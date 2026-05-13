@@ -1,0 +1,27 @@
+{
+  "id": "G1",
+  "title": "Gardner / explicit RK4 only",
+  "pde": "gardner",
+  "constraint": "You MUST use ONLY explicit time integration (forward Euler or explicit RK4). NO IMEX, NO implicit, NO integrating-factor, NO ETD. Compute v_xxx via standard 2nd-order central FD on a uniform grid. Pic",
+  "exit_code": 0,
+  "output_exists": true,
+  "duration_sec": 18.862115,
+  "stderr_tail": "",
+  "diag": {
+    "shape": [
+      256
+    ],
+    "all_finite": true,
+    "n_nan": 0,
+    "n_inf": 0,
+    "min": -0.008875768178062515,
+    "max": 1.506352028868811,
+    "amplitude_range": 1.5152277970468735,
+    "max_jump": 0.1352420575690214,
+    "mean_jump": 0.012178829098352975,
+    "n_local_maxima": 14,
+    "mass": 2.999993975002619,
+    "peak_x": 2.109375
+  },
+  "predicted": "blow-up (NaN/Inf) or massive distortion: explicit on stiff 3rd-derivative compounded by stronger cubic nonlinearity. Stability requires dt extremely small."
+}

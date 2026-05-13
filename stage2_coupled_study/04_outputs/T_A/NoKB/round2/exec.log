@@ -1,0 +1,11 @@
+exit_code=0
+duration_sec=13.4
+--- stdout ---
+Result shape: (10, 2, 256)
+v peak at t=T: 0.9622
+u max at t=T:  5.5285
+v mass ratio (final/initial): 1.0000
+Saved to pred_results/T_A.npy
+
+--- stderr ---
+

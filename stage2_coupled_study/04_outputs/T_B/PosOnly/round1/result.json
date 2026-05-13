@@ -1,0 +1,16 @@
+{
+  "task": "T_B",
+  "condition": "PosOnly",
+  "round": 1,
+  "exit_code": 0,
+  "duration_sec": 1.366649,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": false,
+    "n_nan": 3072,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  v2 = 3.0 * v ** 2\n/stage2/runs/T_B/PosOnly/round1/candidate.py:77: RuntimeWarning: invalid value encountered in multiply\n  v2_hat = np.fft.fft(v2) * dealias\n/stage2/runs/T_B/PosOnly/round1/candidate.py:81: RuntimeWarning: invalid value encountered in multiply\n  d_expr = np.fft.ifft(1j * k * (v2_hat + vxx_hat)).real"
+}

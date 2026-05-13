@@ -1,0 +1,12 @@
+{
+  "id": "A8",
+  "pde": "shallow_water",
+  "title": "Shallow water / Lax-Friedrichs",
+  "constraint": "You MUST use the global Lax-Friedrichs numerical flux for both equations (no HLL, no Roe, no MUSCL). Explicit Euler step at CFL=0.4.",
+  "pde_spec": "h_t + (hu)_x = 0;  (hu)_t + (h u^2 + g h^2 / 2)_x = 0  with g=1, x in [-1,1] periodic, Nx=200",
+  "ic": "dam-break: h(x,0) = 2 if x<0 else 1; u(x,0) = 0",
+  "T": 0.4,
+  "output": "sw_A8.npy",
+  "shape": "(2, 200)",
+  "predicted": "works without blow-up but rarefaction and shock are diffusively smeared"
+}

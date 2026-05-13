@@ -1,0 +1,22 @@
+exit_code=1
+duration_sec=18.9
+--- stdout ---
+Saved shape: (10, 2, 256)
+v final: min=-38.2740, max=19.4151
+u final: min=-50.0000, max=50.0000
+All finite: True
+Peaks in final v >= 0.8: 28 at x = [-14.8828125 -11.484375  -10.546875   -8.7890625  -8.203125   -6.9140625
+  -6.2109375  -5.5078125  -4.921875   -4.21875    -3.6328125  -2.9296875
+  -2.2265625  -0.5859375   0.703125    1.640625    3.1640625   4.8046875
+   5.5078125   6.6796875   7.3828125   9.2578125   9.9609375  10.6640625
+  11.6015625  12.3046875  12.890625   13.9453125]
+
+--- stderr ---
+Traceback (most recent call last):
+  File "${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round2/candidate.py", line 230, in <module>
+    mass_init = np.trapz(v0, x)
+                ^^^^^^^^
+  File "${VENV}/lib/python3.14/site-packages/numpy/__init__.py", line 792, in __getattr__
+    raise AttributeError(f"module {__name__!r} has no attribute {attr!r}")
+AttributeError: module 'numpy' has no attribute 'trapz'. Did you mean: 'trace'?
+

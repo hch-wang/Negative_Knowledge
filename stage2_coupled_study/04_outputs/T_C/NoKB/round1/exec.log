@@ -1,0 +1,20 @@
+exit_code=0
+duration_sec=1.2
+--- stdout ---
+Saved shape: (8, 2, 256)
+u range at T: [nan, nan]
+v range at T: [nan, nan]
+v peak at T: nan
+
+--- stderr ---
+${PROJECT_ROOT}/stage2/runs/T_C/NoKB/round1/candidate.py:46: RuntimeWarning: overflow encountered in square
+  bracket_u = 3.0 * v**2 + v_xx
+${PROJECT_ROOT}/stage2/runs/T_C/NoKB/round1/candidate.py:47: RuntimeWarning: overflow encountered in multiply
+  u_t = -3.0 * u * u_x - deriv(bracket_u, 1)
+${PROJECT_ROOT}/stage2/runs/T_C/NoKB/round1/candidate.py:36: RuntimeWarning: invalid value encountered in multiply
+  return np.real(ifft((1j * k_dealias)**order * fh))
+${PROJECT_ROOT}/stage2/runs/T_C/NoKB/round1/candidate.py:51: RuntimeWarning: overflow encountered in multiply
+  bracket_v = u * v
+${PROJECT_ROOT}/stage2/runs/T_C/NoKB/round1/candidate.py:52: RuntimeWarning: overflow encountered in multiply
+  v_t = -6.0 * v * v_x - v_xxx - deriv(bracket_v, 1)
+

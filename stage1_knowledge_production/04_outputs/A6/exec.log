@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=1.7
+--- stdout ---
+Saved kdv_A6.npy, shape=(256,), max=0.052353, min=-0.034286
+
+--- stderr ---
+

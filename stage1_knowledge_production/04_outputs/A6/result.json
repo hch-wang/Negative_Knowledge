@@ -1,0 +1,27 @@
+{
+  "id": "A6",
+  "title": "KdV / very small amplitude IC",
+  "pde": "kdv",
+  "constraint": "Use whatever STABLE scheme you like (IMEX-spectral recommended). BUT the IC amplitude MUST be 0.1 (NOT 2). Everything else same as standard KdV soliton task.",
+  "exit_code": 0,
+  "output_exists": true,
+  "duration_sec": 1.744385,
+  "stderr_tail": "",
+  "diag": {
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "all_finite": true,
+    "n_nan": 0,
+    "n_inf": 0,
+    "min": -0.0342864524024067,
+    "max": 0.05235253804784727,
+    "amplitude_range": 0.08663899045025397,
+    "max_jump": 0.005713674478674554,
+    "mean_jump": 0.001959039182225202,
+    "zero_crossings": 12,
+    "n_local_maxima": 8
+  },
+  "predicted": "essentially linear dispersive wave; soliton character lost; peak amplitude stays ~0.1, dispersive train forms"
+}

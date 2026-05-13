@@ -1,0 +1,16 @@
+{
+  "task": "T_C",
+  "condition": "NoKB",
+  "round": 1,
+  "exit_code": 0,
+  "duration_sec": 1.178962,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": false,
+    "n_nan": 3584,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  return np.real(ifft((1j * k_dealias)**order * fh))\n/stage2/runs/T_C/NoKB/round1/candidate.py:51: RuntimeWarning: overflow encountered in multiply\n  bracket_v = u * v\n/stage2/runs/T_C/NoKB/round1/candidate.py:52: RuntimeWarning: overflow encountered in multiply\n  v_t = -6.0 * v * v_x - v_xxx - deriv(bracket_v, 1)"
+}

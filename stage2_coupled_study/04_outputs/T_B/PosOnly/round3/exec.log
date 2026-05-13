@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=24.3
+--- stdout ---
+Saved T_B.npy shape=(7, 2, 256), v_final max=515502.4611
+
+--- stderr ---
+

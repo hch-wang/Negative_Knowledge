@@ -1,0 +1,26 @@
+exit_code=0
+duration_sec=3.2
+--- stdout ---
+Result shape: (7, 2, 256)
+Final v: max=nan, min=nan, mass=nan
+Final u: max=nan
+All finite: False
+Peaks in final v with height>=0.8: 0 at positions []
+Saved to ${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/pred_results/T_B.npy, shape=(7, 2, 256)
+
+--- stderr ---
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:87: RuntimeWarning: overflow encountered in square
+  v2 = v**2
+${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:89: RuntimeWarning: invalid value encountered in multiply
+  v2_hat *= dealias
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:94: RuntimeWarning: invalid value encountered in multiply
+  f_hat = 3.0 * v2_hat + vxx_hat
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:99: RuntimeWarning: overflow encountered in multiply
+  return -3.0 * u * ux - f_x
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:71: RuntimeWarning: overflow encountered in multiply
+  uv = u * v
+${PROJECT_ROOT}/stage2/runs/T_B/PosNeg/round1/candidate.py:76: RuntimeWarning: overflow encountered in multiply
+  return -6.0 * v * vx - uv_x
+

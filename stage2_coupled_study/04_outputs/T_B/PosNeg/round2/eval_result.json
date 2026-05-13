@@ -1,0 +1,14 @@
+{
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433096,
+    "mass_vT": -186.3184774282995,
+    "mass_drift_rel": 18.519824031254053,
+    "u_max": 50.0,
+    "v_max": 49.06137874079703,
+    "bounded": false,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "task": "T_A",
+  "condition": "NoKB",
+  "round": 1,
+  "exit_code": 0,
+  "duration_sec": 2.722144,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": false,
+    "n_nan": 3072,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  v_t = -6.0 * v * v_x - v_xxx - u_x * v - u * v_x\n/stage2/runs/T_A/NoKB/round1/candidate.py:49: RuntimeWarning: invalid value encountered in subtract\n  v_t = -6.0 * v * v_x - v_xxx - u_x * v - u * v_x\n${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft\n  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)"
+}

@@ -1,0 +1,44 @@
+phase,stage,call_id,model,total_tokens,duration_ms,description,one_sentence_summary
+early_pilot,bkdv_T1,burgers_T05_r1,sonnet_4.6,17000,21000,Case F positive control: Burgers shock T=0.5,MUSCL + van Leer limiter + Godunov + forward Euler at CFL=0.45 — PASS L1=0.003
+early_pilot,bkdv_T2,kdv_T2_r1,sonnet_4.6,17000,49000,Case G round-1: KdV soliton T=2.0,Fourier pseudospectral + integrating-factor RK4 — all-NaN blow-up
+early_pilot,bkdv_T2,kdv_T2_r2_M4,sonnet_4.6,17000,39000,Case G round-2 with M4 memory,Fourier + IMEX Crank-Nicolson — PASS peak=3.05 amp=2.03 mass=4.000
+stage1,stress,A1,sonnet_4.6,14900,24274,Burgers / forward Euler + central FD,forward Euler + 2nd-order central FD no upwinding no limiter CFL=0.4
+stage1,stress,A2,sonnet_4.6,15170,33609,Burgers / T=0.1 pre-shock,Godunov upwind with CFL-adaptive time stepping for smooth pre-shock regime
+stage1,stress,A3,sonnet_4.6,15019,29671,Burgers / T=10 long-time,Lax-Friedrichs FD conservation form CFL=0.5 integrated to T=10
+stage1,stress,A4,sonnet_4.6,15394,31691,KdV / explicit RK4,Explicit RK4 with 2nd-order central FD for v_x and v_xxx
+stage1,stress,A5,sonnet_4.6,15328,33030,KdV / Fourier spectral NO dealiasing,Fourier pseudospectral with IMEX Euler no dealiasing
+stage1,stress,A6,sonnet_4.6,15949,43516,KdV / amplitude 0.1,Integrating-factor pseudospectral RK4 forced IC amp 0.1
+stage1,stress,A7,sonnet_4.6,15324,29263,Shallow water / forward Euler + central FD,Forward Euler + central FD for both SW equations no upwinding
+stage1,stress,A8,sonnet_4.6,15625,35458,Shallow water / Lax-Friedrichs,Global Lax-Friedrichs scheme with explicit Euler CFL=0.4
+stage1,stress,A9,sonnet_4.6,15930,47291,Shallow water / dry-bed IC,First-order HLL Godunov FV with adaptive CFL + positivity clip
+stage1,stress,A10,sonnet_4.6,15758,41987,Shallow water / HLL Riemann,HLL Riemann solver with explicit Euler CFL=0.4
+stage1,gardner,G1,sonnet_4.6,15268,30411,Gardner / explicit RK4,Explicit RK4 + 2nd-order central FD for all spatial derivatives
+stage1,gardner,G2,sonnet_4.6,15992,43562,Gardner / IMEX-CN + dealiasing,Fourier pseudospectral IMEX-CN dispersive implicit nonlinear explicit 2/3 dealiasing dt=0.0005
+stage1,gardner,G3,sonnet_4.6,15851,37446,Gardner / IMEX-CN NO dealiasing,Fourier pseudospectral IMEX-CN no dealiasing dt=0.001
+stage1,gardner,G4,sonnet_4.6,15877,45772,Gardner / amplitude=3.0,IMEX-CN spectral with IC amp 3.0 cubic term active
+stage1,curator,curator_v1,sonnet_4.6,48492,270663,Initial bank curation,Wrote 20 entries reading 10 A-stress + 3 BKdV pilot artifacts
+stage1,curator,curator_v2_extension,sonnet_4.6,49199,318843,Gardner extension curation,Extended bank to 28 entries adding Gardner findings
+stage1,curator,curator_v3_topup,sonnet_4.6,47859,337343,Final 2-entry top-up,Added 2 synthesized entries (KdV-Gardner transfer + nonlinearCFL boundary)
+stage2,round1,T_A_NoKB_r1,sonnet_4.6,17315,48540,T_A soliton stability NoKB,Pseudospectral + 2/3 dealiasing + explicit RK4 dt=5e-4 — NaN
+stage2,round1,T_A_PosOnly_r1,sonnet_4.6,21202,67644,T_A PosOnly,Fourier pseudospectral IMEX-CN + 2/3 dealiasing — exec_fail (typo)
+stage2,round1,T_A_PosNeg_r1,sonnet_4.6,31639,96248,T_A PosNeg — PASS,Fourier pseudospectral IMEX-CN + AB2 + 2/3 dealiasing dt=1.5e-4 — useful
+stage2,round1,T_B_NoKB_r1,sonnet_4.6,17500,52160,T_B Gaussian decomposition NoKB,Pseudospectral + 2/3 dealiasing + explicit RK4 dt=5e-4 — NaN
+stage2,round1,T_B_PosOnly_r1,sonnet_4.6,21396,73046,T_B PosOnly,Fourier pseudospectral IMEX-CN + 2/3 dealiasing — NaN
+stage2,round1,T_B_PosNeg_r1,sonnet_4.6,31640,97019,T_B PosNeg,Fourier pseudospectral IMEX-CN + AB2 + 2/3 dealiasing dt=2e-4 — NaN
+stage2,round1,T_C_NoKB_r1,sonnet_4.6,17153,48237,T_C bore × soliton NoKB,Pseudospectral + 2/3 dealiasing + explicit RK4 dt=0.002 — NaN
+stage2,round1,T_C_PosOnly_r1,sonnet_4.6,21255,64989,T_C PosOnly,Fourier pseudospectral IMEX-CN + 2/3 dealiasing — NaN (single method for bore failed)
+stage2,round1,T_C_PosNeg_r1,sonnet_4.6,32509,105718,T_C PosNeg — PASS,MUSCL+Godunov for u + IMEX-CN spectral for v + 2/3 dealiasing — useful
+stage2,round2,T_A_NoKB_r2,sonnet_4.6,20078,76637,T_A NoKB r2,Pseudospectral integrating-factor RK4 dt=1.5e-4 — borderline (amp_ratio=0.48)
+stage2,round2,T_A_PosOnly_r2,sonnet_4.6,21851,70382,T_A PosOnly r2,IMEX-CN + AB2 + dealiasing fixed typo — NaN
+stage2,round2,T_B_NoKB_r2,sonnet_4.6,17947,45707,T_B NoKB r2,Pseudospectral RK45 + 2/3 dealiasing — NaN
+stage2,round2,T_B_PosOnly_r2,sonnet_4.6,22826,76556,T_B PosOnly r2,Fourier pseudospectral IFRK4 + dealiasing dt=1e-4 — NaN
+stage2,round2,T_B_PosNeg_r2,sonnet_4.6,32374,96967,T_B PosNeg r2,Fourier pseudospectral ETD-RK2 + IF + explicit midpoint dt=4e-5 — NaN/mass blew up
+stage2,round2,T_C_NoKB_r2,sonnet_4.6,19730,69807,T_C NoKB r2,Explicit RK4 spectral + dealiasing dt=1e-4 — bore blew up (u_max=5)
+stage2,round2,T_C_PosOnly_r2,sonnet_4.6,22952,82423,T_C PosOnly r2,MUSCL+Godunov for u + IMEX-CN for v dt=2e-4 — NaN
+stage2,round3,T_A_NoKB_r3,sonnet_4.6,19196,61824,T_A NoKB r3,Strang splitting + exact spectral v_xxx + adaptive RK45 — NaN
+stage2,round3,T_A_PosOnly_r3,sonnet_4.6,22006,73600,T_A PosOnly r3,Strang splitting: MUSCL+Godunov u + IMEX-CN spectral v dt=2e-4 — soliton destroyed
+stage2,round3,T_B_NoKB_r3,sonnet_4.6,19311,62766,T_B NoKB r3,Integrating-factor pseudospectral RK4 — only 1 peak (need ≥2)
+stage2,round3,T_B_PosOnly_r3,sonnet_4.6,21595,66243,T_B PosOnly r3,IMEX-CN spectral + dealiasing dt=2e-5 (25x smaller) — NaN
+stage2,round3,T_B_PosNeg_r3,sonnet_4.6,29481,85985,T_B PosNeg r3,IMEX-CN spectral + dealiasing dt=5e-5 — NaN (overflow in IF factor)
+stage2,round3,T_C_NoKB_r3,sonnet_4.6,18374,51590,T_C NoKB r3,Explicit RK4 + per-call dealiasing dt=2e-5 — NaN
+stage2,round3,T_C_PosOnly_r3,sonnet_4.6,22705,76583,T_C PosOnly r3,Godunov for u + IMEX-CN spectral for v dt=1e-4 — bore blew up

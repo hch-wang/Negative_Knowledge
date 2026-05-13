@@ -1,0 +1,19 @@
+exit_code=0
+duration_sec=1.1
+--- stdout ---
+Saved (9, 2, 256) to ${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round2/pred_results/T_A.npy
+Final u: max=nan, min=nan
+Final v: max=nan, min=nan
+
+--- stderr ---
+${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round2/candidate.py:57: RuntimeWarning: overflow encountered in square
+  src = 3.0 * v**2 + v_xx
+${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round2/candidate.py:58: RuntimeWarning: overflow encountered in multiply
+  return -3.0 * u * dx_spec(u) - dx_spec(src)
+${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round2/candidate.py:45: RuntimeWarning: invalid value encountered in multiply
+  return np.real(np.fft.ifft(1j * k * dealias * np.fft.fft(f)))
+${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round2/candidate.py:63: RuntimeWarning: overflow encountered in multiply
+  return -6.0 * v * dx_spec(v) - dx_spec(u * v)
+

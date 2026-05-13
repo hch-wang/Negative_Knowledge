@@ -1,0 +1,21 @@
+{
+  "task": "T_B",
+  "condition": "PosOnly",
+  "round": 3,
+  "exit_code": 0,
+  "duration_sec": 24.3032,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433094,
+    "mass_vT": 10.634749692044352,
+    "mass_drift_rel": 2.4999815222124624e-06,
+    "u_max": 718182.7038031443,
+    "v_max": 719714.5761117801,
+    "bounded": false,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": ""
+}

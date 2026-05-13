@@ -1,0 +1,384 @@
+[
+  {
+    "id": "A1",
+    "title": "Burgers / forward Euler + central diff",
+    "pde": "burgers",
+    "constraint": "You MUST use ONLY forward Euler in time + 2nd-order CENTRAL finite differences in space. NO flux limiter. NO upwinding. NO TVD. NO MUSCL. NO Godunov. NO Lax-Friedrichs. If you know better methods, do ",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.052148,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        200
+      ],
+      "size": 200,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -3.606816645491743,
+      "max": 3.6068166454917443,
+      "amplitude_range": 7.213633290983488,
+      "max_jump": 3.6068166454917443,
+      "mean_jump": 0.40609443194914097,
+      "zero_crossings": 2,
+      "n_local_maxima": 21
+    },
+    "predicted": "Gibbs oscillations near shock and likely numerical blow-up"
+  },
+  {
+    "id": "A2",
+    "title": "Burgers / very short T (pre-shock)",
+    "pde": "burgers",
+    "constraint": "Use any STABLE scheme you like (TVD/MUSCL/upwind are fine). But T MUST = 0.1 (well before shock formation at 1/pi ~= 0.318).",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.049613,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        200
+      ],
+      "size": 200,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.9989274812740743,
+      "max": 0.9989274812740743,
+      "amplitude_range": 1.9978549625481485,
+      "max_jump": 0.053236926841729905,
+      "mean_jump": 0.019942741715597068,
+      "zero_crossings": 1,
+      "n_local_maxima": 1
+    },
+    "predicted": "smooth wave with steepening but no actual shock features"
+  },
+  {
+    "id": "A3",
+    "title": "Burgers / very long T (boundary contamination)",
+    "pde": "burgers",
+    "constraint": "Use any STABLE scheme. But T MUST = 10.0 (very long compared to natural shock timescale).",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.057656,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        200
+      ],
+      "size": 200,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.09046691962682804,
+      "max": 0.09046691962682801,
+      "amplitude_range": 0.18093383925365605,
+      "max_jump": 0.0422487791323416,
+      "mean_jump": 0.001813590503190847,
+      "zero_crossings": 1,
+      "n_local_maxima": 1
+    },
+    "predicted": "decayed N-wave plus periodic boundary recirculation contamination"
+  },
+  {
+    "id": "A4",
+    "title": "KdV / explicit RK4 only",
+    "pde": "kdv",
+    "constraint": "You MUST use ONLY explicit time integration (forward Euler or explicit RK4). NO IMEX. NO implicit. NO integrating-factor. NO ETD. Compute v_xxx with standard central FD. Pick whatever dt you think is ",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 17.79105,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "size": 256,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.7567283734403738,
+      "max": 0.8711587299399488,
+      "amplitude_range": 1.6278871033803226,
+      "max_jump": 0.2436795591977215,
+      "mean_jump": 0.0765905843614133,
+      "zero_crossings": 18,
+      "n_local_maxima": 10
+    },
+    "predicted": "blow-up (NaN/Inf) due to stiffness of 3rd derivative under explicit time stepping"
+  },
+  {
+    "id": "A5",
+    "title": "KdV / Fourier spectral but NO dealiasing",
+    "pde": "kdv",
+    "constraint": "Use Fourier pseudo-spectral with IMEX or implicit time integration (so dispersion does NOT blow up). BUT you MUST NOT apply 2/3 dealiasing rule, NO low-pass filtering, NO mode truncation on the nonlin",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.108609,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "size": 256,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.08912585725297606,
+      "max": 2.8743965751278413,
+      "amplitude_range": 2.9635224323808176,
+      "max_jump": 0.33468365469405015,
+      "mean_jump": 0.02371833857875612,
+      "zero_crossings": 2,
+      "n_local_maxima": 4
+    },
+    "predicted": "aliasing artifacts at high wavenumbers; soliton shape may distort or extra spurious peaks may appear; mass may drift"
+  },
+  {
+    "id": "A6",
+    "title": "KdV / very small amplitude IC",
+    "pde": "kdv",
+    "constraint": "Use whatever STABLE scheme you like (IMEX-spectral recommended). BUT the IC amplitude MUST be 0.1 (NOT 2). Everything else same as standard KdV soliton task.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 1.744385,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "size": 256,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.0342864524024067,
+      "max": 0.05235253804784727,
+      "amplitude_range": 0.08663899045025397,
+      "max_jump": 0.005713674478674554,
+      "mean_jump": 0.001959039182225202,
+      "zero_crossings": 12,
+      "n_local_maxima": 8
+    },
+    "predicted": "essentially linear dispersive wave; soliton character lost; peak amplitude stays ~0.1, dispersive train forms"
+  },
+  {
+    "id": "A7",
+    "title": "Shallow water / forward Euler + central diff",
+    "pde": "shallow_water",
+    "constraint": "You MUST use ONLY forward Euler in time + central FD in space for BOTH equations of the system. NO limiter, NO Riemann solver, NO upwinding, NO HLL/HLLE/Roe.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.051044,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        2,
+        200
+      ],
+      "size": 400,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -52737748911.19317,
+      "max": 52737748911.19317,
+      "amplitude_range": 105475497822.38634,
+      "h_min": -0.13916340081382791,
+      "h_max": 2.9755256475460414,
+      "h_negative": true,
+      "h_below_threshold": 2,
+      "mass_h": 300.0,
+      "max_h_jump": 1.847863909957357
+    },
+    "predicted": "oscillations near the discontinuity; h may go negative; possible blow-up"
+  },
+  {
+    "id": "A8",
+    "title": "Shallow water / Lax-Friedrichs",
+    "pde": "shallow_water",
+    "constraint": "You MUST use the global Lax-Friedrichs numerical flux for both equations (no HLL, no Roe, no MUSCL). Explicit Euler step at CFL=0.4.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.054083,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        2,
+        200
+      ],
+      "size": 400,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.6054750747127006,
+      "max": 1.811606215801377,
+      "amplitude_range": 2.4170812905140777,
+      "h_min": 1.4519086492595912,
+      "h_max": 1.811606215801377,
+      "h_negative": false,
+      "h_below_threshold": 0,
+      "mass_h": 300.0,
+      "max_h_jump": 0.0637545052173909
+    },
+    "predicted": "works without blow-up but rarefaction and shock are diffusively smeared"
+  },
+  {
+    "id": "A9",
+    "title": "Shallow water / dry-bed IC",
+    "pde": "shallow_water",
+    "constraint": "Use any STABLE scheme (LF or HLL recommended). BUT the IC has dry bed on the right half: h_R = 0 (NOT 1). u initially 0 everywhere.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.079187,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        2,
+        200
+      ],
+      "size": 400,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.2946377063534315,
+      "max": 0.9999931502946028,
+      "amplitude_range": 1.2946308566480342,
+      "h_min": 0.0015300092922530691,
+      "h_max": 0.9999931502946028,
+      "h_negative": false,
+      "h_below_threshold": 0,
+      "mass_h": 100.00000000000001,
+      "max_h_jump": 0.0237297008730733
+    },
+    "predicted": "positivity violation (h<0) near the dry interface; or huge u where h~0"
+  },
+  {
+    "id": "A10",
+    "title": "Shallow water / HLL Riemann solver",
+    "pde": "shallow_water",
+    "constraint": "You MUST use the HLL (or HLLE) Riemann solver for the numerical flux. Explicit Euler time step at CFL <= 0.4.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.054436,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        2,
+        200
+      ],
+      "size": 400,
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.41751502547744385,
+      "max": 1.868548130864387,
+      "amplitude_range": 2.286063156341831,
+      "h_min": 1.4519746222336098,
+      "h_max": 1.868548130864387,
+      "h_negative": false,
+      "h_below_threshold": 0,
+      "mass_h": 300.0,
+      "max_h_jump": 0.08979792769646378
+    },
+    "predicted": "clean dam-break: left-going rarefaction, right-going shock; h stays positive"
+  },
+  {
+    "id": "G1",
+    "title": "Gardner / explicit RK4 only",
+    "pde": "gardner",
+    "constraint": "You MUST use ONLY explicit time integration (forward Euler or explicit RK4). NO IMEX, NO implicit, NO integrating-factor, NO ETD. Compute v_xxx via standard 2nd-order central FD on a uniform grid. Pic",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 18.862115,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.008875768178062515,
+      "max": 1.506352028868811,
+      "amplitude_range": 1.5152277970468735,
+      "max_jump": 0.1352420575690214,
+      "mean_jump": 0.012178829098352975,
+      "n_local_maxima": 14,
+      "mass": 2.999993975002619,
+      "peak_x": 2.109375
+    },
+    "predicted": "blow-up (NaN/Inf) or massive distortion: explicit on stiff 3rd-derivative compounded by stronger cubic nonlinearity. Stability requires dt extremely small."
+  },
+  {
+    "id": "G2",
+    "title": "Gardner / IMEX Crank-Nicolson spectral",
+    "pde": "gardner",
+    "constraint": "You MUST use Fourier pseudo-spectral spatial discretization with IMEX Crank-Nicolson: Crank-Nicolson on the LINEAR DISPERSIVE term v_xxx (handled implicitly in Fourier space), explicit on the nonlinea",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.142312,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.6479584834402792,
+      "max": 0.6122041990847724,
+      "amplitude_range": 1.2601626825250516,
+      "max_jump": 0.1634812894022295,
+      "mean_jump": 0.05500651215525469,
+      "n_local_maxima": 13,
+      "mass": 2.9999999945128835,
+      "peak_x": -3.515625
+    },
+    "predicted": "stable propagation; the IC is not a true Gardner soliton so there will be some radiative shedding, but the main lump should remain compact with mass roughly conserved."
+  },
+  {
+    "id": "G3",
+    "title": "Gardner / spectral IMEX with NO dealiasing",
+    "pde": "gardner",
+    "constraint": "Use Fourier pseudo-spectral + IMEX Crank-Nicolson (CN on dispersion, explicit on nonlinear) as in G2 \u2014 BUT you MUST NOT apply any 2/3 dealiasing or low-pass filter on the nonlinear terms. dt = 0.001.",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.101387,
+    "stderr_tail": "",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "all_finite": true,
+      "n_nan": 0,
+      "n_inf": 0,
+      "min": -0.009420576979730559,
+      "max": 1.5451914814774828,
+      "amplitude_range": 1.5546120584572134,
+      "max_jump": 0.14145975998675775,
+      "mean_jump": 0.012389144102449096,
+      "n_local_maxima": 11,
+      "mass": 2.9999999945128835,
+      "peak_x": 2.2265625
+    },
+    "predicted": "stronger aliasing than the KdV-without-dealiasing case (A5) because the cubic v^2 v_x term aliases at twice the wavenumber and three times the wavenumber. Expect amplitude inflation, spurious peaks at small scales, possibly delayed blow-up."
+  },
+  {
+    "id": "G4",
+    "title": "Gardner / large-amplitude KdV-style IC (wrong soliton form)",
+    "pde": "gardner",
+    "constraint": "Use any STABLE scheme (IMEX-CN spectral recommended). BUT the IC must be a KdV-amplitude sech^2 of amplitude 3.0 \u2014 this is NOT a Gardner soliton; in the Gardner equation the cubic term will be active ",
+    "exit_code": 0,
+    "output_exists": true,
+    "duration_sec": 0.414271,
+    "stderr_tail": "${PROJECT_ROOT}/stage1/sandboxes/G4/candidate.py:52: RuntimeWarning: overflow encountered in multiply\n  N = 6.0 * v_phys * vx + 1.5 * v_phys ** 2 * vx\n${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft\n  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)",
+    "diag": {
+      "shape": [
+        256
+      ],
+      "all_finite": false,
+      "n_nan": 256,
+      "n_inf": 0
+    },
+    "predicted": "the wave is not a stationary Gardner soliton shape because the (3/2) v^2 v_x term contributes significantly at amplitude 3. Expect shape change: peak may broaden / asymmetrize, and there will be radiative tail. Phase speed will differ from the KdV expected c=2*A=6."
+  }
+]

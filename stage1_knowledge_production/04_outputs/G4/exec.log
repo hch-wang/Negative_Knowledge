@@ -1,0 +1,11 @@
+exit_code=0
+duration_sec=0.4
+--- stdout ---
+Saved pred_results/gardner_G4.npy, shape: (256,)
+
+--- stderr ---
+${PROJECT_ROOT}/stage1/sandboxes/G4/candidate.py:52: RuntimeWarning: overflow encountered in multiply
+  N = 6.0 * v_phys * vx + 1.5 * v_phys ** 2 * vx
+${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+

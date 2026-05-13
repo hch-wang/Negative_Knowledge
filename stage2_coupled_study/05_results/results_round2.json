@@ -1,0 +1,141 @@
+[
+  {
+    "task": "T_A",
+    "condition": "NoKB",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 13.357509,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": true,
+      "mass_v0": 3.9999999926838448,
+      "mass_vT": 3.9999999926838448,
+      "mass_drift_rel": 0.0,
+      "u_max": 5.528529398231534,
+      "v_max": 1.9969513439288096,
+      "bounded": true,
+      "v0_max": 1.9969513439288096,
+      "vT_max": 0.9622033754475846,
+      "amp_ratio": 0.48183616409728947,
+      "n_dominant_peaks_vT": 4,
+      "useful": false,
+      "reason": "amp ratio 0.48 < 0.5"
+    },
+    "stderr_tail": ""
+  },
+  {
+    "task": "T_A",
+    "condition": "PosOnly",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 1.145312,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": false,
+      "n_nan": 3584,
+      "useful": false,
+      "reason": "non-finite or unbounded"
+    },
+    "stderr_tail": "  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)\n/stage2/runs/T_A/PosOnly/round2/candidate.py:45: RuntimeWarning: invalid value encountered in multiply\n  return np.real(np.fft.ifft(1j * k * dealias * np.fft.fft(f)))\n/stage2/runs/T_A/PosOnly/round2/candidate.py:63: RuntimeWarning: overflow encountered in multiply\n  return -6.0 * v * dx_spec(v) - dx_spec(u * v)"
+  },
+  {
+    "task": "T_B",
+    "condition": "NoKB",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 12.654575,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": true,
+      "mass_v0": 10.634723105433096,
+      "mass_vT": 10.63472310543309,
+      "mass_drift_rel": 5.011010127267179e-16,
+      "u_max": 59.40796253001846,
+      "v_max": 4.437344291969205,
+      "bounded": false,
+      "useful": false,
+      "reason": "non-finite or unbounded"
+    },
+    "stderr_tail": ""
+  },
+  {
+    "task": "T_B",
+    "condition": "PosNeg",
+    "round": 2,
+    "exit_code": 1,
+    "duration_sec": 18.915046,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": true,
+      "mass_v0": 10.634723105433096,
+      "mass_vT": -186.3184774282995,
+      "mass_drift_rel": 18.519824031254053,
+      "u_max": 50.0,
+      "v_max": 49.06137874079703,
+      "bounded": false,
+      "useful": false,
+      "reason": "non-finite or unbounded"
+    },
+    "stderr_tail": "    mass_init = np.trapz(v0, x)\n                ^^^^^^^^\n  File \"${VENV}/lib/python3.14/site-packages/numpy/__init__.py\", line 792, in __getattr__\n    raise AttributeError(f\"module {__name__!r} has no attribute {attr!r}\")\nAttributeError: module 'numpy' has no attribute 'trapz'. Did you mean: 'trace'?"
+  },
+  {
+    "task": "T_B",
+    "condition": "PosOnly",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 10.461782,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": false,
+      "n_nan": 3072,
+      "useful": false,
+      "reason": "non-finite or unbounded"
+    },
+    "stderr_tail": "  ef = np.exp(1j * ik3 * t)\n/stage2/runs/T_B/PosOnly/round2/candidate.py:110: RuntimeWarning: overflow encountered in exp\n  v_r = np.fft.ifft(np.exp(1j * ik3 * t) * w_hat).real\n/stage2/runs/T_B/PosOnly/round2/candidate.py:154: RuntimeWarning: overflow encountered in exp\n  v_r = np.fft.ifft(np.exp(1j * ik3 * t) * w_hat).real"
+  },
+  {
+    "task": "T_C",
+    "condition": "NoKB",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 20.286487,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": true,
+      "mass_v0": 2.9999977863409164,
+      "mass_vT": 4.064594622671604,
+      "mass_drift_rel": 0.3548658739609175,
+      "u_max": 5.0,
+      "v_max": 5.0,
+      "bounded": true,
+      "vT_max": 5.0,
+      "vT_min": -5.0,
+      "n_dominant_peaks_vT": 22,
+      "useful": false,
+      "reason": "u_max 5.00 too large (bore blew up)"
+    },
+    "stderr_tail": ""
+  },
+  {
+    "task": "T_C",
+    "condition": "PosOnly",
+    "round": 2,
+    "exit_code": 0,
+    "duration_sec": 3.264296,
+    "output_exists": true,
+    "useful": false,
+    "diag": {
+      "all_finite": false,
+      "n_nan": 3072,
+      "useful": false,
+      "reason": "non-finite or unbounded"
+    },
+    "stderr_tail": "  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)\n/stage2/runs/T_C/PosOnly/round2/candidate.py:107: RuntimeWarning: invalid value encountered in multiply\n  return np.fft.ifft(ik * np.fft.fft(f_arr)).real\n/stage2/runs/T_C/PosOnly/round2/candidate.py:140: RuntimeWarning: overflow encountered in multiply\n  rhs_v_nl = -6.0 * v_arr * spectral_dx(v_arr) - spectral_dx(u_arr * v_arr)"
+  }
+]

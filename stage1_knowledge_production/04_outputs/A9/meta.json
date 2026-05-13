@@ -1,0 +1,12 @@
+{
+  "id": "A9",
+  "pde": "shallow_water",
+  "title": "Shallow water / dry-bed IC",
+  "constraint": "Use any STABLE scheme (LF or HLL recommended). BUT the IC has dry bed on the right half: h_R = 0 (NOT 1). u initially 0 everywhere.",
+  "pde_spec": "h_t + (hu)_x = 0;  (hu)_t + (h u^2 + g h^2 / 2)_x = 0  with g=1, x in [-1,1] periodic, Nx=200",
+  "ic": "dry-bed dam-break: h(x,0) = 1 if x<0 else 0; u(x,0) = 0",
+  "T": 0.3,
+  "output": "sw_A9.npy",
+  "shape": "(2, 200)",
+  "predicted": "positivity violation (h<0) near the dry interface; or huge u where h~0"
+}

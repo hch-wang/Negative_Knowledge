@@ -1,0 +1,12 @@
+{
+  "id": "A4",
+  "pde": "kdv",
+  "title": "KdV / explicit RK4 only",
+  "constraint": "You MUST use ONLY explicit time integration (forward Euler or explicit RK4). NO IMEX. NO implicit. NO integrating-factor. NO ETD. Compute v_xxx with standard central FD. Pick whatever dt you think is needed.",
+  "pde_spec": "v_t + 6 v v_x + v_xxx = 0 on x in [-15,15] periodic, Nx=256",
+  "ic": "v_0(x) = 2 sech^2(x + 5)  (KdV soliton, speed 4)",
+  "T": 2.0,
+  "output": "kdv_A4.npy",
+  "shape": "(256,)",
+  "predicted": "blow-up (NaN/Inf) due to stiffness of 3rd derivative under explicit time stepping"
+}

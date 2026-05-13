@@ -1,0 +1,9 @@
+exit_code=0
+duration_sec=12.7
+--- stdout ---
+Saved shape: (7, 2, 256)
+Final v max: 4.4373, min: -3.0926
+Final u max: 58.6158
+
+--- stderr ---
+

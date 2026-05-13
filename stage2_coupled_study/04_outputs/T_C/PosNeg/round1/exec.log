@@ -1,0 +1,9 @@
+exit_code=0
+duration_sec=1.2
+--- stdout ---
+Saved snapshots shape (9, 2, 256) to ${PROJECT_ROOT}/stage2/runs/T_C/PosNeg/round1/pred_results/T_C.npy
+Final u: min=0.2231, max=1.2949
+Final v: min=-0.0842, max=0.5079, peak=0.5079
+
+--- stderr ---
+

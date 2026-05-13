@@ -1,0 +1,12 @@
+{
+  "id": "G2",
+  "pde": "gardner",
+  "title": "Gardner / IMEX Crank-Nicolson spectral",
+  "constraint": "You MUST use Fourier pseudo-spectral spatial discretization with IMEX Crank-Nicolson: Crank-Nicolson on the LINEAR DISPERSIVE term v_xxx (handled implicitly in Fourier space), explicit on the nonlinear terms 6 v v_x and (3/2) v^2 v_x. dt around 0.0005. Apply 2/3 dealiasing on the nonlinear terms.",
+  "pde_spec": "v_t + 6 v v_x + (3/2) v^2 v_x + v_xxx = 0  on x in [-15,15] periodic, Nx=256",
+  "ic": "v_0(x) = 1.5 * sech^2(x + 5)",
+  "T": 2.0,
+  "output": "gardner_G2.npy",
+  "shape": "(256,)",
+  "predicted": "stable propagation; the IC is not a true Gardner soliton so there will be some radiative shedding, but the main lump should remain compact with mass roughly conserved."
+}

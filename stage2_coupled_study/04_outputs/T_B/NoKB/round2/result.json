@@ -1,0 +1,21 @@
+{
+  "task": "T_B",
+  "condition": "NoKB",
+  "round": 2,
+  "exit_code": 0,
+  "duration_sec": 12.654575,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433096,
+    "mass_vT": 10.63472310543309,
+    "mass_drift_rel": 5.011010127267179e-16,
+    "u_max": 59.40796253001846,
+    "v_max": 4.437344291969205,
+    "bounded": false,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": ""
+}

@@ -1,0 +1,12 @@
+{
+  "id": "A5",
+  "pde": "kdv",
+  "title": "KdV / Fourier spectral but NO dealiasing",
+  "constraint": "Use Fourier pseudo-spectral with IMEX or implicit time integration (so dispersion does NOT blow up). BUT you MUST NOT apply 2/3 dealiasing rule, NO low-pass filtering, NO mode truncation on the nonlinear term. dt = 0.005.",
+  "pde_spec": "v_t + 6 v v_x + v_xxx = 0 on x in [-15,15] periodic, Nx=256",
+  "ic": "v_0(x) = 2 sech^2(x + 5)",
+  "T": 2.0,
+  "output": "kdv_A5.npy",
+  "shape": "(256,)",
+  "predicted": "aliasing artifacts at high wavenumbers; soliton shape may distort or extra spurious peaks may appear; mass may drift"
+}

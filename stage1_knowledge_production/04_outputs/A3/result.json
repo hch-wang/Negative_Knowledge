@@ -1,0 +1,27 @@
+{
+  "id": "A3",
+  "title": "Burgers / very long T (boundary contamination)",
+  "pde": "burgers",
+  "constraint": "Use any STABLE scheme. But T MUST = 10.0 (very long compared to natural shock timescale).",
+  "exit_code": 0,
+  "output_exists": true,
+  "duration_sec": 0.057656,
+  "stderr_tail": "",
+  "diag": {
+    "shape": [
+      200
+    ],
+    "size": 200,
+    "all_finite": true,
+    "n_nan": 0,
+    "n_inf": 0,
+    "min": -0.09046691962682804,
+    "max": 0.09046691962682801,
+    "amplitude_range": 0.18093383925365605,
+    "max_jump": 0.0422487791323416,
+    "mean_jump": 0.001813590503190847,
+    "zero_crossings": 1,
+    "n_local_maxima": 1
+  },
+  "predicted": "decayed N-wave plus periodic boundary recirculation contamination"
+}

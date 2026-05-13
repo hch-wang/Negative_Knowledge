@@ -1,0 +1,21 @@
+{
+  "task": "T_B",
+  "condition": "PosNeg",
+  "round": 3,
+  "exit_code": 0,
+  "duration_sec": 3.712278,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433096,
+    "mass_vT": 5.1957611932068774e+135,
+    "mass_drift_rel": 4.885657239681636e+134,
+    "u_max": 1.5124823111395512e+156,
+    "v_max": 1.2642372759749117e+152,
+    "bounded": false,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  uvx_hat = 1j * k_spec * uv_hat  # d_x(u v)\n/stage2/runs/T_B/PosNeg/round3/candidate.py:115: RuntimeWarning: invalid value encountered in multiply\n  uvx_hat = 1j * k_spec * uv_hat  # d_x(u v)\n${VENV}/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in ifft\n  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)"
+}

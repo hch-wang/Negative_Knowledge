@@ -1,0 +1,12 @@
+{
+  "id": "A6",
+  "pde": "kdv",
+  "title": "KdV / very small amplitude IC",
+  "constraint": "Use whatever STABLE scheme you like (IMEX-spectral recommended). BUT the IC amplitude MUST be 0.1 (NOT 2). Everything else same as standard KdV soliton task.",
+  "pde_spec": "v_t + 6 v v_x + v_xxx = 0 on x in [-15,15] periodic, Nx=256",
+  "ic": "v_0(x) = 0.1 sech^2(x + 5)  (very small amplitude)",
+  "T": 2.0,
+  "output": "kdv_A6.npy",
+  "shape": "(256,)",
+  "predicted": "essentially linear dispersive wave; soliton character lost; peak amplitude stays ~0.1, dispersive train forms"
+}

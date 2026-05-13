@@ -1,0 +1,12 @@
+{
+  "id": "G3",
+  "pde": "gardner",
+  "title": "Gardner / spectral IMEX with NO dealiasing",
+  "constraint": "Use Fourier pseudo-spectral + IMEX Crank-Nicolson (CN on dispersion, explicit on nonlinear) as in G2 \u2014 BUT you MUST NOT apply any 2/3 dealiasing or low-pass filter on the nonlinear terms. dt = 0.001.",
+  "pde_spec": "v_t + 6 v v_x + (3/2) v^2 v_x + v_xxx = 0  on x in [-15,15] periodic, Nx=256",
+  "ic": "v_0(x) = 1.5 * sech^2(x + 5)",
+  "T": 2.0,
+  "output": "gardner_G3.npy",
+  "shape": "(256,)",
+  "predicted": "stronger aliasing than the KdV-without-dealiasing case (A5) because the cubic v^2 v_x term aliases at twice the wavenumber and three times the wavenumber. Expect amplitude inflation, spurious peaks at small scales, possibly delayed blow-up."
+}

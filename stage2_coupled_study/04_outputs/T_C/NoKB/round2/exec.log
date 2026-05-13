@@ -1,0 +1,12 @@
+exit_code=0
+duration_sec=20.3
+--- stdout ---
+Result shape: (10, 2, 256)
+u range: [-5.0000, 5.0000]
+v range: [-5.0000, 5.0000]
+v peak amplitude: 5.0000
+All finite: True
+Saved pred_results/T_C.npy
+
+--- stderr ---
+

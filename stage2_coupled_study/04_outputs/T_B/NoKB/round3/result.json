@@ -1,0 +1,24 @@
+{
+  "task": "T_B",
+  "condition": "NoKB",
+  "round": 3,
+  "exit_code": 0,
+  "duration_sec": 0.625404,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433096,
+    "mass_vT": 10.634723105433096,
+    "mass_drift_rel": 0.0,
+    "u_max": 0.0,
+    "v_max": 3.9972882460057573,
+    "bounded": true,
+    "v0_max": 3.9972882460057573,
+    "vT_max": 3.9972882460057573,
+    "n_dominant_peaks_vT": 1,
+    "useful": false,
+    "reason": "only 1 peaks (need >= 2)"
+  },
+  "stderr_tail": "  return -3.0 * u_p * u_x - forcing\n/stage2/runs/T_B/NoKB/round3/candidate.py:73: RuntimeWarning: overflow encountered in multiply\n  uv = u_p * v_p\n/stage2/runs/T_B/NoKB/round3/candidate.py:75: RuntimeWarning: overflow encountered in multiply\n  return -6.0 * v_p * v_x - uv_x"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "A4",
+  "title": "KdV / explicit RK4 only",
+  "pde": "kdv",
+  "constraint": "You MUST use ONLY explicit time integration (forward Euler or explicit RK4). NO IMEX. NO implicit. NO integrating-factor. NO ETD. Compute v_xxx with standard central FD. Pick whatever dt you think is ",
+  "exit_code": 0,
+  "output_exists": true,
+  "duration_sec": 17.79105,
+  "stderr_tail": "",
+  "diag": {
+    "shape": [
+      256
+    ],
+    "size": 256,
+    "all_finite": true,
+    "n_nan": 0,
+    "n_inf": 0,
+    "min": -0.7567283734403738,
+    "max": 0.8711587299399488,
+    "amplitude_range": 1.6278871033803226,
+    "max_jump": 0.2436795591977215,
+    "mean_jump": 0.0765905843614133,
+    "zero_crossings": 18,
+    "n_local_maxima": 10
+  },
+  "predicted": "blow-up (NaN/Inf) due to stiffness of 3rd derivative under explicit time stepping"
+}

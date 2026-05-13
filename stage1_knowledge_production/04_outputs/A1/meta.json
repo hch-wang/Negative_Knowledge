@@ -1,0 +1,12 @@
+{
+  "id": "A1",
+  "pde": "burgers",
+  "title": "Burgers / forward Euler + central diff",
+  "constraint": "You MUST use ONLY forward Euler in time + 2nd-order CENTRAL finite differences in space. NO flux limiter. NO upwinding. NO TVD. NO MUSCL. NO Godunov. NO Lax-Friedrichs. If you know better methods, do not use them. CFL <= 0.5.",
+  "pde_spec": "u_t + u u_x = 0 on x in [-1,1] periodic, Nx=200",
+  "ic": "u_0(x) = -sin(pi x)",
+  "T": 0.5,
+  "output": "burgers_A1.npy",
+  "shape": "(200,)",
+  "predicted": "Gibbs oscillations near shock and likely numerical blow-up"
+}

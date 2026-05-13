@@ -1,0 +1,11 @@
+{
+  "task": "T_A",
+  "condition": "PosOnly",
+  "round": 1,
+  "exit_code": 1,
+  "duration_sec": 0.054553,
+  "output_exists": false,
+  "useful": false,
+  "diag": null,
+  "stderr_tail": "Traceback (most recent call last):\n  File \"${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round1/candidate.py\", line 104, in <module>\n    u_hat = np.fft.fft(u) * dealias_mask\n                            ^^^^^^^^^^^^\nNameError: name 'dealias_mask' is not defined"
+}

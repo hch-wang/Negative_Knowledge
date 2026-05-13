@@ -1,0 +1,16 @@
+{
+  "task": "T_C",
+  "condition": "NoKB",
+  "round": 3,
+  "exit_code": 0,
+  "duration_sec": 8.373186,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": false,
+    "n_nan": 2048,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  fhat = rfft(f) * dealias\n/stage2/runs/T_C/NoKB/round3/candidate.py:34: RuntimeWarning: invalid value encountered in multiply\n  return irfft((1j * k) ** n * fhat, n=Nx)\n/stage2/runs/T_C/NoKB/round3/candidate.py:66: RuntimeWarning: overflow encountered in multiply\n  rhs_v = -6.0 * v * vx - vxxx - spectral_deriv(u * v, 1)"
+}

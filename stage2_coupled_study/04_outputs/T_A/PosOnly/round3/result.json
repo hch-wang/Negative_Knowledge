@@ -1,0 +1,25 @@
+{
+  "task": "T_A",
+  "condition": "PosOnly",
+  "round": 3,
+  "exit_code": 0,
+  "duration_sec": 5.063013,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 3.9999999926838448,
+    "mass_vT": 3.999999992683843,
+    "mass_drift_rel": 4.440892106623191e-16,
+    "u_max": 3.0437480055479775,
+    "v_max": 1.9969513439139424,
+    "bounded": true,
+    "v0_max": 1.9969513439139424,
+    "vT_max": 0.389514445110415,
+    "amp_ratio": 0.19505454967519775,
+    "n_dominant_peaks_vT": 0,
+    "useful": false,
+    "reason": "amp ratio 0.20 < 0.5; no dominant peak in final v"
+  },
+  "stderr_tail": ""
+}

@@ -1,0 +1,13 @@
+{
+  "task": "kdv_T2",
+  "model": "sonnet_4.6",
+  "round": 1,
+  "memory_condition": "M0_baseline",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "ran",
+  "eval_score": 0,
+  "eval_msg": "non-finite: 256 NaN/Inf (blow-up -- likely explicit scheme on stiff dispersion)",
+  "candidate_approach": "Fourier pseudospectral + integrating-factor RK4 (IFRK4)",
+  "actual_outcome": "All 256 output values are NaN. Implementation failed despite sound theoretical choice."
+}

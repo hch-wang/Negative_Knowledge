@@ -1,0 +1,27 @@
+{
+  "id": "A1",
+  "title": "Burgers / forward Euler + central diff",
+  "pde": "burgers",
+  "constraint": "You MUST use ONLY forward Euler in time + 2nd-order CENTRAL finite differences in space. NO flux limiter. NO upwinding. NO TVD. NO MUSCL. NO Godunov. NO Lax-Friedrichs. If you know better methods, do ",
+  "exit_code": 0,
+  "output_exists": true,
+  "duration_sec": 0.052148,
+  "stderr_tail": "",
+  "diag": {
+    "shape": [
+      200
+    ],
+    "size": 200,
+    "all_finite": true,
+    "n_nan": 0,
+    "n_inf": 0,
+    "min": -3.606816645491743,
+    "max": 3.6068166454917443,
+    "amplitude_range": 7.213633290983488,
+    "max_jump": 3.6068166454917443,
+    "mean_jump": 0.40609443194914097,
+    "zero_crossings": 2,
+    "n_local_maxima": 21
+  },
+  "predicted": "Gibbs oscillations near shock and likely numerical blow-up"
+}

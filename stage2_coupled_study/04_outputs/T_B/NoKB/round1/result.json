@@ -1,0 +1,16 @@
+{
+  "task": "T_B",
+  "condition": "NoKB",
+  "round": 1,
+  "exit_code": 0,
+  "duration_sec": 3.747721,
+  "output_exists": true,
+  "useful": false,
+  "diag": {
+    "all_finite": false,
+    "n_nan": 512,
+    "useful": false,
+    "reason": "non-finite or unbounded"
+  },
+  "stderr_tail": "  du_dt = -3.0 * u * u_x - drhs_inner_dx\n/stage2/runs/T_B/NoKB/round1/candidate.py:53: RuntimeWarning: overflow encountered in multiply\n  uv = u * v\n/stage2/runs/T_B/NoKB/round1/candidate.py:55: RuntimeWarning: overflow encountered in multiply\n  dv_dt = -6.0 * v * v_x - v_xxx - duv_dx"
+}

@@ -1,0 +1,10 @@
+exit_code=0
+duration_sec=5.1
+--- stdout ---
+Saved shape (9, 2, 256) to ${PROJECT_ROOT}/stage2/runs/T_A/PosOnly/round3/pred_results/T_A.npy
+u range: [-0.237, 0.926]
+v range: [0.014, 0.390]
+v peak: 0.390, v mass: 4.000
+
+--- stderr ---
+
