@@ -1,0 +1,12 @@
+{
+  "task": "026",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "crashed",
+  "eval_score": null,
+  "eval_msg": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/indexes/base.py\", line 3819, in get_loc\n    raise KeyError(key) from err\nKeyError: 'names'",
+  "stderr_tail": "MDAnalysis.topology.tables has been moved to MDAnalysis.guesser.tables. This import point will be removed in MDAnalysis version 3.0.0\n  warnings.warn(wmsg, category=DeprecationWarning)\n\n  0%|          | 0/10 [00:00<?, ?it/s]\n 10%|\u2588         | 1/10 [00:01<00:09,  1.03s/it]\n 50%|\u2588\u2588\u2588\u2588\u2588     | 5/10 [00:01<00:01,  3.82it/s]\n 90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 9/10 [00:02<00:00,  5.34it/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 10/10 [00:02<00:00,  4.79it/s]",
+  "cand_duration_sec": 4.2514,
+  "eval_duration_sec": 0.896786
+}

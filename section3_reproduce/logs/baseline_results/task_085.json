@@ -1,0 +1,12 @@
+{
+  "task": "085",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "crashed",
+  "eval_score": null,
+  "eval_msg": "    pred_value = pred_values[key]\n                 ~~~~~~~~~~~^^^^^\nKeyError: 'argmax'",
+  "stderr_tail": "",
+  "cand_duration_sec": 1.476594,
+  "eval_duration_sec": 0.027117
+}

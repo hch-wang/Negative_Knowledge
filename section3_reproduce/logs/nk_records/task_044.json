@@ -1,0 +1,14 @@
+{
+  "task_id": "044",
+  "attempted_route": "biopsykit.sleep.sleep_processing_pipeline.predict_pipeline_acceleration(acc_data) with acc columns renamed from acc_x/y/z to x/y/z via str.replace; pickle.load for data; pd.to_datetime for index",
+  "observation": "TypeError at line 34: predict_pipeline_acceleration() missing 1 required positional argument: 'sampling_rate'; exit_code=1 after 1.8s",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "contradicted",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The agent called predict_pipeline_acceleration without the mandatory 'sampling_rate' positional argument. BioPsyKit's API requires the sensor sampling rate (Hz) to compute the activity index correctly; the agent omitted it entirely despite the function signature requiring it.",
+  "recommended_alternative": "Call biopsykit.sleep.sleep_processing_pipeline.predict_pipeline_acceleration(acc_data, sampling_rate=50) — infer the Hz from the DatetimeIndex (e.g., pd.infer_freq or 1/acc_data.index.to_series().diff().dt.total_seconds().median()). Pass the resulting float as sampling_rate."
+}

@@ -1,0 +1,12 @@
+{
+  "task": "087",
+  "model": "sonnet_4.6",
+  "exit_code": 1,
+  "output_exists": false,
+  "eval_status": "not_run",
+  "eval_score": null,
+  "eval_msg": "",
+  "stderr_tail": " cftime.Datetime360Day(2092, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2093, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2094, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2095, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2096, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2097, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2098, 6, 1, 0, 0, 0, 0, has_year_zero=True)\n cftime.Datetime360Day(2099, 6, 1, 0, 0, 0, 0, has_year_zero=True)]' is not compatible with origin='1900-01-01 00:00:00'; it must be numeric with a unit specified",
+  "cand_duration_sec": 0.430229,
+  "eval_duration_sec": 0.0
+}

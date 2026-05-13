@@ -1,0 +1,12 @@
+{
+  "task": "016",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "ran",
+  "eval_score": 1,
+  "eval_msg": "overlap: 1.0",
+  "stderr_tail": "[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator\n[05:47:57] DEPRECATION WARNING: please use MorganGenerator",
+  "cand_duration_sec": 4.501872,
+  "eval_duration_sec": 0.019844
+}

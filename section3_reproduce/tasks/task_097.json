@@ -1,0 +1,13 @@
+{
+  "instance_id": 97,
+  "domain": "Computational Chemistry",
+  "subtask_categories": "Deep Learning",
+  "github_name": "deepchem/deepchem",
+  "task_inst": "Train a fromation energy prediction model using the NumpyDataset in the perovskite_train.pkl file of the perovskite dataset. Use the CGCNN regression model from deepchem. After that, predict the formation energy for the molecues in the test set. Save the predicted scores to 'pred_results/formation_energy_prediction_pred.txt' using numpy.savetxt().",
+  "domain_knowledge": "Formation energy is the energy change to form certain crystal structure from its constituents. CGCNN is a graph neural network for material science that takes geometry (e.g. atom distances) into account, which is integrated in DeepChem.",
+  "dataset_folder_tree": "|-- perovskite/\n|---- perovskite_train.pkl\n|---- perovskite_test.pkl",
+  "dataset_preview": "",
+  "output_fname": "pred_results/formation_energy_prediction_pred.txt",
+  "gold_program_name": "formation_energy_prediction.py",
+  "eval_script_name": "eval_formation_energy_prediction.py"
+}

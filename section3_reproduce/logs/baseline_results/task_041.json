@@ -1,0 +1,12 @@
+{
+  "task": "041",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "ran",
+  "eval_score": 1,
+  "eval_msg": "Mean F1: 0.9908256880733944",
+  "stderr_tail": "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.\n  warnings.warn(\n/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.\n  warnings.warn(\n/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.\n  warnings.warn(\n/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/sklearn/metrics/_classification.py:620: UserWarning: A single label was found in 'y_true' and 'y_pred'. For the confusion matrix to have the correct shape, use the 'labels' parameter to pass all known labels.\n  warnings.warn(",
+  "cand_duration_sec": 4.438879,
+  "eval_duration_sec": 0.911405
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "026",
+  "round": 2,
+  "attempted_route": "fp.to_dataframe() with no args; flatten MultiIndex with '_'.join; long-format reshape emitting columns ['name', 'Y'] with name=<col>_<frame_idx>, Y=int(bool(value)); write to pred_results/ligand_fingerprint_pred.csv",
+  "observation": "exec exit_code=0, 410 rows written; eval exit_code=1 with KeyError: 'names' — evaluator expects column 'names' (plural) but script wrote column 'name' (singular)",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The round-1 fix (drop return_atoms arg) was correctly applied and fp.run/to_dataframe succeeded. The new failure is a trivial column-name mismatch: out_df used column header 'name' instead of 'names', causing the evaluator's pred['names'] lookup to raise KeyError.",
+  "recommended_alternative": "Keep the same prolif pipeline. Change pd.DataFrame(rows, columns=['name', 'Y']) to columns=['names', 'Y'] so the output CSV header reads 'names,Y'. No other changes needed; the reshaping logic and Y encoding are correct.",
+  "relationship_to_round1": "new_failure_mode_unrelated_to_round1"
+}

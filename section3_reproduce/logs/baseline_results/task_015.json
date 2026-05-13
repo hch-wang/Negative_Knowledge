@@ -1,0 +1,12 @@
+{
+  "task": "015",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "crashed",
+  "eval_score": null,
+  "eval_msg": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/indexes/base.py\", line 6261, in _raise_if_missing\n    raise KeyError(f\"None of [{key}] are in the [{axis_name}]\")\nKeyError: \"None of [Index(['Y'], dtype='object')] are in the [columns]\"",
+  "stderr_tail": "[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator\n[05:47:35] DEPRECATION WARNING: please use MorganGenerator",
+  "cand_duration_sec": 2.935169,
+  "eval_duration_sec": 0.890317
+}

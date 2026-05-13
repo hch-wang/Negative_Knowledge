@@ -1,0 +1,36 @@
+{
+  "task_id": "034",
+  "depth": 3,
+  "rounds_summary": [
+    {
+      "round": 1,
+      "attempted_route": "neurokit2: nk.ecg_clean + nk.ecg_peaks + nk.hrv_time + nk.hrv_frequency + nk.hrv_nonlinear called separately, pd.concat, save CSV.",
+      "observation": "AttributeError: module 'numpy' has no attribute 'trapz' inside neurokit2/signal/signal_power.py. exit_code=1. Eval never ran."
+    },
+    {
+      "round": 2,
+      "attempted_route": "Same three-function NeuroKit2 approach but with monkey-patch np.trapz = np.trapezoid applied before import to fix NumPy 2.x incompatibility.",
+      "observation": "Script ran (exit 0) but evaluator scored 69/91 — 22 feature columns missing from the reference output."
+    },
+    {
+      "round": 3,
+      "attempted_route": "Replaced three separate hrv_* calls with unified nk.hrv(rpeaks, sampling_rate=100, show=False) to harmonize internal parameters and maximize column coverage.",
+      "observation": "Script ran (exit 0) but evaluator still scored 69/91 — identical to round 2; switching to nk.hrv() recovered zero additional columns."
+    }
+  ],
+  "ruled_out_routes": [
+    "nk.hrv_time + nk.hrv_frequency + nk.hrv_nonlinear (separate calls, numpy monkey-patch): produces only 69/91 reference columns.",
+    "nk.hrv(rpeaks, sampling_rate=100, show=False) unified call with numpy monkey-patch: also produces only 69/91 reference columns.",
+    "neurokit2 frequency-domain via default nk.hrv_frequency without numpy monkey-patch: crashes with AttributeError on NumPy 2.x."
+  ],
+  "synthesised_diagnosis": "All three rounds ultimately share one root cause: the installed NeuroKit2 version does not produce the 22 columns the reference expects. Round 1 exposed a NumPy 2.x API break; rounds 2-3 fixed execution but hit a library-version ceiling — both nk.hrv() and the three separate calls yield identical 69/91 coverage, proving the gap is not a call-pattern issue but a missing-feature issue in the pinned NeuroKit2 release.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Rounds 2 and 3 produced identical eval scores despite fundamentally different call strategies, ruling out parameter harmonization as the fix. The 22 missing columns are features absent from the installed NeuroKit2 version, not a coding error.",
+  "recommended_alternative": "Identify the 22 missing columns by diffing the produced CSV headers against the reference schema, then compute them explicitly: use scipy.signal.welch for VLF/ULF sub-bands, antropy.sample_entropy / antropy.app_entropy for entropy metrics, and nolds.dfa for DFA alpha1/alpha2 — all with parameters matched to the reference. Do not rely on NeuroKit2 alone."
+}

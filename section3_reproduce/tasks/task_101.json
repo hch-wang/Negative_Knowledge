@@ -1,0 +1,13 @@
+{
+  "instance_id": 101,
+  "domain": "Computational Chemistry",
+  "subtask_categories": "Deep Learning",
+  "github_name": "ppdebreuck/modnet",
+  "task_inst": "Train a MODNet model for predicting experimental band gap using the examples in the matbench_expt_gap_train dataset. The model could use 150 input features and has 256, 128, 16, 16 neurons in each layer. Use 'elu' as the activation function. Your target attribute is 'gap_expt_eV'. Predict experimental band gap with the trained model on the test set and save the results to pred_results/experimental_band_gap_prediction_pred.csv. Make sure the results are in the 'gap_expt_eV' column.",
+  "domain_knowledge": "MODNetModel takes a 4-tuple of lists of integers for the num_neurons argument: ([], [], [], []). ",
+  "dataset_folder_tree": "|-- experimental_band_gap/\n|---- matbench_expt_gap_train\n|---- matbench_expt_gap_test",
+  "dataset_preview": "",
+  "output_fname": "pred_results/experimental_band_gap_prediction_pred.csv",
+  "gold_program_name": "experimental_band_gap_prediction.py",
+  "eval_script_name": "eval_experimental_band_gap_prediction.py"
+}

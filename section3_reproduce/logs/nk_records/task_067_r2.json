@@ -1,0 +1,16 @@
+{
+  "task_id": "067",
+  "round": 2,
+  "attempted_route": "Built (64-syllogism x vocab) multi-hot matrix per model CSV, flattened, used align_vector() to zero-pad/truncate to W.flatten().size (1152), then np.dot cosine similarity against w_con_flat and w_ope_flat. No sklearn used.",
+  "observation": "exec exit_code=0, output CSV written; but eval score=8/14. Script ran without error yet produced partially wrong similarity values due to semantic space mismatch hidden by zero-padding.",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "align_vector() zero-pads a (64 x vocab)-flattened vector to 1152 dims, but W shape is (n_factors x n_syllogisms), a different semantic space. Cosine is computed between misaligned spaces; round-1 assumed same-space once dims matched, which is incorrect for JNMF W matrices.",
+  "recommended_alternative": "Determine W shape (e.g. n_factors x 64) via W_con.shape. Build model matrix as (64 x n_responses) probability or multi-hot, then project into factor space via W_con @ model_matrix.T or np.linalg.lstsq. Compute cosine between projected vectors, no padding.",
+  "relationship_to_round1": "round1_recipe_was_wrong"
+}

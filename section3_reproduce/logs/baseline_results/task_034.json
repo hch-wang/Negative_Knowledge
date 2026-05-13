@@ -1,0 +1,12 @@
+{
+  "task": "034",
+  "model": "sonnet_4.6",
+  "exit_code": 1,
+  "output_exists": false,
+  "eval_status": "not_run",
+  "eval_score": null,
+  "eval_msg": "",
+  "stderr_tail": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/neurokit2/signal/signal_power.py\", line 145, in _signal_power_instant\n    power = _signal_power_instant_compute(psd, band)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/neurokit2/signal/signal_power.py\", line 156, in _signal_power_instant_compute\n    power = np.trapz(y=psd[\"Power\"][where], x=psd[\"Frequency\"][where])\n            ^^^^^^^^\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/numpy/__init__.py\", line 792, in __getattr__\n    raise AttributeError(f\"module {__name__!r} has no attribute {attr!r}\")\nAttributeError: module 'numpy' has no attribute 'trapz'. Did you mean: 'trace'?",
+  "cand_duration_sec": 2.216774,
+  "eval_duration_sec": 0.0
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "085",
+  "round": 2,
+  "attempted_route": "biopsykit.saliva.standard_features(data) + two-pass rename (suffix pattern matching for 'argmax','mean','std','skew','kurt') + outer dict keyed by subject string with condition field per entry",
+  "observation": "eval exit_code=0 but score=(0,'N/A'); evaluator no longer crashes on KeyError but returns zero score, indicating output dict structure is wrong — keying by subject string only collapses multi-condition rows, overwriting earlier conditions",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The rename fix eliminated the KeyError but the outer dict keyed only by subject string loses data when multiple conditions share a subject — later rows silently overwrite earlier ones. The evaluator expects a structure that preserves per-condition entries, likely keyed by 'condition_subject' string or a nested condition->subject dict.",
+  "recommended_alternative": "After biopsykit.saliva.standard_features(data) and column rename, key the outer dict as f\"{condition}_{subject}\" (or nested dict[condition][subject]) so all condition-subject pairs are preserved. Verify actual features.columns after calling standard_features() to confirm rename succeeded before building output dict.",
+  "relationship_to_round1": "round1_recipe_was_correct_but_insufficient"
+}

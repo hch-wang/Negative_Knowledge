@@ -1,0 +1,36 @@
+{
+  "task_id": "072",
+  "depth": 3,
+  "rounds_summary": [
+    {
+      "round": 1,
+      "attempted_route": "U-Net 8-layer channel-wise Conv1d in PyTorch, assumed disk layout (N,17,200), normalised with axis=(0,2), 30 epochs, batch 64, Adam lr=1e-3",
+      "observation": "Immediate crash: ValueError broadcast mismatch (17,200,200) vs (1,16540,1) — disk layout is (17,N,200) not (N,17,200), so mean had wrong shape"
+    },
+    {
+      "round": 2,
+      "attempted_route": "Same U-Net with to_images_first() transpose guard fixing layout to (N,17,200), normalisation corrected, 30 epochs batch 64 Adam lr=1e-3",
+      "observation": "Hard timeout kill at 180s (exit_code=-9); 30 epochs x 259 steps/epoch on CPU far exceeds budget; no output produced"
+    },
+    {
+      "round": 3,
+      "attempted_route": "Same U-Net architecture, epochs reduced 30->8, batch 512, OneCycleLR scheduler; ~260 total gradient steps estimated to fit 180s",
+      "observation": "Hard timeout kill at 180s again (exit_code=-9); even 8 epochs x 33 steps/epoch on CPU exceeds wall-clock budget"
+    }
+  ],
+  "ruled_out_routes": [
+    "PyTorch U-Net channel-wise Conv1d with batch_size=64, epochs=30, Adam lr=1e-3 on CPU — ~7800 steps, far exceeds 180s wall-clock",
+    "PyTorch U-Net channel-wise Conv1d with batch_size=512, epochs=8, OneCycleLR on CPU — ~260 steps still exceeds 180s wall-clock",
+    "Any PyTorch training loop over 16540 training samples on CPU using the full U-Net architecture without GPU — per-step cost alone defeats the 180s limit"
+  ],
+  "synthesised_diagnosis": "After R1's layout bug was fixed in R2, all subsequent failures are a single mechanism: 16540 samples x (17 channels x 200 timepoints) float32 tensors fed through an 8-layer Conv1d U-Net on CPU cannot complete even a minimal training loop within the 180s hard limit. Reducing epochs and increasing batch size (R3) cuts step count but not per-step wall time sufficiently; the bottleneck is CPU-bound tensor arithmetic, not iteration count.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "regime_bound_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The 180s CPU wall-clock limit is incompatible with any multi-epoch gradient-based training on the full 16540-sample dataset using PyTorch Conv1d ops; this is a resource-regime constraint, not a model logic error.",
+  "recommended_alternative": "Replace the iterative training loop with a closed-form linear mapping: use numpy.linalg.lstsq to fit a per-channel linear regression from flattened Sub01 train vectors (16540 x 200) to Sub03 train vectors, then apply to test set. This runs in seconds on CPU via LAPACK, requires no epochs or batches, and produces a valid (200,17,200) prediction array. Specifically: for ch in range(17): coef,_,_,_ = np.linalg.lstsq(X_train[:,ch,:], Y_train[:,ch,:], rcond=None); pred[:,ch,:] = X_test[:,ch,:] @ coef."
+}

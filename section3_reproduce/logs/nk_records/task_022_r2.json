@@ -1,0 +1,16 @@
+{
+  "task_id": "022",
+  "round": 2,
+  "attempted_route": "Applied round-1 fix: merged protein_set[['target_id','Organism','Classification']] via DataFrame.merge on target_id; dropped only '_org_lower' temp column; retained Organism and Classification in output pickle.",
+  "observation": "exec exit_code=0 but Saved 0 rows. Evaluator crashed with IndexError on iloc[0] — output pickle is empty, not a schema mismatch. Organism and Classification columns are present but all rows filtered away.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "contradicted",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "Round-1 schema fix was correctly applied, but the filter chain produces 0 rows. Likely causes: (1) Organism strings in protein_set do not match 'homo sapiens'/'rattus norvegicus' exactly (casing, extra whitespace, or different naming), OR (2) type_Ki/type_KD are not semicolon-flag strings so has_activity kills all rows in step 3.",
+  "recommended_alternative": "Before filtering, inspect actual unique values: protein_set['Organism'].unique() and unfiltered['type_Ki'].dtype plus unfiltered['type_Ki'].value_counts(). Use str.contains('Homo sapiens', case=False) for organism; use pd.notna(col) & (col != 0) for numeric type flags instead of semicolon-split logic.",
+  "relationship_to_round1": "round1_recipe_was_correct_but_insufficient"
+}

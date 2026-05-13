@@ -1,0 +1,14 @@
+{
+  "task_id": "021",
+  "attempted_route": "geopandas.GeoDataFrame.to_crs(epsg=32720) + geometry.buffer(5500) + GeoDataFrame.dissolve() + gpd.clip(deforested_proj, roads_buffer_dissolved)",
+  "observation": "Crashed at gpd.clip with shapely.errors.GEOSException: TopologyException: side location conflict at 560799.78 8788950.50 — invalid geometry in dissolved buffer or deforested layer.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "contradicted",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "gpd.clip internally calls shapely.intersection on the raw geometries; topology conflicts arise when either input has self-intersections or degenerate rings introduced during buffer+dissolve. The script never validates or repairs geometries before clipping.",
+  "recommended_alternative": "After dissolve, apply roads_buffer_dissolved.geometry = roads_buffer_dissolved.geometry.buffer(0) and deforested_proj.geometry = deforested_proj.geometry.buffer(0) to repair invalid geometries via Shapely's buffer(0) trick before calling gpd.clip; all other steps (EPSG:32720, 5500 m buffer, dissolve, area ratio, CSV column name) can remain unchanged."
+}

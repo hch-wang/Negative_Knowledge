@@ -1,0 +1,12 @@
+{
+  "task": "102",
+  "model": "sonnet_4.6",
+  "exit_code": 1,
+  "output_exists": false,
+  "eval_status": "not_run",
+  "eval_score": null,
+  "eval_msg": "",
+  "stderr_tail": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_102/sonnet_4.6/candidate.py\", line 245, in <module>\n    train_df = discover_dataframe(TRAIN_DIR)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_102/sonnet_4.6/candidate.py\", line 65, in discover_dataframe\n    df = load_csv_from_dir(directory)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_102/sonnet_4.6/candidate.py\", line 26, in load_csv_from_dir\n    for fname in sorted(os.listdir(directory)):\n                        ~~~~~~~~~~^^^^^^^^^^^\nNotADirectoryError: [Errno 20] Not a directory: 'benchmark/datasets/ref_index/md_ref_index_train'",
+  "cand_duration_sec": 0.916471,
+  "eval_duration_sec": 0.0
+}

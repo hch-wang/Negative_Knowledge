@@ -1,0 +1,16 @@
+{
+  "task_id": "087",
+  "round": 2,
+  "attempted_route": "xarray.open_dataset + spatial mean over non-time dims + numpy.polyfit(years,temp,deg=2) + polyval; output cols: Year(int), Predicted(float) only — exactly as round-1 NK prescribed",
+  "observation": "Script exited 0, wrote CSV with correct column names; evaluator still returned score=0/'N/A'. Year column likely contains raw numeric time values (e.g. -946800) not real calendar years.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "Round-1 fix (column names) was correctly applied, but the time coordinate was never decoded to calendar years. The fallback chain silently fell through to raw integer time values, so Year column holds nonsense integers rather than actual years, causing the evaluator to find no correctness signal.",
+  "recommended_alternative": "Use xr.open_dataset with decode_times=True (default) and decode_cf=True; then access ds['time'].dt.year (xarray DatetimeAccessor) to get calendar years. If cftime objects are returned, use [t.year for t in ds['time'].values]. Do not rely on pd.DatetimeIndex on raw numeric values.",
+  "relationship_to_round1": "round1_recipe_was_correct_but_insufficient"
+}

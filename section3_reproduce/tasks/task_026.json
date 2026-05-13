@@ -1,0 +1,13 @@
+{
+  "instance_id": 26,
+  "domain": "Computational Chemistry",
+  "subtask_categories": "Computational Analysis",
+  "github_name": "chemosim-lab/ProLIF",
+  "task_inst": "Generate the interaction fingerprints between a selected ligand and protein for the first 10 trajectory frames. Combine the ligand, protein, type of interactions, and frame index into names in the output CSV file pred_results/ligand_fingerprint_pred.csv. Additionally, save the status of the fingerprint under the column Y.",
+  "domain_knowledge": "MDAnalysis is a popular python package to analyze molecular dynamics (MD) trajectories. Selecting the ligand molecule by its residue name (\"resname\") is a common practice. The selection string \"protein\" can select all protein atoms. ProLIF is a python package built on MDAnalysis to analyze various  interactions between protein-protein or protein-ligand.",
+  "dataset_folder_tree": "|-- ligand_protein/\n|---- top.pdb\n|---- traj.xtc",
+  "dataset_preview": "",
+  "output_fname": "pred_results/ligand_fingerprint_pred.csv",
+  "gold_program_name": "ligand_fingerprint.py",
+  "eval_script_name": "eval_fingerprint.py"
+}

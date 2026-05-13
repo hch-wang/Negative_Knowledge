@@ -1,0 +1,14 @@
+{
+  "task_id": "058",
+  "attempted_route": "pandas.read_csv on indiv_table/models/*.csv + heuristic detect_task_col/detect_pred_col column detection + importlib.util dynamic rule module loading probing predict/apply/rule function names",
+  "observation": "exit_code=0 but output was 1 row 'Unknown;Unknown;139' — all 139 participants got Unknown for both model and rule; eval returned False",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "contradicted",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "Heuristic column detection found no matching column names in the model CSVs, yielding zero fit counts for every model and rule, so every participant defaulted to 'Unknown'. The rule module probe also silently failed, never finding a callable function.",
+  "recommended_alternative": "Use ccobra.syllogistic built-in model classes (e.g. ccobra.syllogistic.models.PHM, MMT, etc.) via ccobra.CCobraModel.predict_and_adapt on each Ragni2016 trial, plus load rule CSVs via pandas with actual column name inspection printed at runtime before any matching logic."
+}

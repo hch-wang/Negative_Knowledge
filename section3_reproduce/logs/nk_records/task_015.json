@@ -1,0 +1,14 @@
+{
+  "task_id": "015",
+  "attempted_route": "RDKit.AllChem.GetMorganFingerprintAsBitVect(radius=2, nBits=2048) + sklearn.RandomForestClassifier(n_estimators=500, class_weight='balanced') + predict_proba[:,1] saved as column 'probability' in aai_preds.csv",
+  "observation": "exec exit_code=0, saved 1457 rows; eval exit_code=1 with KeyError: \"None of [Index(['Y'], dtype='object')] are in the [columns]\" — evaluator expected column 'Y' but found 'probability'",
+  "failure": {
+    "layer": "communication_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The evaluator calls pred[[\"Y\"]] to extract predicted probabilities, so the output CSV must use column name 'Y' not 'probability'. The model and featurization were correct; only the output column name was wrong.",
+  "recommended_alternative": "Use the exact same pipeline (RDKit MorganFingerprintAsBitVect radius=2 nBits=2048 + RandomForestClassifier n_estimators=500) but rename the probability output column to 'Y' when constructing the results DataFrame before calling to_csv."
+}

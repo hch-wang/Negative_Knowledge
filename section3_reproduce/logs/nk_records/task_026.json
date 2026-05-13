@@ -1,0 +1,14 @@
+{
+  "task_id": "026",
+  "attempted_route": "prolif.Fingerprint().run(u.trajectory[0:10], ligand, protein) + fp.to_dataframe(return_atoms=False); long-format reshape with frame index appended to column name; Y=int(bool(value))",
+  "observation": "TypeError: Fingerprint.to_dataframe() got an unexpected keyword argument 'return_atoms' at line 81; fp.run() completed 10/10 frames successfully; exit_code=1 after 4s",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The installed ProLIF version does not expose 'return_atoms' as a keyword to to_dataframe(); the agent assumed a newer API signature without verifying the installed version's actual method signature.",
+  "recommended_alternative": "Call fp.to_dataframe() with no arguments (prolif >= 2.0 default omits return_atoms); if atoms columns appear, drop MultiIndex levels with df.columns.droplevel() or use df.xs() before reshaping to long format with frame index."
+}

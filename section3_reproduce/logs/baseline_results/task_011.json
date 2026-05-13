@@ -1,0 +1,12 @@
+{
+  "task": "011",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "ran",
+  "eval_score": 1,
+  "eval_msg": "MAE: 13.003500000000003",
+  "stderr_tail": "",
+  "cand_duration_sec": 1.324141,
+  "eval_duration_sec": 0.807057
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "058",
+  "depth": 3,
+  "rounds_summary": [
+    {
+      "round": 1,
+      "attempted_route": "Load model CSVs with heuristic column detection; load rule .py files via importlib and call predict/apply/rule by name; match raw task strings directly to model CSV keys.",
+      "observation": "All 139 participants → Unknown/Unknown. Raw task strings ('Some;A;B/All;B;C') never matched encoded CSV keys ('AA1'); rule modules silently raised and returned 0."
+    },
+    {
+      "round": 2,
+      "attempted_route": "Parse raw task strings into AIOE+figure syl codes; detect model CSV format (row-indexed vs wide-matrix); pre-compute rule predictions by trying predict/apply/rule/apply_rule function names.",
+      "observation": "Model matching fixed (64 syl codes each). Rule modules all failed: 'attempted relative import with no known parent package'; all 139 participants assigned default rule 'negativity' → 2 rows output. Eval: False."
+    },
+    {
+      "round": 3,
+      "attempted_route": "Added ccobra class instantiation (find subclass with .predict()), CCobraItem calls, and module-level dict lookup (PREDICTIONS/TABLE) as rule-prediction fallbacks; added stderr diagnostics.",
+      "observation": "Stderr confirms all 6 rule modules: 0 non-empty predictions. Relative import error persisted. Rule column stuck at 'negativity' by tie-break → 3 rows output. Eval: False."
+    }
+  ],
+  "ruled_out_routes": [
+    "importlib.util.spec_from_file_location on rule .py files: relative imports fail without a known parent package regardless of sys.path manipulation.",
+    "Heuristic function-name probing (predict/apply/rule/apply_rule) on dynamically loaded rule modules: all six modules expose no callable at module level.",
+    "ccobra.CCobraModel subclass instantiation + CCobraItem.predict(): find_model_class returns None for all six rule modules when loaded outside their package.",
+    "Module-level dict lookup (PREDICTIONS/TABLE/pred) on rule modules: none of the six modules expose a top-level lookup table accessible after failed import."
+  ],
+  "synthesised_diagnosis": "Across all three rounds the rule modules (negativity, figural, emptystart, particularity, atmosphere, partneg) use intra-package relative imports. Loading them with importlib.util outside their package context always raises 'attempted relative import with no known parent package', producing empty prediction sets. No amount of function-name guessing, class introspection, or sys.path patching can fix a relative import that requires a live parent package. The model side worked from round 2 onward; only the rule side is broken.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The relative-import error is a Python package-loading constraint, not a logic error. All three rounds patched symptoms (adding sys.path entries, fallback strategies) rather than the root cause: the rule modules must be imported within their declared package hierarchy.",
+  "recommended_alternative": "Use importlib.import_module with the full dotted package path after inserting the scripts/indiv_table parent into sys.path: set sys.path to include the 'scripts' directory, then call importlib.import_module('indiv_table.rules.negativity') etc. Alternatively, use subprocess.run(['python', '-c', 'import sys; sys.path.insert(0,\"scripts\"); from indiv_table.rules import negativity; ...'], capture_output=True) to run rule queries inside the correct package context."
+}

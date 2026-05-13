@@ -1,0 +1,12 @@
+{
+  "task": "002",
+  "model": "sonnet_4.6",
+  "exit_code": 0,
+  "output_exists": true,
+  "eval_status": "ran",
+  "eval_score": 0,
+  "eval_msg": "N/A",
+  "stderr_tail": "",
+  "cand_duration_sec": 1.229695,
+  "eval_duration_sec": 0.234879
+}

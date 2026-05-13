@@ -1,0 +1,12 @@
+{
+  "task": "021",
+  "model": "sonnet_4.6",
+  "exit_code": 1,
+  "output_exists": false,
+  "eval_status": "not_run",
+  "eval_score": null,
+  "eval_msg": "",
+  "stderr_tail": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/shapely/decorators.py\", line 173, in wrapper\n    result = func(*args, **kwargs)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/shapely/decorators.py\", line 88, in wrapped\n    return func(*args, **kwargs)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/shapely/set_operations.py\", line 168, in intersection\n    return lib.intersection(a, b, **kwargs)\n           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\nshapely.errors.GEOSException: TopologyException: side location conflict at 560799.78282553738 8788950.5027434062. This can occur if the input geometry is invalid.",
+  "cand_duration_sec": 7.727466,
+  "eval_duration_sec": 0.0
+}

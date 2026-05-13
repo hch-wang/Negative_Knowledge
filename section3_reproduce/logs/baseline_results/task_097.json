@@ -1,0 +1,12 @@
+{
+  "task": "097",
+  "model": "sonnet_4.6",
+  "exit_code": 1,
+  "output_exists": false,
+  "eval_status": "not_run",
+  "eval_score": null,
+  "eval_msg": "",
+  "stderr_tail": "Traceback (most recent call last):\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_097/sonnet_4.6/candidate.py\", line 9, in <module>\n    train_dataset = pickle.load(f)\nModuleNotFoundError: No module named 'deepchem'",
+  "cand_duration_sec": 1.010673,
+  "eval_duration_sec": 0.0
+}
