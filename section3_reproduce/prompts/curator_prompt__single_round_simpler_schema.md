@@ -1,18 +1,25 @@
-# Curator Agent Prompt — ScienceAgentBench per-task NK
+# Curator Agent Prompt — variant: single round, simpler schema
 
-This is the prompt template handed to a Sonnet-4.6 sub-agent acting as a
-"failure curator". The curator reads one round-1 attempt's artifacts and
-produces a single bounded-failure record (the per-task NK) plus nothing else.
+This template is a **modification** of the canonical curator prompt at
+`../curator_prompt.md`. The modifications are:
+
+1. **Input narrowed** from $N$ rounds (canonical) to **exactly 1 round**
+   of failed attempt artifacts.
+2. **Output schema simplified** — drops the three cross-round fields
+   (`rounds_summary`, `ruled_out_routes`, `synthesised_diagnosis`),
+   keeping only the base 6 fields.
+
+The result is a depth-1 NK record: a snapshot of one failed attempt.
+This variant produced the 24 r1 NKs that fed the §3 NKR round-2
+condition.
 
 The template is parameterized by:
 
 - `{TASK_ID}` — the three-digit task id (e.g. `002`)
 - `{TASK_INST}` — the task instruction (verbatim from `tasks/task_{id}.json`)
-- `{ROUND1_DIR}` — absolute path to `runs/task_{id}/sonnet_4.6/v3/round1/`
+- `{ROUND1_DIR}` — absolute path to the single failed-round directory
 - `{OUTPUT_NK_PATH}` — absolute path the curator must write its NK file to
-
-The materialized prompt is dropped into a per-task curator sandbox as
-`prompt.md` by `03_scripts/build_curator_runs.py`.
+- `{EVAL_LOG_STATUS}` — "present" or "ABSENT" (auto-detected by the caller)
 
 ---
 

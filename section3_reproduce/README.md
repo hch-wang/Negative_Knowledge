@@ -59,7 +59,7 @@ For executing candidate.py inside sandboxes (Modes B / C), you also
 need the 28-library `.venv_full` from the paper's
 `paper/release/environment/setup.sh`, or any Python 3.13 environment
 that satisfies the libraries listed in
-`prompts/sab_curator.md`. Set `PY_VENV` to your binary path:
+the package list in `curator_prompt.md`. Set `PY_VENV` to your binary path:
 
 ```bash
 export PY_VENV=/abs/path/to/your/.venv_full/bin/python
@@ -210,9 +210,13 @@ python scripts/reproduce_claims.py --logs runs/  # or wherever fresh logs landed
 section3_reproduce/
 ├── README.md                          this file
 ├── prompts/
-│   ├── sab_curator.md                 depth-1 r1 curator prompt
-│   ├── sab_curator_r2.md              depth-1 r2 curator (with relationship field)
-│   └── sab_curator_deep.md            depth-3 deep curator prompt
+│   ├── curator_prompt__single_round_simpler_schema.md
+│   │                                  variant: 1 round in; base 6-field schema
+│   └── curator_prompt__chain_with_prior_nk.md
+│                                      variant: 1 round + prior NK; adds
+│                                      relationship_to_round1 field
+├── curator_prompt.md                  ★ canonical (top level): N rounds in,
+│                                        depth-N schema with cross-round fields
 ├── scripts/
 │   ├── _paths.py                      path resolution (uses REPRO_ROOT, no hardcoded paths)
 │   ├── build_sandboxes.py             create sandbox dirs for any cell type

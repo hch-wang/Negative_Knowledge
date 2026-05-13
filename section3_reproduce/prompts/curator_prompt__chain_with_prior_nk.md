@@ -1,15 +1,28 @@
-# Curator Agent Prompt — round-2 NK (NKR cell)
+# Curator Agent Prompt — variant: chain with prior NK
 
-This is the prompt template for the round-2 curator sub-agent. It reads ONE
-round-2 NKR attempt's artifacts AND the round-1 NK record that the round-2
-agent was given, and produces a NEW NK record capturing what went wrong on
-the round-2 attempt.
+This template is a **modification** of the canonical curator prompt at
+`../curator_prompt.md`. The modifications are:
+
+1. **Input adds a prior NK record** — alongside 1 new failed round's
+   artifacts, the curator also reads the NK record that was given to
+   the agent that produced this new failure.
+2. **Output adds a `relationship_to_round1` field** — a discrete value
+   in `{round1_recipe_was_correct_but_insufficient,
+   round1_recipe_was_wrong, round1_recipe_was_misapplied,
+   new_failure_mode_unrelated_to_round1}` saying how the prior NK
+   relates to the new failure.
+
+This variant produced the 22 r2 NKs that fed the §3 NKR round-3
+condition (NK chain length 2). It is also the data source for the
+**9% NK error rate** reported in §3.8 (2 of 22 r2 NKs marked
+`round1_recipe_was_wrong`).
 
 Parameterized by:
+
 - `{TASK_ID}`, `{TASK_INST}`
-- `{ROUND2_DIR}` — absolute path to `runs/task_{id}/sonnet_4.6/v3/round2_NKR/`
-- `{ROUND1_NK_PATH}` — absolute path to the round-1 NK file
-- `{OUTPUT_NK_PATH}` — absolute path the curator must write its round-2 NK to
+- `{ROUND2_DIR}` — absolute path to the failed round directory
+- `{ROUND1_NK_PATH}` — absolute path to the prior NK file
+- `{OUTPUT_NK_PATH}` — absolute path the curator must write its NK to
 - `{EVAL_LOG_STATUS}` — "Present — read it." or "ABSENT — exec crashed first."
 
 ---

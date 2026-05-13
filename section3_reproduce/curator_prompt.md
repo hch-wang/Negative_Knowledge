@@ -1,18 +1,24 @@
-# Curator Agent Prompt — DEEP NK (3-round Self-Debug distillation)
+# Curator Agent Prompt — canonical (multi-round distillation)
 
-This is the prompt template for the **deep curator** sub-agent. The deep
-curator reads the full 3-round Self-Debug exploration artifacts on ONE task
-(round 1 + round 2 covering-memory + round 3 covering-memory, all of which
-failed) and writes a single synthesised NK record that captures the entire
-3-round investigation.
+This is the **canonical** curator prompt for our negative-knowledge
+pipeline. The curator reads $N$ rounds of failed attempts on one task
+(each round's `candidate.py` + `exec.log` + `eval.log` +
+`reasoning.md`) and synthesises them into one structured NK record
+that includes cross-round fields (`rounds_summary`,
+`ruled_out_routes`, `synthesised_diagnosis`).
 
-The contrast with the round-1 curator (`sab_curator.md`):
+This template is the **most general** of three; the other two are
+documented modifications of it:
 
-| | round-1 curator | deep curator (this file) |
+| Template | Lives at | Modification relative to canonical |
 |---|---|---|
-| Inputs | 1 attempt's artifacts | 3 attempts' artifacts (covering Self-Debug) |
-| NK depth | snapshot of 1 failure | distillation of 3 successive failures |
-| Schema | base 7 fields | base 7 fields + `ruled_out_routes` + `synthesised_diagnosis` |
+| (canonical) | `curator_prompt.md` (this file, top of `section3_reproduce/`) | — |
+| single-round simpler schema | `prompts/curator_prompt__single_round_simpler_schema.md` | input restricted to 1 round; output drops `rounds_summary`/`ruled_out_routes`/`synthesised_diagnosis`, keeping only the base 6 fields |
+| chain with prior NK | `prompts/curator_prompt__chain_with_prior_nk.md` | input adds a prior NK record + 1 new failed round; output adds a `relationship_to_round1` field |
+
+In our §3 experiment this canonical template is instantiated at
+$N = 3$ (three rounds of Self-Debug failure → one depth-3 NK), which
+produced the deepNKR-Sonnet PASS on task_072.
 
 Parameterised by:
 - `{TASK_ID}`, `{TASK_INST}`
