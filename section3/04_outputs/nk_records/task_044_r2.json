@@ -1,0 +1,16 @@
+{
+  "task_id": "044",
+  "round": 2,
+  "attempted_route": "biopsykit.sleep.sleep_processing_pipeline.predict_pipeline_acceleration(acc_data, sampling_rate=sampling_rate) with sampling_rate inferred via median DatetimeIndex diff reciprocal; acc columns renamed acc_x/y/z -> x/y/z; pickle.load for data",
+  "observation": "ValueError inside wear_detection.get_major_wear_block(): argmax of empty sequence at line 184; wear detector returned zero wear blocks so pipeline aborted; exit_code=1 after 4.3s",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "contradicted",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "predict_pipeline_acceleration internally calls WearDetection.get_major_wear_block(), which crashes when no wear blocks are detected. The dataset's time range or variance profile causes every epoch to be classified as non-wear, emptying the block list. The high-level pipeline API has no parameter to skip or override wear detection.",
+  "recommended_alternative": "Bypass predict_pipeline_acceleration. Use biopsykit.sleep.sleep_wake_detection.SleepWakeDetection with acc_data directly: compute activity index via biopsykit.signals.imu.activity_counts.ActivityCounts, then call SleepWakeDetection().predict(activity_index) and derive sleep_onset/wake_onset from the first/last sleep epoch timestamps; total_sleep_duration = (wake_onset - sleep_onset).total_seconds().",
+  "relationship_to_round1": "round1_recipe_was_correct_but_insufficient"
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "037",
+  "round": 2,
+  "attempted_route": "pd.read_excel(sheet_name='MIST3') + dynamic df.columns scan for HR column; manual fallback: baseline_hr=mean(first 60 rows), onset_hr=min(remaining rows), onset_hr_percent=((onset_hr-baseline_hr)/baseline_hr)*100",
+  "observation": "Script ran without error (exit 0), produced output, but eval scored 0/3 correct: all three parameter values are numerically wrong despite structurally correct JSON keys.",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "Script produced plausible-looking numbers but got 0/3. The 60-row baseline window and raw-minimum onset_hr are ad-hoc estimates that do not match BioPsyKit CFT protocol definitions. The round-1 fix (dynamic column inspection) resolved the crash but the computation formula is wrong.",
+  "recommended_alternative": "Use biopsykit.protocols.CFT explicitly: load data with bp.io.load_dataset_nilspod or pd.read_excel, build a properly time-indexed HR DataFrame, call cft = CFT(); then use cft.baseline(data) and cft.onset(data) methods — or cft.compute_cft_parameter(hr_data) — to get BioPsyKit-defined baseline_hr, onset_hr, onset_hr_percent rather than any manual mean/min fallback.",
+  "relationship_to_round1": "new_failure_mode_unrelated_to_round1"
+}

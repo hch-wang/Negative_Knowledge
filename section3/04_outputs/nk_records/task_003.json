@@ -1,0 +1,14 @@
+{
+  "task_id": "003",
+  "attempted_route": "matminer.StrToComposition + ElementProperty.from_preset('magpie') with ep.set_n_jobs(1) but stc left at default n_jobs; sklearn.RandomForestRegressor(n_estimators=500, n_jobs=-1) via Pipeline",
+  "observation": "TIMEOUT exit_code=-9 after 180s; multiprocessing fork in StrToComposition.featurize_dataframe re-imported candidate.py as __mp_main__, recursively re-spawning Pool workers",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "StrToComposition.featurize_dataframe spawns a multiprocessing Pool (default n_jobs) whose fork start method re-imports the top-level script, hitting featurize_dataframe again and recursing. Setting n_jobs=1 only on ElementProperty left StrToComposition unconstrained.",
+  "recommended_alternative": "Call stc.set_n_jobs(1) before stc.featurize_dataframe AND ep.set_n_jobs(1) before ep.featurize_dataframe, or guard with 'if __name__ == __main__'. Keep all other parameters (magpie preset, RF n_estimators=500) unchanged."
+}

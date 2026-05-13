@@ -1,0 +1,14 @@
+{
+  "task_id": "087",
+  "attempted_route": "xarray.open_dataset + spatial mean (temp_var.mean(non_time_dims)) + numpy.polyfit(years, temp_series, deg=2) + polyval; output columns: year, actual_temp, predicted_temp",
+  "observation": "Script exited 0, wrote 240 rows; evaluator returned score=0, 'N/A' — output schema mismatch; eval found no matching correctness signal",
+  "failure": {
+    "layer": "communication_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "The script produced a valid CSV but the evaluator scored it 0/'N/A', indicating the output column names or structure diverged from the expected schema. The extra 'actual_temp' column and/or non-canonical column names ('predicted_temp' vs e.g. 'Predicted') caused a complete schema mismatch.",
+  "recommended_alternative": "Use xarray.open_dataset + numpy.polyfit(years, temp_series, deg=2) + polyval, but write ONLY two columns matching the benchmark schema exactly: 'Year' (int) and 'Predicted' (float), no 'actual_temp' column, to pred_results/polynomial_fit_pred.csv."
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "022",
+  "depth": 3,
+  "rounds_summary": [
+    {
+      "round": 1,
+      "attempted_route": "pandas boolean masking on Quality/Classification/type_Ki/type_KD/Organism; dropped Classification and Organism columns before saving",
+      "observation": "Script exited 0, produced 336 rows, scored 0/336; evaluator expected Classification and Organism columns in output that the script had dropped"
+    },
+    {
+      "round": 2,
+      "attempted_route": "Same pandas masking logic but merged Classification/Organism into df and retained them; no row explosion; multi-assay rows kept intact with semicolon-delimited fields",
+      "observation": "Produced 336 rows, scored 0/292; evaluator reference uses per-assay exploded rows, so semicolon-packed rows never matched any reference row"
+    },
+    {
+      "round": 3,
+      "attempted_route": "Custom explode_multiassay_row() splits semicolon-delimited rows before filtering; pd.to_numeric() cast type_* columns; dropped Classification/Organism if absent from unfiltered",
+      "observation": "Produced 345 rows, scored 0/336; diff tuples show float vs int mismatch (1.0 vs 1) in type_* cols; Classification/Organism again dropped from output"
+    }
+  ],
+  "ruled_out_routes": [
+    "pandas masking without row explosion: semicolon-packed multi-assay rows never match per-assay reference rows regardless of column set",
+    "pandas merge + retain Classification/Organism without explosion: correct columns but wrong row granularity, score 0/292",
+    "custom explode_multiassay_row() with pd.to_numeric() cast: produces float dtype (1.0) for type_* columns, failing exact-match comparison against integer reference values (1)",
+    "conditionally dropping Classification/Organism based on presence in unfiltered: reference expects these columns present; any conditional drop logic reintroduces the round-1 column-missing failure"
+  ],
+  "synthesised_diagnosis": "All three rounds fail because the evaluator applies exact row-by-row equality across columns, dtype, and granularity simultaneously. Round 1 failed on missing columns; round 2 fixed columns but failed on row granularity (multi-assay vs single-assay); round 3 fixed granularity but failed on dtype (float 1.0 from pd.to_numeric vs int 1 in reference) and reintroduced the missing-column bug. Each fix corrected one axis while breaking or leaving another, revealing that the evaluation function is a strict schema fingerprint check requiring correct columns, per-assay row granularity, AND original integer dtypes simultaneously.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The evaluator performs exact-match comparison on every field; the three axes — column set, row granularity, and dtype — are independent requirements that must ALL be satisfied together. Each round fixed one axis while leaving or reintroducing failures on the others, producing a 0 score despite progressively closer outputs.",
+  "recommended_alternative": "Explode semicolon-delimited rows using pandas str.split + DataFrame.explode on the AID column (not a custom loop), then for type_* columns use pd.to_numeric(..., errors='coerce').astype('Int64') to produce nullable integer dtype matching the reference. Merge Classification and Organism from protein_set and unconditionally retain them in the final output (do not conditionally drop). Use df.reset_index(drop=True) before saving."
+}

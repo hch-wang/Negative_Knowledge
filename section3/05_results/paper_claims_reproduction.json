@@ -1,0 +1,394 @@
+{
+  "summary": "43/43 claims match",
+  "n_match": 43,
+  "n_mismatch": 0,
+  "claims": [
+    {
+      "label": "pilot subset size",
+      "expected": 38,
+      "computed": 38,
+      "match": true,
+      "source_paths": [
+        "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/tasks/task_*.json"
+      ]
+    },
+    {
+      "label": "baseline round-1 PASS (across 38 pilot tasks)",
+      "expected": 12,
+      "computed": 12,
+      "match": true,
+      "source_paths": [
+        "pilot runs/task_*/sonnet_4.6/result.json"
+      ]
+    },
+    {
+      "label": "v3 round1 cell PASS (by selection = 0)",
+      "expected": 0,
+      "computed": 0,
+      "match": true,
+      "source_paths": [
+        "04_outputs/dispatches/solver/task_*__round1.json"
+      ]
+    },
+    {
+      "label": "NK-test subset size",
+      "expected": 24,
+      "computed": 24,
+      "match": true,
+      "source_paths": [
+        "derived from v3 round1 cell"
+      ]
+    },
+    {
+      "label": "hard subset size (B2 fails all 3 rounds)",
+      "expected": 19,
+      "computed": 19,
+      "match": true,
+      "source_paths": [
+        "derived from round2_B2 + round3_B2 cells"
+      ]
+    },
+    {
+      "label": "Table 1: round-1 baseline PASS / 38",
+      "expected": "12/38",
+      "computed": "12/38",
+      "match": true,
+      "source_paths": [
+        "pilot baseline result.json (sonnet_4.6 root level)"
+      ]
+    },
+    {
+      "label": "Table 1: + B0 retry PASS / 38",
+      "expected": "12/38",
+      "computed": "12/38",
+      "match": true,
+      "source_paths": [
+        "baseline + round2_B0 cell"
+      ]
+    },
+    {
+      "label": "Table 1: + NKR (depth-1) PASS / 38",
+      "expected": "14/38",
+      "computed": "14/38",
+      "match": true,
+      "source_paths": [
+        "baseline + round2_NKR cell"
+      ]
+    },
+    {
+      "label": "Table 1: + B2 covering PASS / 38",
+      "expected": "17/38",
+      "computed": "17/38",
+      "match": true,
+      "source_paths": [
+        "baseline + round2_B2 + round3_B2 cells"
+      ]
+    },
+    {
+      "label": "Table 1: + deepNKR (depth-3) PASS / 38",
+      "expected": "18/38",
+      "computed": "18/38",
+      "match": true,
+      "source_paths": [
+        "baseline + deepNKR_sonnet cell"
+      ]
+    },
+    {
+      "label": "controlled view: NKR r2 on 24",
+      "expected": "2/24",
+      "computed": "2/24",
+      "match": true,
+      "source_paths": [
+        "round2_NKR cell"
+      ]
+    },
+    {
+      "label": "controlled view: NKR chain (r2+r3) on 24",
+      "expected": "3/24",
+      "computed": "3/24",
+      "match": true,
+      "source_paths": [
+        "round2_NKR + round3_NKR cells"
+      ]
+    },
+    {
+      "label": "controlled view: B3 mixed on 24",
+      "expected": "4/24",
+      "computed": "4/24",
+      "match": true,
+      "source_paths": [
+        "round2_B3 + round3_B3 cells"
+      ]
+    },
+    {
+      "label": "controlled view: B2 covering on 24",
+      "expected": "5/24",
+      "computed": "5/24",
+      "match": true,
+      "source_paths": [
+        "round2_B2 + round3_B2 cells"
+      ]
+    },
+    {
+      "label": "hard 19: NKR r2",
+      "expected": "0/19",
+      "computed": "0/19",
+      "match": true,
+      "source_paths": [
+        "round2_NKR cell"
+      ]
+    },
+    {
+      "label": "hard 19: NKR chain",
+      "expected": "0/19",
+      "computed": "0/19",
+      "match": true,
+      "source_paths": [
+        "round2_NKR + round3_NKR cells"
+      ]
+    },
+    {
+      "label": "hard 19: B2 covering",
+      "expected": "0/19",
+      "computed": "0/19",
+      "match": true,
+      "source_paths": [
+        "round2_B2 + round3_B2 cells"
+      ]
+    },
+    {
+      "label": "hard 19: deepNKR-Sonnet",
+      "expected": "1/19",
+      "computed": "1/19",
+      "match": true,
+      "source_paths": [
+        "deepNKR_sonnet cell"
+      ]
+    },
+    {
+      "label": "hard 19: deepNKR-Haiku (cross-model)",
+      "expected": "0/19",
+      "computed": "0/19",
+      "match": true,
+      "source_paths": [
+        "deepNKR_haiku cell"
+      ]
+    },
+    {
+      "label": "headline: round-1 baseline %",
+      "expected": "31.6",
+      "computed": "31.6",
+      "match": true,
+      "source_paths": [
+        "round1 cell"
+      ]
+    },
+    {
+      "label": "headline: final pipeline %",
+      "expected": "47.4",
+      "computed": "47.4",
+      "match": true,
+      "source_paths": [
+        "round1 + round2_NKR + round2_B2 + round3_B2 + deepNKR_sonnet"
+      ]
+    },
+    {
+      "label": "headline: PASS lift (tasks)",
+      "expected": "+6",
+      "computed": "+6",
+      "match": true,
+      "source_paths": [
+        "all of above"
+      ]
+    },
+    {
+      "label": "memory bytes: B2 covering median",
+      "expected": 4272,
+      "computed": 4272,
+      "match": true,
+      "source_paths": [
+        "pilot runs/task_*/sonnet_4.6/v3/round1/{candidate.py,exec.log,eval.log}"
+      ]
+    },
+    {
+      "label": "memory bytes: r1 NK median",
+      "expected": 1187,
+      "computed": 1187,
+      "match": true,
+      "source_paths": [
+        "04_outputs/nk_records/task_<id>.json"
+      ]
+    },
+    {
+      "label": "memory bytes: deep NK median",
+      "expected": 3354,
+      "computed": 3354,
+      "match": true,
+      "source_paths": [
+        "04_outputs/nk_records/task_<id>_deep.json"
+      ]
+    },
+    {
+      "label": "memory savings: r1 NK vs B2 (%)",
+      "expected": "72.2",
+      "computed": "72.2",
+      "match": true,
+      "source_paths": [
+        "bytes table"
+      ]
+    },
+    {
+      "label": "memory savings: deep NK vs B2 (%)",
+      "expected": "21.5",
+      "computed": "21.5",
+      "match": true,
+      "source_paths": [
+        "bytes table"
+      ]
+    },
+    {
+      "label": "solver tokens: round-1 median",
+      "expected": 16262,
+      "computed": 16262,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "solver tokens: round2_B0 median",
+      "expected": 16391,
+      "computed": 16391,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "solver tokens: round2_NKR median",
+      "expected": 18080,
+      "computed": 18080,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "solver tokens: round2_B2 median",
+      "expected": 19641,
+      "computed": 19641,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "solver tokens: deepNKR-Sonnet median",
+      "expected": 19247,
+      "computed": 19247,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "solver tokens: deepNKR-Haiku median",
+      "expected": 48360,
+      "computed": 48360,
+      "match": true,
+      "source_paths": [
+        "solver dispatches"
+      ]
+    },
+    {
+      "label": "r2 NK count",
+      "expected": 22,
+      "computed": 22,
+      "match": true,
+      "source_paths": [
+        "04_outputs/nk_records/task_*_r2.json"
+      ]
+    },
+    {
+      "label": "r2 relationship: correct_but_insufficient",
+      "expected": 13,
+      "computed": 13,
+      "match": true,
+      "source_paths": [
+        "r2 NK records"
+      ]
+    },
+    {
+      "label": "r2 relationship: new_failure_mode_unrelated_to_round1",
+      "expected": 7,
+      "computed": 7,
+      "match": true,
+      "source_paths": [
+        "r2 NK records"
+      ]
+    },
+    {
+      "label": "r2 relationship: round1_recipe_was_wrong",
+      "expected": 2,
+      "computed": 2,
+      "match": true,
+      "source_paths": [
+        "r2 NK records"
+      ]
+    },
+    {
+      "label": "r2 NK error rate (%)",
+      "expected": "9.1",
+      "computed": "9.1",
+      "match": true,
+      "source_paths": [
+        "r2 NK records"
+      ]
+    },
+    {
+      "label": "layer dist: implementation",
+      "expected": 15,
+      "computed": 15,
+      "match": true,
+      "source_paths": [
+        "r1 NK records"
+      ]
+    },
+    {
+      "label": "layer dist: communication",
+      "expected": 7,
+      "computed": 7,
+      "match": true,
+      "source_paths": [
+        "r1 NK records"
+      ]
+    },
+    {
+      "label": "layer dist: method",
+      "expected": 2,
+      "computed": 2,
+      "match": true,
+      "source_paths": [
+        "r1 NK records"
+      ]
+    },
+    {
+      "label": "task_072 is in deepNKR_sonnet PASS set",
+      "expected": true,
+      "computed": true,
+      "match": true,
+      "source_paths": [
+        "deepNKR_sonnet/task_072/result.json"
+      ]
+    },
+    {
+      "label": "task_072 deepNKR-Sonnet eval_score",
+      "expected": 1,
+      "computed": 1,
+      "match": true,
+      "source_paths": [
+        "/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section3/04_outputs/dispatches/solver/task_072__deepNKR_sonnet.json"
+      ]
+    }
+  ]
+}

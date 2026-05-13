@@ -1,0 +1,14 @@
+{
+  "task_id": "022",
+  "attempted_route": "pandas boolean masking on Quality/target_id/type_Ki/type_KD/organism columns; protein_set merged via pd.DataFrame.merge on target_id; temporary _organism/_org_lower columns dropped before pd.to_pickle",
+  "observation": "exec exit_code=0, 336 rows saved; eval scored 0/336 — evaluator shows each predicted row lacks Classification and Organism columns present in every expected row",
+  "failure": {
+    "layer": "communication_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "The script merged protein_set onto filtered rows solely to apply organism filter, then dropped all joined columns including Classification and Organism. The ground-truth pickle retains these columns, causing a schema mismatch that makes every row fail evaluation.",
+  "recommended_alternative": "After filtering on organism, do NOT drop the Classification and Organism columns from the merged DataFrame. Keep them by removing only internal temp columns (_org_lower); call filtered.drop(columns=['_org_lower'], inplace=True) and retain '_organism' renamed to 'Organism' via DataFrame.rename, then pd.to_pickle to pred_results/papyrus_filtered.pkl."
+}

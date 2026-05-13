@@ -1,0 +1,14 @@
+{
+  "task_id": "002",
+  "attempted_route": "mastml.feature_generators.ElementalFeatureGenerator(composition_df, feature_types='composition_avg') + sklearn.RandomForestRegressor(n_estimators=200) + shap.TreeExplainer.shap_values() for top-20 SHAP ranking",
+  "observation": "ModuleNotFoundError: No module named 'shap' at import time; script exited with code 1 after 1.0s — no feature generation or model training occurred",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The `shap` package is absent from the execution environment, blocking the entire pipeline at import time. Since `shap` cannot be installed on-the-fly, the SHAP-based selection step must be replaced with a library that is already available.",
+  "recommended_alternative": "Replace shap.TreeExplainer with sklearn.inspection.permutation_importance(rf, X_all, y, n_repeats=10, random_state=42) to rank features; take importances_mean top-20. All other steps (mastml.feature_generators.ElementalFeatureGenerator + RandomForestRegressor) remain unchanged."
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "101",
+  "round": 2,
+  "attempted_route": "pd.read_pickle(TRAIN_PATH/TEST_PATH) + train_df['structure'].tolist() -> MODData(materials=..., targets=...) + featurize(n_jobs=1) + feature_selection(n=150) + MODNetModel([[target]], num_neurons=([256],[128],[16],[16]), act='elu', n_feat=150) + fit/predict",
+  "observation": "Crashed at line 17 after 4.1 s: TypeError: 'MODData' object is not subscriptable; pd.read_pickle returned a MODData instance, not a DataFrame, so train_df['structure'] fails.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The matbench pickle files contain serialized MODData objects, not raw DataFrames. pd.read_pickle returns the stored MODData directly. Treating it as a DataFrame and indexing train_df['structure'] raises TypeError. A different loading strategy is required.",
+  "recommended_alternative": "Use matbench's own API: from matbench.bench import MatbenchBenchmark; mb = MatbenchBenchmark(autoload=False); task = mb.tasks_map['matbench_expt_gap']; task.load(); fold = task.folds[0]; train_inputs, train_outputs = task.get_train_and_val_data(fold). Then build MODData(materials=train_inputs.tolist(), targets=train_outputs.to_frame('gap_expt_eV'), target_names=['gap_expt_eV']).",
+  "relationship_to_round1": "new_failure_mode_unrelated_to_round1"
+}

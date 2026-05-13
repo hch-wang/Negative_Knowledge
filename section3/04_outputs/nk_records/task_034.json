@@ -1,0 +1,14 @@
+{
+  "task_id": "034",
+  "attempted_route": "neurokit2.ecg_clean + ecg_peaks + hrv_time + hrv_frequency + hrv_nonlinear (default params, sampling_rate=100) → pd.concat → CSV",
+  "observation": "AttributeError: module 'numpy' has no attribute 'trapz' inside neurokit2/signal/signal_power.py:_signal_power_instant_compute at np.trapz(); exit_code=1 after 1.7s",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "NumPy>=2.0 removed np.trapz (renamed to np.trapezoid), but the installed neurokit2 version still calls np.trapz internally; the library is incompatible with the environment's NumPy version.",
+  "recommended_alternative": "Replace nk.hrv_frequency with scipy.signal.welch-based manual PSD integration using np.trapezoid (NumPy>=2.0 API) over VLF/LF/HF bands, or pin numpy<2.0 and use nk.hrv_frequency unchanged; alternatively call nk.hrv(rpeaks, sampling_rate=100) which wraps all three domains and may avoid the broken code path."
+}

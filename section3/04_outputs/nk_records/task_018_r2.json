@@ -1,0 +1,16 @@
+{
+  "task_id": "018",
+  "round": 2,
+  "attempted_route": "Applied round-1 fix: built output DataFrame from subset['standardised_smiles'].values and label list, wrote with index=False. Morgan fp (radius=2, 2048 bits) + GridSearchCV(StratifiedKFold(5), balanced_accuracy). Called dropna(subset=['binary_label']) before featurization.",
+  "observation": "exec exit_code=0, all 3 CSVs saved; eval exit_code=1 with same ValueError: Can only compare identically-labeled Series objects on predicted_df.standardised_smiles == gold_df.standardised_smiles.",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "dropna(subset=['binary_label']) silently removes rows with unrecognized vDILIConcern values, making output CSV shorter than gold. When evaluator reads both CSVs with default 0..N-1 index, lengths differ causing pandas index misalignment on Series comparison.",
+  "recommended_alternative": "Remove dropna and instead filter subset to only rows where vDILIConcern is in POSITIVE|NEGATIVE before computing binary_label. Assert len(subset)==len(gold) by including ALL rows in each config. Write output using pd.DataFrame({'standardised_smiles': subset['standardised_smiles'].values, 'label': preds}) with index=False and no row dropping.",
+  "relationship_to_round1": "round1_recipe_was_correct_but_insufficient"
+}

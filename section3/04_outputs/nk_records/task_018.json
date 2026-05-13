@@ -1,0 +1,14 @@
+{
+  "task_id": "018",
+  "attempted_route": "RDKit.AllChem.GetMorganFingerprintAsBitVect(radius=2, nBits=2048) + sklearn.RandomForestClassifier via GridSearchCV(StratifiedKFold(n_splits=5), scoring='balanced_accuracy'); output written with reset_index(drop=True)",
+  "observation": "exec exit_code=0, all three CSVs saved; eval exit_code=1 with ValueError: Can only compare identically-labeled Series objects on predicted_df.standardised_smiles == gold_df.standardised_smiles",
+  "failure": {
+    "layer": "communication_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "retry",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "subset.reset_index(drop=True) reassigned pandas index 0..N-1 in the output CSVs, while the gold DataFrame retains the original CSV row indices; the evaluator's Series equality check requires identically-labeled indices.",
+  "recommended_alternative": "Remove reset_index(drop=True) from the subset copy so the original DataFrame index is preserved, and write out_df = pd.DataFrame({'standardised_smiles': subset['standardised_smiles'].values, 'label': preds}) with index=False — ensuring row order matches gold without pandas index mismatch."
+}
