@@ -27,9 +27,11 @@ LOGS = REPRO_ROOT / "logs"
 RUNS = pathlib.Path(os.environ.get("REPRO_RUNS", str(REPRO_ROOT / "runs")))
 
 # Upstream benchmark (datasets + eval programs). NOT bundled here; the
-# reviewer downloads it separately. We default to a sibling 'benchmark'
-# directory but expect the env var to be set.
-_DEFAULT_BENCH = REPRO_ROOT.parent.parent.parent / "benchmark"
+# reviewer downloads it separately. We default to ../../benchmark/
+# (section3_reproduce → Negative_Knowledge → paper → benchmark), which
+# is where it lives in our own working tree; reviewers set SAB_BENCH
+# to point at their own clone.
+_DEFAULT_BENCH = REPRO_ROOT.parent.parent / "benchmark"
 BENCH = pathlib.Path(os.environ.get("SAB_BENCH", str(_DEFAULT_BENCH)))
 
 # Python binary used to execute candidate.py and the evaluator.
