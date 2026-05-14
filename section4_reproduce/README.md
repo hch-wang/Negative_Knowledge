@@ -40,7 +40,7 @@ What gets verified:
 ## B. End-to-end (Anthropic API)
 
 ```bash
-pip install anthropic
+pip install -r ../requirements.txt
 export ANTHROPIC_API_KEY=sk-ant-...
 export PY_VENV=/path/to/your/.venv/bin/python  # for the sub-agent's Bash
 
@@ -84,10 +84,11 @@ rec = curator.produce_deep(
 print(rec.schema_issues)   # empty list iff valid
 ```
 
-The full multi-stage pipeline (build sandboxes → dispatch 7 stage-1
-programs → dispatch 28 curators → aggregate bank → build 12 stage-2
-cells → dispatch 12 stage-2 agents → run eval) uses the scripts in
-``scripts/``:
+The full multi-stage pipeline writes new generated artifacts under
+`runs/` by default (`REPRO_RUNS` can override this): build sandboxes →
+dispatch 7 stage-1 programs → dispatch 28 curators → aggregate bank →
+build 12 stage-2 cells → dispatch 12 stage-2 agents → run eval.
+It uses the scripts in ``scripts/``:
 
 ```bash
 python scripts/build_stage1_programs.py        # 7 BKdV-S program prompts

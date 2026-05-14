@@ -1,7 +1,0 @@
-# Session log: B2 / NegOnly
-
-R0  read prompt + 43-entry negative bank; selected solver per BKdV-S6 (nu=5e-2 linear u-viscosity), BKdV-S1 (2/3 dealias + RK4), BKdV-S4 (Nx=256, dt=1e-4 safe envelope); enumerated three hypotheses H_A (kinematic threshold c_b vs c_s), H_B (amplitude-ratio A/u_L), H_C (smooth crossover); flagged BKdV-S5/S7 m=0 instability as a confounder.
-R1 (E1)  anchor at u_L=0.5, A=1.5, T=8: mass conserved to 1e-9, v_peak 1.50->0.36 (ratio 0.24), 4 peaks, u_max swings 0.5->2.2, u_min -0.52. Result: 'destruction' at a point where H_A predicts transmission (c_b=0.75 < c_s=3.0); early H_A falsification flag.
-R2 (E2)  4x4 grid u_L in {0.3,0.6,1.0,1.5} x A in {0.5,1.0,1.5,2.0}, T=6: ratio depends almost entirely on A; <10% variation across 5x range of u_L. Phase contours horizontal in (u_L, A). H_A formally falsified at (1.5, 1.5) and (1.0, 2.0). H_D (intrinsic m=0 instability of sech^2 ansatz, per BKdV-S5/S7) emerges.
-R3 (E3)  A-refinement at u_L=0.6 + zero-bore u_L=0 control: smooth monotone decay along A, transition centre A_c~1.0 with width Delta_A~0.4; n_peaks step from 1 to 4 between A=1.1 and A=1.3. Zero-bore control at A=1.5 STILL fragments (3 peaks, ratio 0.35) — H_D confirmed. Bore worsens but does not cause the destruction.
-Wrap  three regimes mapped (transmission A<~0.9, marginal ~1.0, destruction A>=1.3); transition smooth on energy axis, structural on peak-count axis at A~1.2; mechanism is BKdV m=0 instability of sech^2 IC, NOT bore-soliton kinematic overrun. See hypothesis.md and research_state.jsonl.

@@ -1,0 +1,22 @@
+{
+  "useful": true,
+  "diag": {
+    "all_finite": true,
+    "mass_N0": 7.519885063171387,
+    "mass_NT": 7.51988410949707,
+    "mass_drift_rel": 1.26820331480446e-07,
+    "u_max_abs": 5.736622333526611,
+    "N_max": 13.035316467285156,
+    "N_min": 1.4917464634636355e-15,
+    "phi_max_abs": 7.501081943511963,
+    "bounded": true,
+    "N0_max": 1.9993219375610352,
+    "NT_max": 2.1578824520111084,
+    "n_peaks_T": 2,
+    "peak_separations": [
+      13
+    ],
+    "n_padding_steps": 0,
+    "useful": true
+  }
+}

@@ -1,5 +1,0 @@
-# Session log: T_A / PosNeg
-
-iter 1: E1 simplest baseline (Fourier pseudospectral, no dealias, explicit RK4, dt=1e-4) — blew up at t=0.6123 with overflow in v*v / u*v quadratic products, exactly matching the BKdV-S1 negative & kb-kdv-noDealiasing-aliasing-artifacts predictions for broadband aliasing.
-iter 2: E2 single-component upgrade — add 2/3-rule spectral dealiasing on every nonlinear product (RK4 + dt=1e-4 unchanged); reached T=8 cleanly; mass(v) drift = -0.09%, |max u|=6.03, |max v|=2.0, but v_peak decayed 2.0 -> 0.635 over T=8 with v fragmenting into 4 peaks — amplitude target (>= 1.0) not met. Note: bug-fix np.trapz -> np.trapezoid did not consume an iteration (same method re-run).
-iter 3: E3 single-component upgrade — replace explicit RK4 over full RHS with IMEX-CN on v_xxx + explicit midpoint-RK2 on nonlinear remainder (dt=2.5e-4, 2/3 dealias kept, Nx kept); reached T=8 cleanly; results match E2 to <0.4% on v_peak and mass — confirming the v amplitude decay is intrinsic off-manifold physics, not numerical. Final answer retained as E3.

@@ -1,7 +1,0 @@
-E1 analysis summary
-========================
-||m||_L2 final A=1.2017  B=1.1866
-||m||_L2 init  A=0.0633  B=0.4789
-lock_corr final A=0.293  B=0.351
-lock_corr init  A=0.981  B=0.657
-E_high_v final/init  A=0.0848  B=0.1321

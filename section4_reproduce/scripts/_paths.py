@@ -5,8 +5,7 @@ absolute path. Reviewers can override:
 
   REPRO_RUNS  where to put generated sandboxes (default: REPRO_ROOT/runs)
   PY_VENV     path to Python binary for executing candidate.py
-              (default: ../../experiments/pde_pilot_2026-05-11/.venv/bin/python
-              relative to REPRO_ROOT)
+              (default: python3 on PATH)
 """
 import os
 import pathlib
@@ -29,10 +28,10 @@ VERIFIED_RESULTS = LOGS / "verified_results"
 # Per-run outputs (for new sandboxes built by build_*.py scripts)
 RUNS = pathlib.Path(os.environ.get("REPRO_RUNS", str(REPRO_ROOT / "runs")))
 
-# Python binary used to execute candidate.py
-_DEFAULT_PY = (REPRO_ROOT.parent.parent / "experiments"
-               / "pde_pilot_2026-05-11" / ".venv" / "bin" / "python")
-PY = pathlib.Path(os.environ.get("PY_VENV", str(_DEFAULT_PY)))
+# Python binary used to execute candidate.py.
+# Keep the default repo-independent; reviewers can point PY_VENV at a
+# numpy/scipy environment for fresh dispatches.
+PY = pathlib.Path(os.environ.get("PY_VENV", "python3"))
 
 
 # Canonical task / condition / program lists

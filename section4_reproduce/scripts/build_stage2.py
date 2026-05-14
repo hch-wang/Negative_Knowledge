@@ -1,134 +1,135 @@
 #!/usr/bin/env python3
-"""Build Stage 2 Class A v3 sandboxes — 12 cells (T_A/T_B/T_C × NoKB/PosOnly/NegOnly/PosNeg) with bank_v3.A.
+"""Build 12 Stage-2 BKdV sandboxes inside REPRO_RUNS/stage2.
 
-Differences from v2 build_v2.py:
-- Bank loaded from stage1_v3/bank/bank_v3A_{positive,negative}.jsonl (new section-3-compatible schema)
-- Outputs to stage2_v3/class_A/runs/
-- Bank entries formatted using v3 schema fields (attempted_route / observation / recommended_alternative / depth)
-- Template (research_graph_template.md) reused as-is — it already has progressive-complexity discipline
+The builder prefers a freshly aggregated bank in REPRO_RUNS/banks. If
+that does not exist, it falls back to the bundled canonical bank under
+logs/banks so the release remains directly runnable.
 """
 import json
-import pathlib
 
-PAPER = pathlib.Path("/Users/dietcoke/Documents/Project/00-simulation_software/paper")
-SECTION4 = PAPER / "Negative_Knowledge" / "section4"
-CLASS_A = SECTION4 / "stage2_v3" / "class_A"
-BANK_DIR = SECTION4 / "stage1_v3" / "bank"
-POS_PATH = BANK_DIR / "bank_v3A_positive.jsonl"
-NEG_PATH = BANK_DIR / "bank_v3A_negative.jsonl"
-TASKS_PATH = CLASS_A / "tasks" / "definitions.json"
-TEMPLATE_PATH = CLASS_A / "prompts" / "research_graph_template.md"
-VENV_PY = str(PAPER / "experiments" / "pde_pilot_2026-05-11" / ".venv" / "bin" / "python")
-
-CONDITIONS = ["NoKB", "PosOnly", "NegOnly", "PosNeg"]
+from _paths import (
+    BANKS, PROMPTS, PY, RUNS, STAGE2_CONDS, STAGE2_TASKS, TASKS,
+)
 
 
-def load_split_banks():
-    pos = [json.loads(l) for l in open(POS_PATH) if l.strip()]
-    neg = [json.loads(l) for l in open(NEG_PATH) if l.strip()]
-    return pos, neg
+def resolve_bank_dir():
+    generated = RUNS / "banks"
+    if ((generated / "bank_positive.jsonl").exists()
+            and (generated / "bank_negative.jsonl").exists()):
+        return generated
+    return BANKS
 
 
-def format_entry_v3(e, kind_label):
+def load_split_banks(bank_dir):
+    pos_path = bank_dir / "bank_positive.jsonl"
+    neg_path = bank_dir / "bank_negative.jsonl"
+    pos = [json.loads(line) for line in open(pos_path) if line.strip()]
+    neg = [json.loads(line) for line in open(neg_path) if line.strip()]
+    return pos, neg, pos_path, neg_path
+
+
+def format_entry_v3(entry, kind_label):
     """Flexible formatter for both v2-legacy and v3-new entries."""
-    eid = e.get("task_id") or e.get("id") or "<unknown>"
-    depth_hint = e.get("_v3_depth_hint", 1)
+    entry_id = entry.get("task_id") or entry.get("id") or "<unknown>"
+    depth_hint = entry.get("_v3_depth_hint", 1)
     depth_str = f" depth={depth_hint}" if depth_hint > 1 else ""
+    head = f"### {entry_id}  ({kind_label}{depth_str})"
 
-    # Title
-    head = f"### {eid}  ({kind_label}{depth_str})"
-
-    # Determine which field set this entry uses
-    if "rounds_summary" in e:
-        # Deep synthesis entry
+    if "rounds_summary" in entry:
         body_lines = [
-            f"  [DEEP SYNTHESIS, {e.get('depth', 'N')} rounds]",
-            f"  synthesised_diagnosis: {e.get('synthesised_diagnosis', '')}",
-            f"  ruled_out_routes:",
+            f"  [DEEP SYNTHESIS, {entry.get('depth', 'N')} rounds]",
+            f"  synthesised_diagnosis: {entry.get('synthesised_diagnosis', '')}",
+            "  ruled_out_routes:",
         ]
-        for r in e.get("ruled_out_routes", []):
-            body_lines.append(f"    - {r}")
-        body_lines.append(f"  recommended_alternative: {e.get('recommended_alternative', '')}")
-    elif "attempted_route" in e:
-        # Single-round (v2 legacy or v3 new)
+        for route in entry.get("ruled_out_routes", []):
+            body_lines.append(f"    - {route}")
+        body_lines.append(
+            f"  recommended_alternative: {entry.get('recommended_alternative', '')}")
+    elif "attempted_route" in entry:
         body_lines = [
-            f"  attempted_route: {e.get('attempted_route', '')}",
-            f"  observation: {e.get('observation', '')}",
-            f"  rationale: {e.get('rationale', '')}",
-            f"  recommended_alternative: {e.get('recommended_alternative', e.get('applicability', ''))}",
+            f"  attempted_route: {entry.get('attempted_route', '')}",
+            f"  observation: {entry.get('observation', '')}",
+            f"  rationale: {entry.get('rationale', '')}",
+            "  recommended_alternative: "
+            f"{entry.get('recommended_alternative', entry.get('applicability', ''))}",
         ]
-        f = e.get("failure", {})
-        if f:
-            body_lines.append(f"  failure: layer={f.get('layer','')}, scope={f.get('scope','')}, action={f.get('recommended_action','')}, risk={f.get('risk','')}")
+        failure = entry.get("failure", {})
+        if failure:
+            body_lines.append(
+                "  failure: "
+                f"layer={failure.get('layer','')}, "
+                f"scope={failure.get('scope','')}, "
+                f"action={failure.get('recommended_action','')}, "
+                f"risk={failure.get('risk','')}")
     else:
-        # v2-era positive entry with different fields
         body_lines = [
-            f"  method: {e.get('method', '')}",
-            f"  claim: {e.get('claim', '')}",
-            f"  regime: {e.get('regime', '')}",
-            f"  applicability: {e.get('applicability', '')}",
+            f"  method: {entry.get('method', '')}",
+            f"  claim: {entry.get('claim', '')}",
+            f"  regime: {entry.get('regime', '')}",
+            f"  applicability: {entry.get('applicability', '')}",
         ]
-    if e.get("is_trivial"):
-        body_lines.append(f"  is_trivial: true (trivial_degree={e.get('trivial_degree', 1)})")
+
+    if entry.get("is_trivial"):
+        body_lines.append(
+            f"  is_trivial: true (trivial_degree={entry.get('trivial_degree', 1)})")
     return head + "\n" + "\n".join(body_lines) + "\n"
 
 
 def build_memory_block(condition, pos, neg):
     if condition == "NoKB":
-        return "## Memory: no knowledge bank.\n\nYou have no prior knowledge bank for this problem family. Use your general knowledge of PDE numerical methods.\n"
+        return ("## Memory: no knowledge bank.\n\n"
+                "You have no prior knowledge bank for this problem family. "
+                "Use your general knowledge of PDE numerical methods.\n")
     if condition == "PosOnly":
-        body = "\n".join(format_entry_v3(e, "positive") for e in pos)
+        body = "\n".join(format_entry_v3(entry, "positive") for entry in pos)
         return (
             f"## Memory: positive-knowledge bank ({len(pos)} entries, v3.A — includes BKdV stress-test entries)\n\n"
             "Entries describe methods/regimes that WORKED. Use as guide for what to try. "
             "Note: some entries are 'deep synthesis' across multiple rounds of stage-1 BKdV programs; "
-            "treat those as path-level *what works* rather than single-shot recommendations.\n\n"
+            "treat those as path-level what-works signals rather than single-shot recommendations.\n\n"
             f"{body}"
         )
     if condition == "NegOnly":
-        body = "\n".join(format_entry_v3(e, "negative") for e in neg)
+        body = "\n".join(format_entry_v3(entry, "negative") for entry in neg)
         return (
             f"## Memory: negative-knowledge bank ({len(neg)} entries, v3.A — includes BKdV stress-test entries)\n\n"
             "Entries describe methods/regimes that FAILED. Use to avoid pitfalls. "
-            "Note: 'deep synthesis' entries are path-level closures (3 rounds of stress-test ruled them out); "
+            "Note: deep-synthesis entries are path-level closures from 3-round stress tests; "
             "treat those as harder-to-overcome than single-round failure logs.\n\n"
             f"{body}"
         )
-    # PosNeg
+
     body = (
-        "\n".join(format_entry_v3(e, "positive") for e in pos) +
-        "\n" +
-        "\n".join(format_entry_v3(e, "negative") for e in neg)
+        "\n".join(format_entry_v3(entry, "positive") for entry in pos)
+        + "\n"
+        + "\n".join(format_entry_v3(entry, "negative") for entry in neg)
     )
     return (
         f"## Memory: full bank v3.A ({len(pos)} positive + {len(neg)} negative = {len(pos)+len(neg)} total)\n\n"
-        "Positive entries (methods that worked) and negative entries (methods/paths that failed). "
-        "Deep-synthesis entries span multiple stage-1 stress-test rounds and represent path-level "
-        "closures (strongest negative signal) or path-level successes (strongest positive signal).\n\n"
+        "Positive entries and negative entries are both available. Deep-synthesis entries span multiple "
+        "stage-1 stress-test rounds and represent path-level closures or path-level successes.\n\n"
         f"{body}"
     )
 
 
-def make_prompt(task_id, condition, tasks, pos, neg):
+def make_prompt(task_id, condition, tasks, pos, neg, pos_path, neg_path, out_root):
     task = tasks[task_id]
-    cwd = CLASS_A / "runs" / task_id / condition
+    cwd = out_root / task_id / condition
 
     if condition == "NoKB":
         bank_pos_path = "(none)"
         bank_neg_path = "(none)"
     elif condition == "PosOnly":
-        bank_pos_path = str(POS_PATH)
+        bank_pos_path = str(pos_path)
         bank_neg_path = "(not provided in this condition)"
     elif condition == "NegOnly":
         bank_pos_path = "(not provided in this condition)"
-        bank_neg_path = str(NEG_PATH)
-    else:  # PosNeg
-        bank_pos_path = str(POS_PATH)
-        bank_neg_path = str(NEG_PATH)
+        bank_neg_path = str(neg_path)
+    else:
+        bank_pos_path = str(pos_path)
+        bank_neg_path = str(neg_path)
 
-    memory_block = build_memory_block(condition, pos, neg)
-
-    template = TEMPLATE_PATH.read_text()
+    template = (PROMPTS / "stage2_template.md").read_text()
     template = template.replace("{% raw %}", "").replace("{% endraw %}", "").strip()
     subs = {
         "{task_id}": task_id,
@@ -142,16 +143,12 @@ def make_prompt(task_id, condition, tasks, pos, neg):
         "{cwd}": str(cwd),
         "{bank_pos_path}": bank_pos_path,
         "{bank_neg_path}": bank_neg_path,
-        "{venv_py}": VENV_PY,
-        "{memory_block}": memory_block,
+        "{venv_py}": str(PY),
+        "{memory_block}": build_memory_block(condition, pos, neg),
     }
-    for k, v in subs.items():
-        template = template.replace(k, v)
+    for key, value in subs.items():
+        template = template.replace(key, value)
 
-    # Task-specific addendum for T_B: IC selection guidance (trap design)
-    # — invites agents to adapt the IC informed by positive knowledge,
-    #   testing whether PosOnly (which sees Gardner-stable IC in BKdV-S7_r1
-    #   but NOT the BKdV-S7_r2 warning) falls into the trap.
     if task_id == "T_B":
         addendum = """
 
@@ -168,42 +165,48 @@ The phenomenon target remains: final v should contain ≥ 2 well-separated peaks
 
 
 def main():
-    pos, neg = load_split_banks()
-    tasks = json.load(open(TASKS_PATH))
-    print(f"bank_v3.A: {len(pos)} positive + {len(neg)} negative")
-    print(f"tasks: {list(tasks.keys())}")
-    print(f"conditions: {CONDITIONS}")
+    bank_dir = resolve_bank_dir()
+    pos, neg, pos_path, neg_path = load_split_banks(bank_dir)
+    tasks = json.load(open(TASKS / "stage2_definitions.json"))
+    out_root = RUNS / "stage2"
+
+    print(f"bank v3.A: {len(pos)} positive + {len(neg)} negative from {bank_dir}")
+    print(f"tasks: {STAGE2_TASKS}")
+    print(f"conditions: {STAGE2_CONDS}")
 
     built = 0
     sizes = {}
-    for task_id in tasks:
-        for cond in CONDITIONS:
-            cwd = CLASS_A / "runs" / task_id / cond
+    for task_id in STAGE2_TASKS:
+        for condition in STAGE2_CONDS:
+            cwd = out_root / task_id / condition
             (cwd / "pred_results").mkdir(parents=True, exist_ok=True)
             meta = {
-                "task_id": task_id, "condition": cond, "version": "v3A_class_A",
+                "task_id": task_id,
+                "condition": condition,
+                "version": "section4_reproduce_v1",
                 "iter_budget": 3,
                 "tools_allowed": ["Read", "Write", "Bash"],
-                "bank": "bank_v3.A (50 entries: 12 pos + 38 neg)",
+                "bank": f"bank v3.A ({len(pos)+len(neg)} entries: {len(pos)} pos + {len(neg)} neg)",
                 **tasks[task_id],
             }
             (cwd / "meta.json").write_text(json.dumps(meta, indent=2))
-            mem = build_memory_block(cond, pos, neg)
-            (cwd / "memory.md").write_text(mem)
-            prompt = make_prompt(task_id, cond, tasks, pos, neg)
+            (cwd / "memory.md").write_text(build_memory_block(condition, pos, neg))
+            prompt = make_prompt(task_id, condition, tasks, pos, neg,
+                                 pos_path, neg_path, out_root)
             (cwd / "prompt.md").write_text(prompt)
             (cwd / "research_state.jsonl").write_text("")
-            (cwd / "session_log.md").write_text(f"# Session log: {task_id} / {cond}\n\n")
-            sizes[(task_id, cond)] = len(prompt)
+            (cwd / "session_log.md").write_text(
+                f"# Session log: {task_id} / {condition}\n\n")
+            sizes[(task_id, condition)] = len(prompt)
             built += 1
-            print(f"  built {task_id}/{cond}  ({len(prompt)} chars)")
+            print(f"  built {task_id}/{condition}  ({len(prompt)} chars)")
 
-    print(f"\n{built} Class A v3 sandboxes ready")
-    print(f"\nPrompt size summary:")
-    for tid in tasks:
-        row = "  " + tid + ": "
-        for cond in CONDITIONS:
-            row += f"{cond}={sizes[(tid, cond)]:>6}  "
+    print(f"\n{built} Stage-2 sandboxes ready under {out_root}")
+    print("\nPrompt size summary:")
+    for task_id in STAGE2_TASKS:
+        row = "  " + task_id + ": "
+        for condition in STAGE2_CONDS:
+            row += f"{condition}={sizes[(task_id, condition)]:>6}  "
         print(row)
 
 

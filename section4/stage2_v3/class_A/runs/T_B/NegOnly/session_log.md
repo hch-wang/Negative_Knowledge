@@ -1,4 +1,0 @@
-# Session log: T_B / NegOnly
-
-iter 1: Baseline Fourier pseudospectral + 2/3 dealias + classical RK4, dt=2e-4, no u-viscosity. Ran to T=6 without NaN. mass(v) exactly conserved. But u_max grew 0->~15 by t=2, then exploded to |u|~60 by t=3 (Burgers self-flux cascade, BKdV-S6 mechanism). v_final has 14 peaks above 0.8 and v_max=5.10>IC=4.0 -- contaminated by u-blowup. Not useful. Decision: add nu*u_xx with nu=5e-2.
-iter 2: E1 + explicit linear viscosity nu=5e-2 on u-equation only (single-component upgrade per BKdV-S6 recommendation). All other settings unchanged. Ran to T=6: finite, mass(v) drift exactly 0.000%, |u|<=13.9 throughout (vs |u|~60 in E1). v_final shows 6 well-separated peaks above 0.8 (find_peaks on tiled signal, height>=0.8, distance>=8, prominence>=0.2): amplitudes 0.81-1.79, positions x in {-15.0, -12.9, -4.57, +4.45, +8.20, +11.37}. ASCII plot of v(x,t) shows clean KdV soliton-train decomposition. Phenomenon target satisfied. Stop early.
