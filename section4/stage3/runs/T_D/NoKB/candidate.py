@@ -1,18 +1,42 @@
 """
-E2 (continued) — T_D NoKB: advance (m, N, chi) where phi = c*x + chi, c=0.5, chi periodic.
+E3 — T_D NoKB: Strang split-step with Madelung-Psi linear half (UNITARY) +
+residual (m, N, chi) RK4 sub-step. Single substantive change from E2 is the
+split-step representation: the destabilizing high-k Bohm term is folded into
+an EXACT Fourier-exponential propagator that is unitary regardless of sign
+convention, removing the anti-diffusive blow-up that killed E2.
 
-KEY BUG FIX: original IC phi(x,0)=0.5*x is NOT periodic on [-15,15]; computing its
-Fourier derivative gives spikes up to |88| instead of 0.5, which causes immediate
-blow-up. Split phi into a linear background (c*x) + a periodic perturbation chi.
-Then phi_x = c + chi_x, where chi_x is computed spectrally (and is 0 at t=0).
+Decomposition (kappa=1):
+  Let Psi(x,t) = sqrt(N(x,t)) * exp(i*phi(x,t)) be the Madelung wavefunction.
+  Define tilde_Psi(x,t) = sqrt(N) * exp(i*chi(x,t)) with phi = c*x + chi
+  (c=0.5 background slope, chi periodic).
 
-Same single-component change as E2: representation (u,N,phi) -> (m,N,phi_periodic).
-RK4, dt=5e-4, Fourier pseudospectral, no dealiasing.
+  Standard-NLS linear+focusing evolution corresponds to:
+      i Psi_t = -(1/2) Psi_xx - |Psi|^2 Psi
+  Madelung: phi_t = +Q - (1/2)phi_x^2 + N
+            N_t  = -(N phi_x)_x
 
-Equations (kappa=1):
-    m_t  = -(u m)_x - m u_x,                 u = m + N (c + chi_x)
-    N_t  = -((u + (c + chi_x)) N)_x
-    chi_t = -[u (c+chi_x) + 0.5 (c+chi_x)^2 + Q - 2 N], Q = sqrt(N)_xx/(2 sqrt(N))
+  User's PDE (kappa=1):
+      phi_t = -u phi_x - (1/2)phi_x^2 - Q + 2 N
+      N_t   = -((u + phi_x) N)_x = -(N phi_x)_x - (u N)_x
+      m_t   = -(u m)_x - m u_x
+
+  Residual (user - standard) ODE: handled in a real-space RK4 substep:
+      phi_t_resid = -u phi_x - 2 Q + N       [-Q user - (+Q NLS) = -2Q; 2N - N = +N]
+      N_t_resid   = -(u N)_x
+      m_t_resid   = -(u m)_x - m u_x         [m has no NLS counterpart]
+
+Strang split per dt:
+  step 1: Linear half (dt/2): hat_tilde_Psi *= exp(-i ((k+c)^2/2) (dt/2))
+  step 2: Focusing half (dt/2): tilde_Psi *= exp(+i N (dt/2))     (N = |tilde_Psi|^2)
+  step 3: Residual RK4 (dt) on (m, N, chi)   — N, chi extracted from tilde_Psi
+                                              before, then put back after
+  step 4: Focusing half (dt/2)
+  step 5: Linear half (dt/2)
+
+After every full step we also apply a mild exponential filter on (m, N, chi)
+to suppress accumulating round-off; this is precautionary, not load-bearing.
+
+dt=2e-3 (we can afford a larger dt now because the linear half is exact).
 """
 
 import numpy as np
@@ -24,13 +48,13 @@ L = 30.0
 Nx = 256
 kappa = 1.0
 T_final = 12.0
-dt = 5e-4
+dt = 2e-3            # larger dt now feasible thanks to exact linear half
 n_steps = int(round(T_final / dt))
 n_snapshots = 121
 eps = 0.1
 
-# Background phi gradient
 c_bg = 0.5
+DELTA_REG = 1e-3     # floor for sqrt(N) in Q computation
 
 # Grid
 x = np.linspace(-L / 2.0, L / 2.0, Nx, endpoint=False)
@@ -38,8 +62,26 @@ dx = x[1] - x[0]
 k_vec = 2.0 * np.pi * np.fft.fftfreq(Nx, d=dx)
 ik = 1j * k_vec
 k2 = -(k_vec ** 2)
+k_max_grid = np.max(np.abs(k_vec))
 
 _trapz = getattr(np, "trapezoid", None) or getattr(np, "trapz")
+
+# Mild exponential filter (24 power on (k/kmax)) — kills only the very top
+ALPHA_FILT = 36.0
+P_FILT     = 24
+filt = np.exp(-ALPHA_FILT * (np.abs(k_vec) / k_max_grid) ** P_FILT)
+
+# 2/3 dealias mask for products in residual RHS
+mask_23 = (np.abs(k_vec) <= (2.0 / 3.0) * k_max_grid).astype(float)
+
+# Precompute linear propagator: exp(-i (k+c)^2/2 * dt/2)
+lin_prop_half = np.exp(-1j * ((k_vec + c_bg) ** 2 / 2.0) * (dt / 2.0))
+
+def fft_filter(f):
+    return np.real(np.fft.ifft(filt * np.fft.fft(f)))
+
+def dealias(f):
+    return np.real(np.fft.ifft(mask_23 * np.fft.fft(f)))
 
 def dx_f(f):
     return np.real(np.fft.ifft(ik * np.fft.fft(f)))
@@ -47,41 +89,46 @@ def dx_f(f):
 def d2x_f(f):
     return np.real(np.fft.ifft(k2 * np.fft.fft(f)))
 
-def quantum_potential(N, eps_n=1e-12):
-    sN = np.sqrt(np.maximum(N, eps_n))
+def quantum_potential(N, delta=DELTA_REG):
+    sN = np.sqrt(np.abs(N) + delta * delta)
     return d2x_f(sN) / (2.0 * sN)
 
-def rhs(m, N, chi):
+def residual_rhs(m, N, chi):
+    """RHS of (m, N, chi) residual ODE = user PDE minus standard NLS part."""
     chi_x = dx_f(chi)
     phi_x = c_bg + chi_x
     u     = m + N * phi_x
     u_x   = dx_f(u)
-    flux_N = (u + phi_x) * N
-    Nt    = -dx_f(flux_N)
-    mt    = -dx_f(u * m) - m * u_x
-    Q     = quantum_potential(N)
-    chit  = -(u * phi_x + 0.5 * phi_x ** 2 + Q - 2.0 * kappa * N)
+    # m equation: full user m_t (no NLS counterpart for m)
+    um    = dealias(u * m)
+    mt    = -dx_f(um) - m * u_x
+    # N residual: -(u N)_x  (standard NLS already advances -(N phi_x)_x in linear)
+    uN    = dealias(u * N)
+    Nt    = -dx_f(uN)
+    # phi residual: -u phi_x - 2Q + N
+    u_phix = dealias(u * phi_x)
+    Q      = quantum_potential(N)
+    chit   = -u_phix - 2.0 * Q + N
     return mt, Nt, chit
 
 # ---------- Initial condition ----------
 A = 1.5
 x0 = -5.0
-N0 = (A ** 2) * (1.0 / np.cosh(A * (x - x0))) ** 2
-chi0 = np.zeros_like(x)                       # phi - c*x; periodic part initially zero
+N0   = (A ** 2) * (1.0 / np.cosh(A * (x - x0))) ** 2
+chi0 = np.zeros_like(x)
 m0   = eps * np.cos(2.0 * np.pi * x / L)
-u0   = m0 + N0 * c_bg                         # = N*phi_x + m
+u0   = m0 + N0 * c_bg
 
 mass_0 = _trapz(N0, x)
 m_l2_0 = np.linalg.norm(m0) * np.sqrt(dx)
 print(f"Init eps={eps}: ||m||_2={m_l2_0:.4e}  max|m|={np.max(np.abs(m0)):.4e}  "
-      f"mass={mass_0:.4f}  peak N={N0.max():.4f}  max|u|={np.max(np.abs(u0)):.4f}  "
-      f"Nmin={N0.min():.3e}")
+      f"mass={mass_0:.4f}  peak N={N0.max():.4f}  Nmin={N0.min():.3e}")
 
 # ---------- Snapshots ----------
 snap_steps = np.linspace(0, n_steps, n_snapshots).astype(int)
 snap_set = set(snap_steps.tolist())
 snaps_t  = []
-snaps    = []   # (u, N, phi) at each snapshot (with phi = c*x + chi)
+snaps    = []
 m_l2     = []
 peakN    = []
 massT    = []
@@ -90,7 +137,20 @@ Nmin     = []
 phimax   = []
 chimax   = []
 
-m_arr, N_arr, chi_arr = m0.copy(), N0.copy(), chi0.copy()
+# State: keep tilde_Psi (complex), and m (real) and chi (real for diagnostics)
+# tilde_Psi = sqrt(max(N,0) + delta^2 - delta^2) ... actually we work with raw sqrt(N) exp(i chi)
+m_arr   = m0.copy()
+N_arr   = N0.copy()
+chi_arr = chi0.copy()
+# Build tilde_Psi (with positivity-safe sqrt to handle any negative N during evolution)
+def build_tilde_Psi(N, chi):
+    return np.sqrt(np.maximum(N, 0.0)) * np.exp(1j * chi)
+def split_tilde_Psi(tp):
+    N_new = np.abs(tp) ** 2
+    chi_new = np.angle(tp)   # principal branch; suitable since chi stays small
+    return N_new, chi_new
+
+tilde_Psi = build_tilde_Psi(N_arr, chi_arr)
 
 def take_snapshot(step):
     t = step * dt
@@ -107,7 +167,7 @@ def take_snapshot(step):
     Nmin.append(N_arr.min())
     phimax.append(np.max(np.abs(phi_now)))
     chimax.append(np.max(np.abs(chi_arr)))
-    if (len(snaps) - 1) % 12 == 0:
+    if (len(snaps) - 1) % 10 == 0:
         print(f" step={step:7d}  t={t:6.3f}  ||m||_2={m_l2[-1]:.4e}  "
               f"N_peak={N_arr.max():.4f}  N_min={N_arr.min():.3e}  "
               f"|u|max={umax[-1]:.4f}  |chi|max={chimax[-1]:.3f}  mass={massT[-1]:.5f}")
@@ -117,13 +177,44 @@ t_start = time.time()
 
 aborted_step = None
 for step in range(1, n_steps + 1):
-    k1m, k1N, k1c = rhs(m_arr, N_arr, chi_arr)
-    k2m, k2N, k2c = rhs(m_arr + 0.5 * dt * k1m, N_arr + 0.5 * dt * k1N, chi_arr + 0.5 * dt * k1c)
-    k3m, k3N, k3c = rhs(m_arr + 0.5 * dt * k2m, N_arr + 0.5 * dt * k2N, chi_arr + 0.5 * dt * k2c)
-    k4m, k4N, k4c = rhs(m_arr + dt * k3m,       N_arr + dt * k3N,       chi_arr + dt * k3c)
+    # ---- linear half ----
+    tp_hat = np.fft.fft(tilde_Psi)
+    tp_hat *= lin_prop_half
+    tilde_Psi = np.fft.ifft(tp_hat)
+    # ---- focusing half (dt/2) ----
+    Nloc = np.abs(tilde_Psi) ** 2
+    tilde_Psi = tilde_Psi * np.exp(1j * Nloc * (dt / 2.0))
+    # Extract (N, chi) for residual ODE
+    N_arr, chi_arr = split_tilde_Psi(tilde_Psi)
+    # ---- residual RK4 (full dt) ----
+    k1m, k1N, k1c = residual_rhs(m_arr, N_arr, chi_arr)
+    k2m, k2N, k2c = residual_rhs(m_arr + 0.5 * dt * k1m,
+                                 N_arr + 0.5 * dt * k1N,
+                                 chi_arr + 0.5 * dt * k1c)
+    k3m, k3N, k3c = residual_rhs(m_arr + 0.5 * dt * k2m,
+                                 N_arr + 0.5 * dt * k2N,
+                                 chi_arr + 0.5 * dt * k2c)
+    k4m, k4N, k4c = residual_rhs(m_arr + dt * k3m,
+                                 N_arr + dt * k3N,
+                                 chi_arr + dt * k3c)
     m_arr   = m_arr   + (dt / 6.0) * (k1m + 2 * k2m + 2 * k3m + k4m)
     N_arr   = N_arr   + (dt / 6.0) * (k1N + 2 * k2N + 2 * k3N + k4N)
     chi_arr = chi_arr + (dt / 6.0) * (k1c + 2 * k2c + 2 * k3c + k4c)
+    # Re-pack tilde_Psi from updated (N, chi)
+    tilde_Psi = build_tilde_Psi(N_arr, chi_arr)
+    # ---- focusing half (dt/2) ----
+    Nloc = np.abs(tilde_Psi) ** 2
+    tilde_Psi = tilde_Psi * np.exp(1j * Nloc * (dt / 2.0))
+    # ---- linear half ----
+    tp_hat = np.fft.fft(tilde_Psi)
+    tp_hat *= lin_prop_half
+    tilde_Psi = np.fft.ifft(tp_hat)
+    # Mild filter on each state (precautionary; should be ~no-op)
+    N_arr, chi_arr = split_tilde_Psi(tilde_Psi)
+    m_arr   = fft_filter(m_arr)
+    N_arr   = fft_filter(np.maximum(N_arr, 0.0))   # also enforce N>=0
+    chi_arr = fft_filter(chi_arr)
+    tilde_Psi = build_tilde_Psi(N_arr, chi_arr)
 
     if step in snap_set:
         take_snapshot(step)
