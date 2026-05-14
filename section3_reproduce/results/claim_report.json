@@ -1,8 +1,40 @@
 {
-  "summary": "31/31 claims match",
+  "summary": "31/31 provenance checks match",
   "n_match": 31,
   "n_total": 31,
-  "claims": [
+  "paper_table": [
+    {
+      "method": "Base",
+      "pass_rate_percent": 31.6,
+      "memory_bytes": null,
+      "memory_display": "--"
+    },
+    {
+      "method": "Retry",
+      "pass_rate_percent": 31.6,
+      "memory_bytes": null,
+      "memory_display": "--"
+    },
+    {
+      "method": "Negative knowledge retry (d=1)",
+      "pass_rate_percent": 36.8,
+      "memory_bytes": 1187,
+      "memory_display": "1,187 (-72.2%)"
+    },
+    {
+      "method": "Self-debug (round=3)",
+      "pass_rate_percent": 44.7,
+      "memory_bytes": 4272,
+      "memory_display": "4,272 (baseline)"
+    },
+    {
+      "method": "Deep negative knowledge retry (d=3)",
+      "pass_rate_percent": 47.4,
+      "memory_bytes": 3354,
+      "memory_display": "3,354 (-21.5%)"
+    }
+  ],
+  "provenance_checks": [
     {
       "label": "pilot subset size",
       "expected": 38,
