@@ -1,0 +1,142 @@
+[
+  {
+    "label": "Stage 1 program count",
+    "expected": 7,
+    "computed": 7,
+    "match": true,
+    "source": "logs/stage1/BKdV-S*/"
+  },
+  {
+    "label": "Stage 1 NK records total",
+    "expected": 28,
+    "computed": 28,
+    "match": true,
+    "source": "logs/nk_records/*.json"
+  },
+  {
+    "label": "  per-round (depth-1) records",
+    "expected": 21,
+    "computed": 21,
+    "match": true,
+    "source": "*_r{1,2,3}.json"
+  },
+  {
+    "label": "  deep-synthesis records",
+    "expected": 7,
+    "computed": 7,
+    "match": true,
+    "source": "*_deep.json"
+  },
+  {
+    "label": "Final bank total entries",
+    "expected": 58,
+    "computed": 58,
+    "match": true,
+    "source": "logs/banks/bank_all.jsonl"
+  },
+  {
+    "label": "  positive entries",
+    "expected": 15,
+    "computed": 15,
+    "match": true,
+    "source": "bank_positive.jsonl"
+  },
+  {
+    "label": "  negative entries",
+    "expected": 43,
+    "computed": 43,
+    "match": true,
+    "source": "bank_negative.jsonl"
+  },
+  {
+    "label": "  deep entries in bank (depth \u2265 2)",
+    "expected": 7,
+    "computed": 7,
+    "match": true,
+    "source": "bank entries with depth hint \u2265 2"
+  },
+  {
+    "label": "  legacy pilot positive (input)",
+    "expected": 10,
+    "computed": 10,
+    "match": true,
+    "source": "pilot_legacy_positive.jsonl"
+  },
+  {
+    "label": "  legacy pilot negative (input)",
+    "expected": 20,
+    "computed": 20,
+    "match": true,
+    "source": "pilot_legacy_negative.jsonl"
+  },
+  {
+    "label": "NoKB    PASS/3",
+    "expected": 0,
+    "computed": 0,
+    "match": true,
+    "source": "verified_results.json"
+  },
+  {
+    "label": "PosOnly PASS/3",
+    "expected": 1,
+    "computed": 1,
+    "match": true,
+    "source": "verified_results.json"
+  },
+  {
+    "label": "NegOnly PASS/3",
+    "expected": 3,
+    "computed": 3,
+    "match": true,
+    "source": "verified_results.json"
+  },
+  {
+    "label": "PosNeg  PASS/3",
+    "expected": 3,
+    "computed": 3,
+    "match": true,
+    "source": "verified_results.json"
+  },
+  {
+    "label": "T-A amp_ratio threshold = 0.25",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "scripts/phenomenon_checks.py"
+  },
+  {
+    "label": "T-A single-dominant-peak check present",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "scripts/phenomenon_checks.py"
+  },
+  {
+    "label": "S6 prescribes nu_linear=5e-2 (or 0.05)",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "BKdV-S6_deep.json"
+  },
+  {
+    "label": "S6 vs BKdV-S4 envelope: 13 orders too weak",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "BKdV-S6_deep.json"
+  },
+  {
+    "label": "S7 reports -62.8% v_max decay",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "BKdV-S7_deep.json"
+  },
+  {
+    "label": "S7 reports cos-sim 0.94 prediction",
+    "expected": true,
+    "computed": true,
+    "match": true,
+    "source": "BKdV-S7_deep.json"
+  }
+]
