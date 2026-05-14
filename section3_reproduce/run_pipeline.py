@@ -18,9 +18,9 @@ Required environment:
     export PY_VENV=/abs/path/to/your/python    # has the 28-lib stack
 
 (1) Cheapest demonstration --- one task, reuse our saved autoresearch
-    trace, just re-run the curator + solver. ~$1, ~3 minutes.
+    trace, just re-run the curator + Sonnet solver. ~$1, ~3 minutes.
 
-        python run_pipeline.py --task 072 --use-saved-trace
+        python run_pipeline.py --task 072 --use-saved-trace --skip-haiku
 
 (2) Full single-task end-to-end --- one task, re-run everything from
     scratch (round-1 + 2x Self-Debug + curator + solver). ~$3, ~10 minutes.
@@ -342,6 +342,27 @@ def _read_from_disk(path):
         return ""
 
 
+def _move_solver_sandbox(sb: pathlib.Path, target: pathlib.Path) -> pathlib.Path:
+    """Move a solver sandbox and rewrite prompt paths to the new location.
+
+    build_solver_deep() constructs prompts under RUNS/solver-deep/. The
+    named Sonnet/Haiku cells live under RUNS/solver-deep-<model>/. Without
+    rewriting prompt.md after the move, the model is instructed to Write to
+    the old path while the dispatcher allowlist permits only the new path.
+    """
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        shutil.rmtree(target)
+    shutil.move(str(sb), str(target))
+
+    prompt_path = target / "prompt.md"
+    if prompt_path.exists():
+        prompt = prompt_path.read_text()
+        prompt = prompt.replace(str(sb), str(target))
+        prompt_path.write_text(prompt)
+    return target
+
+
 # --------------------------------------------------------------------
 # Stage 2: knowledge consumption
 # --------------------------------------------------------------------
@@ -364,10 +385,7 @@ def stage2(tid: str, *, do_nkr=True, do_deep_sonnet=True, do_deep_haiku=True):
         # We rename via copy to solver-deep-sonnet/ for clarity:
         target = solver_deep_dir(tid, "sonnet")
         if sb != target:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            if target.exists():
-                shutil.rmtree(target)
-            shutil.move(str(sb), str(target))
+            target = _move_solver_sandbox(sb, target)
         dispatch("solver-deep Sonnet (depth-3)", target, "sonnet",
                  read_allowlist=[target / "deep_nk.json"],
                  output_files=[target / "candidate.py", target / "reasoning.md"])
@@ -378,10 +396,7 @@ def stage2(tid: str, *, do_nkr=True, do_deep_sonnet=True, do_deep_haiku=True):
         sb = bb.build_solver_deep(tid, nk_deep_path(tid))
         target = solver_deep_dir(tid, "haiku")
         if sb != target:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            if target.exists():
-                shutil.rmtree(target)
-            shutil.move(str(sb), str(target))
+            target = _move_solver_sandbox(sb, target)
         dispatch("solver-deep Haiku (cross-model)", target, "haiku",
                  read_allowlist=[target / "deep_nk.json"],
                  output_files=[target / "candidate.py", target / "reasoning.md"])
