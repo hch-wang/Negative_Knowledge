@@ -1,7 +1,7 @@
 # Negative Knowledge
 
 Code and reproducibility artifacts for the ICML 2026 AI4Research Workshop
-paper *Negative Knowledge as Failure-aware shared memory for AutoResearch*.
+submission *Negative Knowledge as Failure-aware shared memory for AutoResearch*.
 
 A *negative-knowledge record* (NK) is a structured, machine-readable
 summary of one or more failed attempts on a task.
@@ -15,11 +15,6 @@ This release keeps only the three reviewer-facing reproduction packages:
 - `section3_reproduce/` — §3 ScienceAgentBench negative-knowledge study
 - `section4_reproduce/` — §4 BKdV controlled memory-condition study
 - `appendix_reproduce/` — Burgers-NLS appendix transfer study
-
-The older working directories used during paper development were removed
-from the GitHub tree. The reproduce packages bundle the logs, banks,
-prompts, eval scripts, and minimal pipeline entry points needed by a
-reviewer.
 
 For §4 and appendix verification/eval scripts:
 
@@ -124,11 +119,10 @@ Full guide:
 ```bibtex
 @inproceedings{NegativeKnowledge2026,
   title  = {Negative Knowledge as Failure-aware shared memory for AutoResearch},
-  author = {...},
+  author = {Hanchun Wang},
   booktitle = {ICML 2026 AI4Research Workshop},
   year   = {2026},
 }
 ```
 
-ScienceAgentBench: Chen et al., 2024
-(https://github.com/OSU-NLP-Group/ScienceAgentBench).
+
