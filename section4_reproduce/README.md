@@ -221,14 +221,4 @@ first-class artifacts: the operational definition of the NK schema.
   single-dominant-peak threshold.
 
 ## Citation
-
-```
-@inproceedings{NegativeKnowledge2026,
-  title  = {Negative Knowledge as Failure-aware shared memory for AutoResearch},
-  author = {...},
-  booktitle = {ICML 2026 AI4Research Workshop},
-  year   = {2026},
-}
-```
-
 BKdV system: Holm et al., 2025.
