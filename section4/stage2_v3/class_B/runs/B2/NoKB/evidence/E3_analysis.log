@@ -1,0 +1,62 @@
+=== Master table: u_L=1.0 sweep in A (T=12, dt=1e-4) ===
+    A  n_peaks   max_v_T   x_peak   L2_v_T     source
+ 0.20        1     0.149     9.02    0.353         E1
+ 0.30        1     0.213    10.78    0.470        E2B
+ 0.40        1     0.257    12.19    0.560        E2B
+ 0.50        1     0.286    12.89    0.626         E1
+ 0.60        1     0.301    13.24    0.673        E2B
+ 0.70        1     0.313    13.48    0.713        E2B
+ 0.80        1     0.322    13.59    0.751        E2B
+ 0.90        1     0.331    13.71    0.788 E3A_sharpness
+ 1.00        1     0.339    13.95    0.824         E1
+ 1.00        1     0.339    13.95    0.824 E3A_sharpness
+ 1.05        2     0.343    14.06    0.842 E3A_sharpness
+ 1.10        2     0.347    14.06    0.859 E3A_sharpness
+ 1.15        2     0.352    14.18    0.875 E3A_sharpness
+ 1.20        3     0.356    14.30    0.892        E2B
+ 1.50        4     0.370    14.77    0.982         E1
+ 2.00        5     0.363   -14.88    1.145         E1
+
+=== u_L=0 sweep in A (T=12, dt=1e-4)  -- no-bore baseline ===
+    A  n_peaks   max_v_T   x_peak   L2_v_T
+ 0.20        1     0.171    -0.23    0.368
+ 0.50        3     0.320     8.09    0.568
+ 1.00        4     0.380   -14.65    0.673
+ 1.50        3     0.534   -12.42    0.901
+ 2.00        4     0.550   -10.55    1.064
+
+=== 2D n_peaks(uL, A) from E1 ===
+          A=0.20 A=0.50 A=1.00 A=1.50 A=2.00
+u_L=0.20      1      3      4      5      5 
+u_L=0.40      1      2      4      4      6 
+u_L=0.60      1      2      3      4      5 
+u_L=0.80      1      1      3      4      5 
+u_L=1.00      1      1      1      4      5 
+
+=== Sharpness metric near boundary at u_L=1.0 ===
+A     | n_peaks | max_v_T | L2_v_T
+0.900 |       1 | 0.331   | 0.788
+1.000 |       1 | 0.339   | 0.824
+1.050 |       2 | 0.343   | 0.842
+1.100 |       2 | 0.347   | 0.859
+1.150 |       2 | 0.352   | 0.875
+
+** sharp jump n_peaks 1 -> 2 between A=1.0 and A=1.05 (delta A = 0.050) **
+
+=== dt convergence check ===
+(uL=1.0, A=1.10) dt=1e-4: n_peaks=2, max_v_T=0.3474, L2_v_T=0.8587
+(uL=1.0, A=1.10) dt=5e-5: n_peaks=2, max_v_T=0.3474, L2_v_T=0.8587
+  |delta_max_v_T| = 0.00000, |delta_L2_v_T| = 0.00000  -> dt-converged
+
+=== Long-time asymptote check ===
+(uL=1.0, A=1.0) T=12: n_peaks=1 (E1+E3 baseline)
+(uL=1.0, A=1.0) T=24: n_peaks=2 max_v_T=0.285
+** Implication: 'transmission' regime at T=12 is TRANSIENT; the system fissions on longer time scale **
+
+=== Reflection probe ===
+(uL=2.0, A=0.2) T=12: n_peaks=1, x_peak=-13.83
+  initial soliton at x=-6, free trajectory predicts x_free = -1.2
+  observed x_peak = -13.83 -> displacement -7.83
+  if + (and wraparound), bore co-advected soliton; if -, reflection
+  -> looks like WRAPAROUND of right-moving soliton dragged at near-bore speed (~u_L)
+     Bore advection accelerated the soliton; NOT classical reflection

@@ -1,0 +1,92 @@
+{
+  "E1_Strang_eps0p05": {
+    "fit_exponential": {
+      "tau": Infinity,
+      "A": 0.26714625057699204,
+      "r2_log": 0.7496936565173374,
+      "slope": 0.10308862238972291,
+      "t_start": 1.2000000000000002,
+      "t_end": 12.0
+    },
+    "fit_power_law": {
+      "alpha": -0.5556422844887041,
+      "A": 0.20214781877545332,
+      "r2_log": 0.9304593017021812,
+      "t_start": 0.5,
+      "t_end": 12.0
+    },
+    "epsilon": 0.05,
+    "method": "Strang",
+    "dt": 0.005,
+    "mass_initial": 2.828427124744911,
+    "mass_final": 2.8284191834429526,
+    "mass_drift_relative": -2.8076742330646755e-06,
+    "energy_initial": -2.7400387770851733,
+    "energy_final": -2.8706296317742375,
+    "energy_drift_relative": -0.04766022137394182,
+    "m_norm_initial": 0.19364916731037085,
+    "m_norm_final": 0.7060265547549665,
+    "m_norm_decay_ratio": 3.645905451394912,
+    "max_u_max": 1.0737298114119134
+  },
+  "E2_Strang_eps0p20": {
+    "fit_exponential": {
+      "tau": Infinity,
+      "A": 0.9487162381345943,
+      "r2_log": 0.5856138671679756,
+      "slope": 0.016839985709889684,
+      "t_start": 1.2000000000000002,
+      "t_end": 12.0
+    },
+    "fit_power_law": {
+      "alpha": -0.11892217542462834,
+      "A": 0.859643145091011,
+      "r2_log": 0.8938637471516852,
+      "t_start": 0.5,
+      "t_end": 12.0
+    },
+    "epsilon": 0.2,
+    "method": "Strang",
+    "dt": 0.005,
+    "mass_initial": 2.828427124744911,
+    "mass_final": 2.828418206762154,
+    "mass_drift_relative": -3.152983040887367e-06,
+    "energy_initial": -2.7400387770851733,
+    "energy_final": -2.8848722957810717,
+    "energy_drift_relative": -0.05285820036823382,
+    "m_norm_initial": 0.7745966692414834,
+    "m_norm_final": 1.1066437433126495,
+    "m_norm_decay_ratio": 1.4286709293448423,
+    "max_u_max": 1.0727617974251025
+  },
+  "E3_Strang_eps0p05_fine": {
+    "fit_exponential": {
+      "tau": Infinity,
+      "A": 0.26708821247498543,
+      "r2_log": 0.7502173949291668,
+      "slope": 0.10312650489017348,
+      "t_start": 1.2000000000000002,
+      "t_end": 12.0
+    },
+    "fit_power_law": {
+      "alpha": -0.5557080365257214,
+      "A": 0.2021331078581814,
+      "r2_log": 0.9306463422552451,
+      "t_start": 0.5,
+      "t_end": 12.0
+    },
+    "epsilon": 0.05,
+    "method": "Strang",
+    "dt": 0.0025,
+    "mass_initial": 2.828427124744911,
+    "mass_final": 2.828423048445871,
+    "mass_drift_relative": -1.4411893466965757e-06,
+    "energy_initial": -2.7400387770851733,
+    "energy_final": -2.8706164493052073,
+    "energy_drift_relative": -0.04765541032194489,
+    "m_norm_initial": 0.19364916731037085,
+    "m_norm_final": 0.7070025587636303,
+    "m_norm_decay_ratio": 3.6509455144234275,
+    "max_u_max": 1.0715554375382486
+  }
+}

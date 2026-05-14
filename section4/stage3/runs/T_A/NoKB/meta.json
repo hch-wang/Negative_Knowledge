@@ -1,0 +1,24 @@
+{
+  "task_id": "T_A",
+  "condition": "NoKB",
+  "version": "stage3_bnls_v1",
+  "iter_budget": 3,
+  "tools_allowed": [
+    "Read",
+    "Write",
+    "Bash"
+  ],
+  "title": "Bright NLS soliton stability in the Burgers frame (compound-soliton attractor test)",
+  "description": "Initialize with an exact bright NLS soliton (Madelung form) and check whether the soliton structure survives long-time propagation in the coupled Burgers-NLS system. The IC has u = N*phi_x exactly (on the compound-soliton manifold M_cs); generic methods that introduce numerical noise off M_cs let us measure whether the system relaxes back to M_cs (attractor) or drifts away (marginal).",
+  "ic": "kappa = 1 (focusing). Bright soliton ansatz at v=0.5 boost: A=1.5. N(x,0) = A^2 * sech^2(A*(x+5)). phi(x,0) = 0.5*x  (so phi_x = 0.5 everywhere). u(x,0) = N(x,0) * phi_x(x,0) = 0.5 * N(x,0). [This sits on M_cs at t=0; m(x,0) = u - N*phi_x = 0.]",
+  "T_final": 8.0,
+  "output_path": "pred_results/T_A.npy",
+  "output_shape_spec": "shape (n_snapshots, 3, 256), channels are (u, N, phi). Save at least 5 evenly-spaced snapshots from t=0 to T_final. The last snapshot is the eval target; the time series enables diagnostics of m(t) = u - N*phi_x relaxation.",
+  "phenomenon_target": "Final N(x, T) should still contain a single dominant peak with amplitude >= 0.5 of the initial 2.25 (A^2). Mass M = integral(N dx) should drift < 5%. Both u, N, phi stay bounded (|u|, |N|, |phi| < 25). The momentum m = u - N*phi_x should remain small (||m||_2 / ||N*phi_x||_2 < 0.2) \u2014 the system stays near the compound-soliton manifold.",
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx": 256,
+  "kappa": 1.0
+}

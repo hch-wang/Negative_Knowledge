@@ -1,0 +1,15 @@
+E2: 11 runs (5 Arm A + 6 Arm B). T=12.0, dt=0.0001, NU=0.05
+  uL=0.00 A=0.20  L2_v_T=0.368  max_v_T=0.171  n_peaks=1  x_peak=-0.23  u_max=0.15  high_v=0.0000  t=20.8s blew_up=False
+  uL=0.00 A=0.50  L2_v_T=0.568  max_v_T=0.320  n_peaks=3  x_peak=8.09  u_max=0.57  high_v=0.0000  t=20.2s blew_up=False
+  uL=0.00 A=1.00  L2_v_T=0.673  max_v_T=0.380  n_peaks=4  x_peak=-14.65  u_max=0.68  high_v=0.0001  t=19.9s blew_up=False
+  uL=0.00 A=1.50  L2_v_T=0.901  max_v_T=0.534  n_peaks=3  x_peak=-12.42  u_max=0.28  high_v=0.0000  t=21.5s blew_up=False
+  uL=0.00 A=2.00  L2_v_T=1.064  max_v_T=0.550  n_peaks=4  x_peak=-10.55  u_max=0.31  high_v=0.0001  t=21.1s blew_up=False
+  uL=1.00 A=0.30  L2_v_T=0.470  max_v_T=0.213  n_peaks=1  x_peak=10.78  u_max=1.03  high_v=0.0000  t=20.9s blew_up=False
+  uL=1.00 A=0.40  L2_v_T=0.560  max_v_T=0.257  n_peaks=1  x_peak=12.19  u_max=1.04  high_v=0.0000  t=20.4s blew_up=False
+  uL=1.00 A=0.60  L2_v_T=0.673  max_v_T=0.301  n_peaks=1  x_peak=13.24  u_max=1.06  high_v=0.0000  t=20.5s blew_up=False
+  uL=1.00 A=0.70  L2_v_T=0.713  max_v_T=0.313  n_peaks=1  x_peak=13.48  u_max=1.07  high_v=0.0000  t=19.5s blew_up=False
+  uL=1.00 A=0.80  L2_v_T=0.751  max_v_T=0.322  n_peaks=1  x_peak=13.59  u_max=1.08  high_v=0.0000  t=17.2s blew_up=False
+  uL=1.00 A=1.20  L2_v_T=0.892  max_v_T=0.356  n_peaks=3  x_peak=14.30  u_max=1.16  high_v=0.0000  t=16.0s blew_up=False
+
+Total wall: 218.0s
+Saved evidence/E2_summary.json

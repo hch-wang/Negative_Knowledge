@@ -1,0 +1,24 @@
+{
+  "task_id": "T_B",
+  "condition": "NoKB",
+  "version": "stage3_bnls_v1",
+  "iter_budget": 3,
+  "tools_allowed": [
+    "Read",
+    "Write",
+    "Bash"
+  ],
+  "title": "Gaussian density packet on M_cs: dispersion vs soliton emission",
+  "description": "Initialize N as a localized Gaussian density packet with phi chosen so u = N*phi_x (still on M_cs) and ask: does the packet shed bright solitons via modulational instability (focusing NLS classic), or does the Burgers coupling alter the threshold? Analogous to BKdV T_B (Gaussian -> soliton train) but in a focusing NLS regime with Burgers boost.",
+  "ic": "kappa = 1 (focusing). N(x,0) = 2.0 * exp(-(x+5)^2 / 2.25) (amplitude 2.0, width sigma=1.5). phi(x,0) = 0.3*x (constant phase gradient => phi_x = 0.3). u(x,0) = 0.3 * N(x,0). [On M_cs at t=0.]",
+  "T_final": 6.0,
+  "output_path": "pred_results/T_B.npy",
+  "output_shape_spec": "shape (n_snapshots, 3, 256), channels (u, N, phi). Save 5+ snapshots; eval focuses on final snapshot.",
+  "phenomenon_target": "Final N should contain >= 2 well-separated peaks with amplitude >= 1.0 (soliton emission, hallmark of focusing-NLS modulational instability). Mass drift < 5%. Boundedness as in T_A.",
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx": 256,
+  "kappa": 1.0
+}

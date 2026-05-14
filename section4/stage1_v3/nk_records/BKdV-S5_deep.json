@@ -1,0 +1,28 @@
+{
+  "task_id": "BKdV-S5",
+  "depth": 3,
+  "rounds_summary": [
+    {"round": 1, "attempted_route": "Baseline a=1 sech^2(x+5) with u=v^2/2 (m_0=0) under full BKdV; pseudospectral + 2/3 dealias + IMEX-CN(v_xxx) + MUSCL-Godunov(u u_x); T=15, dt=1e-4.", "observation": "m_norm grows 0->2.9, v_peak collapses 1.0->0.4 within t<1, energy(u,v) +679%, mass_v conserved to 0 ppm; chaotic dispersive flow, not a soliton. m=0 is NOT invariant: m_t|_{m=0}=(v-1)(6 v v_x+v_xxx)!=0."},
+    {"round": 2, "attempted_route": "Add structured single-mode dv=0.05 sin(2pi*5 x/L) on v only (||dv_0||=0.194); same solver/IC/T; measure ||v_E2-v_E1||_L2 at shared snapshots.", "observation": "||dv|| stays in [0.18,0.22] for t in [0,13] (effective rate ~0), then rises ~6x to 1.15 by t=15. No early exponential phase; mode-5 is essentially inert against the chaotic baseline."},
+    {"round": 3, "attempted_route": "Replace structured perturbation with zero-mean Gaussian white noise (seed=42) rescaled to same ||dv_0||=0.194; identical solver/IC/T.", "observation": "||dv|| ~ exp(1.02 t)*||dv_0||, ratio E3/E2 reaches 143x at t=5; numerical blow-up at t=5.5 (sup->nan, energy ~1e3). Strong k-selective response: high-k modes are exponentially amplified."}
+  ],
+  "ruled_out_routes": [
+    "sech^2 v_0 + u_0=v_0^2/2 as a 'coherent Gardner-soliton-like traveling wave' under full BKdV (E1: m=0 manifold not invariant, immediate decoherence within t<1).",
+    "Low-k structured single-mode perturbation (sin at mode index 5, k0~1.05) as a fast-amplifying direction over T<=13 (E2: flat ||dv||_L2 for 13 time units).",
+    "Broadband matched-L^2 noise on a 256-point grid with 2/3 dealiasing + MUSCL-Godunov to characterize a saturated late-time state (E3: numerical blow-up at t~5.5 before saturation; cannot distinguish physical instability from high-k under-resolution).",
+    "Forward-Euler on u's full RHS / a=1.5 with dt=2.5e-4 (E1 bug history: blows up at t~3 once u acquires Burgers-shock amplitude; MUSCL-Godunov on u u_x is mandatory).",
+    "Using energy E=0.5*integral(u^2+v^2) as a convergence/conservation diagnostic for BKdV (E1: drifts +679% even when scheme is stable; it is not a BKdV invariant)."
+  ],
+  "synthesised_diagnosis": "The 'approximate Gardner soliton on m=0' premise is materially false: the m=0 manifold is not BKdV-invariant for sech^2 ICs (m_t|_{m=0}=(v-1)(6 v v_x+v_xxx)!=0), so E1 produces a chaotic dispersive baseline rather than a coherent wave. Against this baseline the perturbation response is sharply k-selective: low-k structured dv (mode 5) is inert for ~13 units, while broadband dv with significant high-k power grows as exp(t) and blows up at t~5.5. Mechanism: u_t -= d_x(3 v^2 + v_xx) injects a v_xxx forcing into u, so small-||dv|| but large-||dv_xxx|| perturbations drive u rapidly off m=0 and into the Burgers-shock regime, which the -d_x(u v) coupling then feeds back into v.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The program's presupposed stable structure (Gardner soliton on m=0) does not exist for sech^2 IC under full BKdV (algebraic+numerical confirmation), so 'modulational instability of it' cannot be defined; the only robust finding is k-selective deviation growth from a chaotic baseline, with high-k tied to the v_xxx-in-u coupling.",
+  "recommended_alternative": "Stage-2 should (a) abandon the m=0/sech^2 ansatz and instead construct a numerically dressed coherent state by long-time relaxation of the full BKdV system (damped time-integration or Petviashvili/Newton iteration on the traveling-wave ODE) and use THAT as the baseline; (b) sweep single-mode dv across k-index 1..N/3 to measure lambda(k); (c) re-run the broadband case at Nx=512/1024 with hyperviscosity nu_p*k^{2p} (p=4-8) on v to separate physical high-k instability from pseudospectral under-resolution; (d) replace the energy(u,v) diagnostic with the true BKdV Casimirs (mass_v, mass_u, and any quadratic invariant derivable from the variational structure).",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

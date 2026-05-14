@@ -1,0 +1,30 @@
+[A] Nx=256 dt=5.0e-04 T=5.0 nsteps=10000 elapsed=1.94s
+[B] Nx=256 dt=1.0e-04 T=5.0 nsteps=50000 elapsed=9.30s
+[C] Nx=512 dt=2.5e-04 T=5.0 nsteps=20000 elapsed=4.73s
+
+=== Drift summary across configs (E1 IC, T=5.0) ===
+quantity           |      A: dt=5e-4 Nx=256 |      B: dt=1e-4 Nx=256 |    C: dt=2.5e-4 Nx=512
+----------------------------------------------------------------------------------------------------
+C1=int u dx        | init=+0.000e+00 final=+7.494e-15 drift=+7.49e-15 | init=+0.000e+00 final=-2.498e-15 drift=-2.50e-15 | init=+0.000e+00 final=-8.327e-16 drift=-8.33e-16 |
+C2=int v dx        | init=+3.000e+00 final=+3.000e+00 drift=+1.78e-15 | init=+3.000e+00 final=+3.000e+00 drift=+3.55e-15 | init=+3.000e+00 final=+3.000e+00 drift=-2.22e-15 |
+C3=int uv dx       | init=+0.000e+00 final=+9.627e-01 drift=+9.63e-01 | init=+0.000e+00 final=+9.612e-01 drift=+9.61e-01 | init=+0.000e+00 final=+1.135e+00 drift=+1.14e+00 |
+C4=energy          | init=+2.700e+00 final=+3.884e+00 drift=+1.18e+00 | init=+2.700e+00 final=+3.893e+00 drift=+1.19e+00 | init=+2.700e+00 final=+3.910e+00 drift=+1.21e+00 |
+C5=int m^2 dx      | init=+1.157e+00 final=+5.914e+00 drift=+4.76e+00 | init=+1.157e+00 final=+5.932e+00 drift=+4.77e+00 | init=+1.157e+00 final=+5.704e+00 drift=+4.55e+00 |
+
+=== dt-scaling check (config A vs B at same Nx=256) ===
+dt ratio = dt_A/dt_B = 5e-4/1e-4 = 5
+  C1=int u dx        drift_A=+7.49e-15 drift_B=-2.50e-15  -> both ~ machine zero; structurally conserved
+  C2=int v dx        drift_A=+1.78e-15 drift_B=+3.55e-15  -> both ~ machine zero; structurally conserved
+  C3=int uv dx       drift_A=+9.63e-01 drift_B=+9.61e-01 ratio=+1.002 -> order ~ +0.00
+  C4=energy          drift_A=+1.18e+00 drift_B=+1.19e+00 ratio=+0.992 -> order ~ -0.00
+  C5=int m^2 dx      drift_A=+4.76e+00 drift_B=+4.77e+00 ratio=+0.996 -> order ~ -0.00
+
+=== Nx-scaling check (config A vs C at similar dt) ===
+Configs use different (Nx, dt) tuples; report side-by-side raw drift:
+  C1=int u dx        drift_A=+7.494e-15 drift_B=-2.498e-15 drift_C=-8.327e-16
+  C2=int v dx        drift_A=+1.776e-15 drift_B=+3.553e-15 drift_C=-2.220e-15
+  C3=int uv dx       drift_A=+9.627e-01 drift_B=+9.612e-01 drift_C=+1.135e+00
+  C4=energy          drift_A=+1.184e+00 drift_B=+1.193e+00 drift_C=+1.210e+00
+  C5=int m^2 dx      drift_A=+4.757e+00 drift_B=+4.775e+00 drift_C=+4.547e+00
+
+[save] history -> /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S2/round3/history.npz

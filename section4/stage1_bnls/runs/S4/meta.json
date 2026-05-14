@@ -1,0 +1,21 @@
+{
+  "title": "NLS defocusing dark soliton",
+  "domain": "NLS defocusing (kappa=-1), no Burgers boost",
+  "ic": "Psi(x,0) = tanh(x). (Dark soliton, density |Psi|^2 = tanh^2(x) has a zero at x=0 \u2014 this stress-tests N->0 handling.)",
+  "T_final": 4.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Stationary dark soliton, density profile tanh^2(x) preserved exactly. Phase jumps by pi across x=0.",
+  "stress_question": "How does Madelung-Psi handle the N=0 point at x=0? Does direct (N, phi) blow up? What regularization is needed? Are periodic-vs-Dirichlet boundary conditions an issue?",
+  "parameters_to_sweep": "Try Madelung-Psi (with phase jump) and direct (N, phi) (with regularization N->max(N, eps), eps in {1e-6, 1e-4, 1e-2}).",
+  "required_observations": [
+    "min_N_observed",
+    "phase_jump_resolved",
+    "method_for_each_attempt"
+  ],
+  "test_id": "S4",
+  "version": "stage1_bnls_v1"
+}

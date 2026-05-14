@@ -1,0 +1,28 @@
+{
+  "task_id": "BKdV-S6",
+  "depth": 3,
+  "rounds_summary": [
+    {"round": 1, "attempted_route": "Pre-validated stack (Fourier pseudospectral + 2/3 dealias + RK4, Nx=256, dt=1e-4) with NO u-dissipation on bore u + sech^2 v IC.", "observation": "No IEEE blowup, mass_u conserved (22.59), but u_max 1.5->3.41 (2.3x overshoot), u_min->-1.07, TV(u) 3->126 (42x), mid-k ratio 0.3%->25%; v_max collapses 1.50->0.58."},
+    {"round": 2, "attempted_route": "Same stack + small linear viscosity eps*u_xx with eps=1e-4 explicit in RK4 RHS.", "observation": "Essentially indistinguishable from E1: u_max_final 3.18 (7% drop), TV(u)=124 (1.4% drop), u_min=-0.77. Damping rate eps*k^2~3e-2/unit dominated by shock production O(u*k)~50/unit."},
+    {"round": 3, "attempted_route": "9-point sweep of u-dissipation: linear nu in {1e-3,1e-2,2e-2,5e-2,1e-1} and k^8 hyperviscosity nu_h in {1e-14,1e-12,1e-10,1e-9} (ceiling).", "observation": "Linear nu>=1e-2 passes practical bound (u_max_fin<1.8, TV<30); nu=5e-2 clean (u_max=1.54, TV=9.6); only nu_h=1e-9 hyper passes; BKdV-S4 envelope (~1e-20) is 13 orders too weak."}
+  ],
+  "ruled_out_routes": [
+    "Fourier pseudospectral + 2/3-rule dealias + classical RK4 with NO explicit u-dissipation on bore-like u IC (1.5(1-tanh(x/0.5))/2): produces 2.3x u_max overshoot and 42x TV inflation by T=6.",
+    "Adding 'standard tiny' linear viscosity eps*u_xx with eps=1e-4 on bore IC: ineffective (<7% reduction in u_max, <2% in TV); rate-balance shows 2-3 orders of magnitude undersized.",
+    "k^8 hyperviscosity at the BKdV-S4 smooth-soliton 'safe envelope' (nu_h ~ 1e-22 to 1e-20) on this IC: 13 orders of magnitude too weak; nu_h up to 1e-12 still yields TV_final>115 and u_max_final>3.0.",
+    "Linear viscosity nu=1e-3 on bore IC: insufficient (u_max_final=2.54, TV_final=93, u_min_final=-0.63).",
+    "Hyperviscosity nu_h<=1e-10 on bore IC: insufficient (TV_final>77, u_max_final>2.5); only nu_h=1e-9 (at explicit-RK4 stability ceiling for Nx=256/dt=1e-4) passes."
+  ],
+  "synthesised_diagnosis": "The Burgers self-flux 3*u*u_x on the smoothed-bore IC drives a one-sided in-band high-k energy cascade that 2/3 dealiasing CANNOT dissipate (it only zeros |k|>2k_max/3, leaving the cascade to pile up just below the cutoff). The shock-energy injection rate ~u_max*k_max~50/unit must be exceeded by the dissipation rate; this requires nu*k^2>>u*k at the spectral edge, i.e. nu>>u_max/k_max~0.11. Empirically nu_lin~1e-2 (marginal) to 5e-2 (clean) works; k^8 hyperviscosity needs nu_h~1e-9 (at the RK4 stability ceiling). Without it, u is quantitatively wrong and v is poisoned via -d_x(u*v).",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "2/3-rule dealiasing prevents aliasing of products INTO the resolved band but provides ZERO energy absorption inside it; for ICs whose self-flux produces a one-sided up-cascade (Burgers bore), energy accumulates at the dealias-cutoff edge as Gibbs ringing, yielding non-blowing-up but quantitatively wrong solutions and poisoning v via the (uv) coupling.",
+  "recommended_alternative": "For Stage-2 BKdV tasks with bore-like or steep u-gradient ICs: default to explicit linear viscosity nu*u_xx with nu=5e-2 (CFL-trivial at Nx=256, dt=1e-4, RK4; nu*k_max^2*dt~3.6e-3); if higher selectivity needed, use exponential / IMEX integrator (e.g. scipy.integrate.solve_ivp with method='LSODA' or a custom ETDRK4 on the linear part) to lift the explicit-stability ceiling and allow k^8 hyperviscosity above 1e-9. Always log TV(u) and mid-k spectral ratio E(k_max/3<|k|<2k_max/3)/E_total as primary diagnostics for u-side well-behavedness; re-calibrate nu per IC class rather than transferring BKdV-S4 smooth-soliton envelopes.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

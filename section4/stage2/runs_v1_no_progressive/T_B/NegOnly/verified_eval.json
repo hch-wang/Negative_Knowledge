@@ -1,0 +1,22 @@
+{
+  "useful": true,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 10.634723105433096,
+    "mass_vT": 10.634723105433096,
+    "mass_drift_rel": 0.0,
+    "u_max": 6.465835782875198,
+    "v_max": 4.487833002055746,
+    "bounded": true,
+    "v0_max": 3.9972882460057573,
+    "vT_max": 2.015067173837499,
+    "n_dominant_peaks_vT": 5,
+    "peak_separations": [
+      15,
+      95,
+      86,
+      25
+    ],
+    "useful": true
+  }
+}

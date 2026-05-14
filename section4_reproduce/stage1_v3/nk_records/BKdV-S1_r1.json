@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S1",
+  "round": 1,
+  "attempted_route": "Fourier pseudospectral derivatives (Nx=256, L=30) + classical RK4 over full explicit RHS (v_xxx treated explicitly), NO 2/3-rule dealiasing, NO IMEX. IC v0=1.5*sech^2(x+5), u0=v0^2/2, dt=2e-4, T=10.",
+  "observation": "Blow-up before t=0.5: RuntimeWarning 'overflow in multiply' on v*v then u*v, then 'invalid value in fft'; first scheduled diagnostic at t=0.5 already reports sup=NaN, mass_v=NaN, finite=False, reached_T10=False.",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "general_failure",
+    "degree": "unstable",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Quadratic products (v^2, u*v, v*v_x) on a Fourier grid populate wavenumbers above Nx/3; without 2/3 truncation those aliased modes wrap back into resolved modes with no dissipation. Co-candidate: dt=2e-4 sits marginally above the pure-RK4 v_xxx CFL ~1.47e-4 for k_max=pi/dx.",
+  "recommended_alternative": "Keep RK4 and dt=2e-4, but apply 2/3-rule spectral dealiasing on every nonlinear product (zero modes with |k_idx|>Nx/3=85; pre-dealias state at each rhs evaluation). This isolates aliasing vs v_xxx stiffness in one experiment.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

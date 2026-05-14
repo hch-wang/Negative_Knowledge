@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S7",
+  "round": 1,
+  "attempted_route": "Gardner-only baseline (m=0 reduction): v_t + 6 v v_x + (3/2) v^2 v_x + v_xxx = 0; IC v_0 = 1.5 sech^2(x+5); Fourier pseudospectral + 2/3 dealias + RK4, Nx=256, L=30, T=10, dt=2e-4. Diagnostics: mass_v, L2v, Gardner H, v_max, n_peaks.",
+  "observation": "Clean single-peak propagation over T=10: mass_v and L2v conserved to 0.000000%, H drift +0.188%, v_max in [1.4957, 1.5067] (drift -0.137%), n_peaks=1 throughout, phase speed c~3.564 (peak wraps domain twice). No blowup; positive baseline confirmed.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "local_failure",
+    "degree": "partial",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "Positive baseline, not a failure. sech^2 is an exact KdV soliton and the cubic (3/2)v^2 v_x is a mild perturbation at A=1.5 (cubic/quadratic flux ratio ~A/4=0.375), so radiative shedding stays sub-percent. Establishes that any E2 BKdV breakdown cannot be blamed on Gardner-side instability or numerics.",
+  "recommended_alternative": "Proceed to E2: rerun identical stack under full BKdV (u_t + 3 u u_x = -d_x(3 v^2 + v_xx), v_t + 6 v v_x + v_xxx = -d_x(uv)) with u_0 = v_0^2/2 so m_0=0 to machine precision; track ||m||_L2(t), v_max(t), u_max(t), ||v_BKdV(t)-v_Gardner(t)||_L2 against round1/snapshots.npz.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

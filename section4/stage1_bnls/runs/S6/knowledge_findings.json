@@ -1,0 +1,152 @@
+{
+  "test_id": "S6",
+  "methods_tried": [
+    {
+      "method_name": "Strang-split Madelung-Psi (kinetic exact via FFT, nonlinear pointwise exponential, RK4-sub-stepped advection-and-m)",
+      "params": {
+        "epsilon": 0.05,
+        "dt": 0.005,
+        "Nx": 256,
+        "T_final": 12.0,
+        "kappa": 1,
+        "dealiasing": "2/3 rule",
+        "nls_sign_convention": "standard (i*Psi_t = -(1/2)*Psi_xx - 2*kappa*|Psi|^2*Psi - i*u*Psi_x - (i/2)*u_x*Psi)",
+        "state_variables": "(Psi=sqrt(N)*exp(i*phi), m=u-N*phi_x)",
+        "u_reconstruction": "u = m + j, j = Im(conj(Psi)*Psi_x), no division by N"
+      },
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "mass_drift_relative": -2.8e-6,
+        "energy_drift_relative": -0.0477,
+        "min_N_min": 0.0,
+        "max_absu_max": 1.074,
+        "m_norm_initial": 0.1936,
+        "m_norm_final": 0.7060,
+        "m_norm_max": 0.7060,
+        "m_norm_plateau_mean_last_25pct": 0.7002,
+        "plateau_approach_tau_relax": 2.16,
+        "plateau_approach_r2_log": 0.939,
+        "power_law_growth_alpha_minus_slope": -0.556,
+        "power_law_growth_r2_log": 0.930,
+        "time_to_half_plateau": 3.90
+      },
+      "failure_mode": null,
+      "evidence": "Mass conserved to 1e-6 relative, energy to 5% (typical for Strang split with nonzero advection); ||m||_2 grows from 0.1936 to plateau 0.7002 with tau_relax=2.16; ||m||_2 trajectory matches finer-dt run (E3) to 0.14%; max|Psi| oscillates around 1.5-2 (soliton remains coherent)."
+    },
+    {
+      "method_name": "Strang-split Madelung-Psi (same as M1) at larger epsilon",
+      "params": {
+        "epsilon": 0.20,
+        "dt": 0.005,
+        "Nx": 256,
+        "T_final": 12.0,
+        "kappa": 1,
+        "dealiasing": "2/3 rule"
+      },
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "mass_drift_relative": -3.2e-6,
+        "energy_drift_relative": -0.0529,
+        "m_norm_initial": 0.7746,
+        "m_norm_final": 1.1066,
+        "m_norm_max": 1.1088,
+        "m_norm_plateau_mean_last_25pct": 1.1063,
+        "plateau_approach_tau_relax": 1.77,
+        "plateau_approach_r2_log": 0.991,
+        "power_law_growth_alpha_minus_slope": -0.119,
+        "power_law_growth_r2_log": 0.894,
+        "time_to_half_plateau": 2.30
+      },
+      "failure_mode": null,
+      "evidence": "Same conservation as M1. Plateau m_inf ~ 1.11 (1.58x of eps=0.05 plateau, for 4x epsilon -> sub-linear scaling, fit m_inf ~ eps^0.33). tau_relax ~ 1.77, slightly faster than eps=0.05."
+    },
+    {
+      "method_name": "Strang-split Madelung-Psi at finer dt (timestep convergence check)",
+      "params": {
+        "epsilon": 0.05,
+        "dt": 0.0025,
+        "Nx": 256,
+        "T_final": 12.0,
+        "kappa": 1
+      },
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "mass_drift_relative": -1.4e-6,
+        "energy_drift_relative": -0.0477,
+        "m_norm_final": 0.7070,
+        "m_norm_plateau": 0.7004,
+        "plateau_approach_tau_relax": 2.14,
+        "match_with_E1_relative_at_T12": 0.0014
+      },
+      "failure_mode": null,
+      "evidence": "Halving dt changes ||m||(T=12) by 0.14% and tau_relax by ~1%. The trajectory is numerically converged. The observed growth-and-plateau is a physical feature, not an artifact of dt."
+    },
+    {
+      "method_name": "Direct primitive (N, phi_x, u) RK4 with Fourier spectral + 2/3 dealias + hyperviscosity (attempted; documented as failure mode)",
+      "params": {
+        "epsilon": 0.05,
+        "dt": 0.001,
+        "Nx": 256,
+        "N_FLOOR": 1e-3,
+        "nu_hyper_u": 5e-3,
+        "nu_hyper_N": 5e-4,
+        "nu_hyper_p": 5e-4
+      },
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "blowup_time": 0.1,
+        "p_t_max_initial": 32.4,
+        "blowup_signature": "phi_x grows to >1.4 (from IC 0.25) within 1e-4 sec; subsequent NaN propagation"
+      },
+      "failure_mode": "Direct primitive integration with quantum pressure (sqrt(N))_xx/(2*sqrt(N)) is unstable at the soliton edge: even with N_FLOOR=1e-3, the spatial derivative of the quantum-pressure term has steep gradients (|d_x(QP)|_max ~ 32) in the vacuum-to-soliton transition zone, which the explicit RK4 cannot stably integrate. Hyperviscosity on u, N, p does not control it without making the dynamics non-physical. Conclusion: the Madelung-Psi reformulation (where Psi -> 0 smoothly in vacuum) is essential for the dispersive sector.",
+      "evidence": "Blowup at t=0.1 with p_max growing from 0.25 to 13.7 in 1e-4 sec across all attempted hyperviscosity strengths."
+    }
+  ],
+  "positive_findings": [
+    "Strang-split Madelung-Psi (kinetic via FFT exponential, nonlinear pointwise exponential, RK4-sub-stepped advection on (Psi, m)) is stable for T=12 with mass drift O(1e-6 relative) and energy drift O(5% relative). The method recommended in the S5 prompt extends naturally to the off-Mcs case.",
+    "Numerical convergence in dt: halving dt from 0.005 to 0.0025 changes ||m||(T=12) by only 0.14% and tau_relax by ~1%. The Strang split is stable at dt = 0.005 for Nx = 256.",
+    "Plateau scaling: m_inf ~ eps^(0.33) approximately, going from m_inf = 0.700 at eps=0.05 to m_inf = 1.106 at eps=0.20 (1.58x for 4x epsilon).",
+    "Plateau approach is well-fit by exponential relaxation m(t) = m_inf - A*exp(-t/tau_relax) with tau_relax = 2.16 at eps=0.05 (r2_log=0.94) and tau_relax = 1.77 at eps=0.20 (r2_log=0.99). The relaxation timescale modestly decreases with eps."
+  ],
+  "negative_findings": [
+    "The Mcs-attractor hypothesis is REFUTED for T=12: ||m(t)||_2 does NOT decay; it GROWS by a factor of 3.6 (eps=0.05) or 1.43 (eps=0.20) and saturates at a non-zero plateau. There is no exponential decay (the fit_exponential to m_norm itself gives slope +0.10 i.e. growth, not decay; tau = -10 unphysical).",
+    "Power-law fit of m_norm yields negative alpha (-0.56 at eps=0.05; -0.12 at eps=0.20), indicating GROWTH like t^|alpha|, not decay. r2 ~ 0.93 / 0.89 for the power-law fit confirms the growth phase trends with a power law.",
+    "Decay rate is therefore not characterizable as exp(-t/tau) or t^(-alpha) under the user's intended sign — the system moves AWAY from Mcs (m=0) not toward it.",
+    "Direct primitive (N, phi_x, u) RK4 integration is unstable for T_final ~ 12 even with 2/3 dealiasing and hyperviscosity (blowup at t ~ 0.1) because the Madelung quantum-pressure term has steep gradients in the vacuum-soliton transition region. The Madelung-Psi reformulation is essential.",
+    "The Madelung sign in the prompt's phi equation (+(sqrt(N))_xx/(2*sqrt(N))) does not match standard NLS-Madelung; the simulation here adopts the standard NLS sign (assuming the prompt sign is a convention/typo). With the prompt's literal sign, no stable explicit Madelung-Psi formulation exists because Psi cannot satisfy a standard Schrödinger equation."
+  ],
+  "parameter_boundaries": [
+    {
+      "variable": "dt",
+      "method": "Strang-split Madelung-Psi",
+      "stable_range": "dt <= 0.005",
+      "fails_at": "not tested; expected to fail at dt >= 0.05 from CFL on advection sub-step (max|u| ~ 1, max|k| ~ pi*Nx/L ~ 27, advection_CFL ~ dt*max|u|*max|k| = 0.135 at dt=0.005)",
+      "convergence_at_half_dt": "trajectory deviates by < 0.2% in m_norm; relaxation tau deviates by ~1%"
+    },
+    {
+      "variable": "epsilon",
+      "method": "Strang-split Madelung-Psi",
+      "stable_range": "[0.05, 0.20] tested; expected stable up to ~0.5 before nonlinear effects dominate",
+      "fails_at": "not observed within tested range",
+      "epsilon_dependence": "m_inf(eps) approximately eps^0.33; tau_relax(eps) approximately decreasing weakly with eps (from 2.16 at 0.05 to 1.77 at 0.20)"
+    },
+    {
+      "variable": "method",
+      "method": "direct primitive RK4 on (N, phi_x, u)",
+      "stable_range": "none observed in S6 setup",
+      "fails_at": "blows up at t ~ 0.1 even with dt=1e-4, N_FLOOR=1e-3, hyperviscosity 5e-3 on u, 5e-4 on N and p",
+      "rationale": "quantum pressure d_x[(sqrt(N))_xx/(2*sqrt(N))] has |d_x| ~ 32 in vacuum-soliton boundary even with N_floor; explicit time integration cannot stabilize without unphysically large diffusion"
+    }
+  ],
+  "key_research_question_answer": {
+    "user_hypothesis": "B-NLS off Mcs relaxes back toward Mcs (m -> 0); ||m||_2 decays with some rate tau.",
+    "simulation_result": "REFUTED at T=12 for both epsilon in {0.05, 0.20}. ||m||_2 GROWS by factor 1.4-3.6 and saturates at non-zero plateau.",
+    "characterization": "Exponential approach to a non-zero plateau: ||m||(t) approximately m_inf - (m_inf - m_0)*exp(-t/tau_relax). tau_relax approximately 2.16 +/- 0.5 for eps=0.05; tau_relax approximately 1.77 +/- 0.3 for eps=0.20. m_inf approximately 0.700 (eps=0.05) and 1.106 (eps=0.20), scaling as eps^0.33 approximately.",
+    "interpretation": "Mcs (m = u - N*phi_x = 0) is NOT a dynamical attractor of B-NLS in the tested regime with the standard NLS sign convention on Psi. Instead, the system relaxes to a different invariant configuration with m at O(1) magnitude. Plateau dependence on eps is sub-linear, suggesting the plateau is determined more by the soliton state (||N||) than by the perturbation amplitude.",
+    "caveats": [
+      "Simulation uses standard NLS sign on Psi (-1/2 Psi_xx); the prompt's literal sign yields an unstable Madelung formulation. If the prompt's sign is intentional, a different numerical method is needed (perhaps fluid-only primitive integration with very strong regularization, which we found to fail).",
+      "Energy drift is ~5%, larger than ideal; this comes from the RK4-sub-stepped advection-by-u step inside the Strang split (the kinetic and nonlinear sub-steps are exact). The qualitative growth-and-plateau result is robust under timestep refinement, but the precise tau_relax/m_inf values may have ~10% uncertainty due to method choice.",
+      "Tested only kappa = +1 (focusing); negative-kappa case not explored."
+    ]
+  }
+}

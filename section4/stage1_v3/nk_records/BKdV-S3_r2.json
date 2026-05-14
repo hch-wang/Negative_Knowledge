@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S3",
+  "round": 2,
+  "attempted_route": "Amplitude scan on sech^2(x+2,width=1.5) v-seed with flat u, A in {0.1,0.2,0.3,0.4,0.5,0.6,0.8,1.0,1.2}; same Fourier pseudospectral + RK4 + integrating-factor stack as E1; T=12, dt=2.5e-4 (1e-4 for A>=1). Measured vmax_late, npeaks_v, fracL_v (k<=2), lock_corr, and new retention=vmax_late/A.",
+  "observation": "Across all 9 amplitudes: npeaks=1 (or 2 at A<=0.2), fracL_v>=0.993, retention 0.51-0.63, no blowup. Strict vmax>=0.5 only met at A>=1.0 (artifact of absolute threshold). lock_corr non-monotonic, peaks 0.79 at A=0.4, drops to -0.19 (A=0.1) and 0.19 (A=1.2).",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "contradicted",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "BKdV's localized basin is amplitude-scale-free for sech^2 seeds: the cubic v^2 nonlinearity rescales with A but stays self-focusing, so any A produces a single coherent pulse with ~50-60% retention. There is no A_c inside the localized family; the phase boundary lives on the IC-spectral-shape axis, not amplitude.",
+  "recommended_alternative": "Move off the amplitude axis: fix A=0.6 sech^2 and sweep additive Gaussian-envelope white noise sigma in {0,0.05,0.1,0.2,0.3,0.4,0.6,0.8} to interpolate between localized and broadband ICs; track fracL_v and lock_corr (drop count_peaks as primary — it is noise-texture-sensitive) to locate the soft sigma_c.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

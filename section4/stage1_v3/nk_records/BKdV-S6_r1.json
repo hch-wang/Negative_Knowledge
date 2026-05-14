@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S6",
+  "round": 1,
+  "attempted_route": "Pre-validated stack (Fourier pseudospectral + 2/3-rule dealias + classical RK4, dt=1e-4, Nx=256, L=30) with NO u-side viscosity/hyperviscosity/filter on IC u=1.5(1-tanh(x/0.5))/2 (smoothed bore) + v=1.5 sech^2(x+5), T=6.",
+  "observation": "No IEEE blow-up; mass_u exactly preserved (22.589). But u_max grows IC 1.5 -> 3.41 (~2.3x), u_min dives to -1.07, TV(u) inflates 3.0 -> 125.8 (42x), mid-band spectral ratio 0.3% -> 25%; v_max collapses 1.50 -> 0.58.",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "regime_bound_failure",
+    "degree": "unstable",
+    "recommended_action": "change_method",
+    "risk": "high_risk_false_progress"
+  },
+  "rationale": "2/3-rule dealiasing only zeroes |k|>2/3 k_max to prevent aliasing OF products into resolved modes; it does NOT dissipate energy already inside the resolved band. Burgers self-flux 3 u u_x steepens the bore and piles Gibbs energy just below the cutoff, then leaks into v via -d_x(uv).",
+  "recommended_alternative": "Add explicit linear viscosity term eps*u_xx in the u-RHS (computed spectrally as ifft(-k^2*fft(u))) with eps=1e-4 as the conventional starting value, treated explicitly inside RK4; sweep upward if insufficient.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

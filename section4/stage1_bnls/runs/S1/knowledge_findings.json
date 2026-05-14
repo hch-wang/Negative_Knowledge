@@ -1,0 +1,91 @@
+{
+  "test_id": "S1",
+  "system_under_test": "Focusing NLS: i*Psi_t + (1/2)*Psi_xx + kappa*|Psi|^2*Psi = 0 with kappa=+1, u=0 (B-NLS Madelung-Psi reduction)",
+  "ic": "Psi(x,0) = sqrt(2)*sech(sqrt(2)*(x+5))*exp(i*0.25*x)",
+  "T_final": 8.0,
+  "domain_x": [-15.0, 15.0],
+  "ground_truth": {
+    "Psi_max_modulus": 1.4142135623730951,
+    "abs_Psi_squared_max": 2.0,
+    "mass": 2.8284271247461903,
+    "peak_position_at_T8": -3.0,
+    "energy_focusing": -0.85442069
+  },
+  "methods_tried": [
+    {
+      "method_name": "Strang split-step Fourier on Psi (Madelung-Psi route)",
+      "description": "Symmetric splitting N(dt/2)-L(dt)-N(dt/2): nonlinear half-step exact in physical space (|Psi| invariant: Psi -> Psi*exp(i*kappa*|Psi|^2*dt/2)), linear full step exact in Fourier (Psi_k -> Psi_k*exp(-i*k^2*dt/2)). Both sub-steps unitary so mass is preserved by construction.",
+      "params": {"dt_grid": [0.01, 0.001, 0.0001], "Nx_grid": [128, 256, 512], "dealiasing": false},
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "dt0.001_Nx256": {"mass_drift_rel": 5.17e-13, "energy_drift_rel": 2.93e-12, "peak_amplitude_final_abs_Psi": 1.41111, "peak_position_final": -3.00031, "relL2_error_vs_exact": 5.68e-06, "Linf_error_vs_exact": 8.18e-06, "phase_winding": 2.666, "wall_seconds": 0.15},
+        "dt0.0001_Nx512": {"mass_drift_rel": 8.31e-12, "energy_drift_rel": 3.08e-11, "peak_amplitude_final_abs_Psi": 1.41402, "peak_position_final": -3.00000, "relL2_error_vs_exact": 7.0e-07, "wall_seconds": 2.24},
+        "dt0.01_Nx256": {"mass_drift_rel": 2.84e-14, "energy_drift_rel": 4.33e-08, "relL2_error_vs_exact": 5.64e-04},
+        "convergence_order_in_dt": "~2 (factor 100 in relL2 when dt drops by 10)",
+        "convergence_order_in_Nx": "spectral (exponential) until peak resolution; |Psi|_max at Nx=128 is 1.4111 vs true sqrt(2)=1.4142, improving to 1.4140 at Nx=512"
+      },
+      "failure_mode": null,
+      "evidence": "All 9 (dt,Nx) combos in the prompt grid finite and accurate. Mass conserved to between 3e-14 and 9e-12 (drift grows mildly with n_steps from rounding only, not from method). Energy conserved to 1e-12 at dt=0.001/Nx=256 (best balance). Peak position matches ground truth -3.0 to 4 decimals at Nx>=256."
+    },
+    {
+      "method_name": "Lie (first-order) split-step Fourier on Psi",
+      "description": "Asymmetric splitting N(dt)-L(dt): same nonlinear and linear propagators but applied sequentially without the half-step symmetrization.",
+      "params": {"dt_grid": [0.01, 0.001, 0.0001], "Nx_grid": [256], "dealiasing": false},
+      "outcome": "partial",
+      "outcome_diagnostics": {
+        "dt0.001_Nx256": {"mass_drift_rel": 5.15e-13, "energy_drift_rel": 2.17e-06, "relL2_error_vs_exact": 6.54e-04},
+        "dt0.01_Nx256": {"mass_drift_rel": 3.16e-14, "energy_drift_rel": 2.18e-04, "relL2_error_vs_exact": 6.13e-03},
+        "dt0.0001_Nx256": {"mass_drift_rel": 4.87e-12, "energy_drift_rel": 2.17e-08, "relL2_error_vs_exact": 6.59e-05},
+        "convergence_order_in_dt": "~1 (factor 10 in relL2 when dt drops by 10)"
+      },
+      "failure_mode": "First-order: relL2 ~ 100x worse than Strang at the same (dt,Nx). Energy drift O(dt) instead of O(dt^2) (~1e-4 at dt=1e-2 vs Strang's 4e-8). Mass still conserved because each sub-step is individually norm-preserving.",
+      "evidence": "Lie at dt=1e-2 gives relL2=6.1e-3 vs Strang's 5.6e-4 (factor 11). Halving the error requires ~10x more dt steps. For NLS soliton transport at long T, Lie is uneconomical despite being half the cost per step."
+    },
+    {
+      "method_name": "ETD-RK1 (exponential Euler in Fourier) on Psi",
+      "description": "Treat linear operator L=-i*k^2/2 exactly and nonlinear term N(Psi)=i*kappa*|Psi|^2*Psi via first-order ETD: Psi_k(t+dt) = e^{L*dt}*Psi_k(t) + ((e^{L*dt}-1)/L) * FFT[N(Psi(t))]. Operator-splitting alternative that does not split the nonlinearity off symplectically.",
+      "params": {"dt_grid": [0.01, 0.001, 0.0001], "Nx_grid": [256], "dealiasing": false},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "dt0.01_Nx256": {"mass_drift_rel": 0.1435, "energy_drift_rel": 0.5645, "relL2_error_vs_exact": 1.045, "peak_amplitude_final_abs_Psi": 1.616},
+        "dt0.001_Nx256": {"mass_drift_rel": 1.06e-2, "energy_drift_rel": 3.71e-2, "relL2_error_vs_exact": 8.52e-2},
+        "dt0.0001_Nx256": {"mass_drift_rel": 1.04e-3, "energy_drift_rel": 3.59e-3, "relL2_error_vs_exact": 8.34e-3},
+        "convergence_order_in_dt": "~1 (in error AND in mass drift -- a strong negative signature)"
+      },
+      "failure_mode": "Non-symplectic, non-norm-preserving. The nonlinear contribution is integrated forward by a single Euler-like correction (E-1)/L over [t, t+dt] rather than as a unitary rotation, so |Psi|^2 grows or shrinks per step. Mass drift is O(dt) (1e-1 at dt=1e-2, 1e-3 at dt=1e-4) -- linear in dt. For mass-conserving NLS this is unacceptable: even at dt=1e-4 mass leaks at the ~0.1% level over T=8.",
+      "evidence": "relL2=1.045 at dt=0.01 means the produced field is unrelated to the exact soliton (worse than zero solution). Even at dt=0.0001 relL2=8e-3 vs Strang's 7e-7 (factor 10^4 worse). For NLS, ANY non-symplectic Eulerian time-stepper destroys the soliton's amplitude over long horizons."
+    }
+  ],
+  "positive_findings": [
+    "Strang split-step Fourier conserves mass to machine precision (~3e-14 to 9e-12) on the bright soliton for every (dt,Nx) in {0.01,0.001,0.0001} x {128,256,512}. Mass conservation is by construction (each sub-step is unitary), so this holds even when the soliton shape is wrong due to under-resolution.",
+    "Strang exhibits clean 2nd-order temporal convergence: relL2 drops from 5.6e-4 at dt=0.01 to 5.7e-6 at dt=0.001 to ~7e-7 at dt=0.0001 (last drop is limited by Nx=256 spatial resolution, not temporal).",
+    "Spatial convergence is spectral on the smooth sech soliton: at Nx=512/dt=0.0001 the peak amplitude |Psi|_max recovers sqrt(2) to 4 decimals (1.41402 vs 1.41421) and peak position recovers -3.0000 exactly.",
+    "Energy drift is O(dt^4) for Strang (4.3e-8 at dt=0.01, 1.7e-11 at dt=0.0001 -- factor ~2500 = 50^2 ~ dt^4-ish), consistent with Strang being a symmetric symplectic 2nd-order method that picks up a 4th-order shadow Hamiltonian.",
+    "Recommended default: Strang split-step Fourier with dt=0.001 and Nx=256 gives relL2=5.7e-6, |dM|/M=5e-13, |dE|/|E|=3e-12 in 0.15 s wall time for T=8 -- the sweet spot for this test."
+  ],
+  "negative_findings": [
+    "ETD-RK1 (exponential Euler) is NOT mass-conserving for NLS: mass drift is O(dt) with leading coefficient ~kappa, so |dM|/M ~ 0.14 at dt=0.01 even though the soliton 'looks plausible' (peak amplitude 1.62, position -3.14). Lesson: non-symplectic single-step schemes on Hamiltonian NLS systems destroy invariants linearly in dt regardless of nominal order.",
+    "Strang's mass conservation is unconditional and gives a FALSE positive signal at coarse Nx: at Nx=32 the soliton width 1/sqrt(2) ~ 0.71 < dx=0.94, so the field is unresolved and the peak ends at x=-4.66 (vs gt -3.0) and |Psi|_max collapses to 1.31, but mass is still conserved to ~1e-14. Mass conservation alone is NOT a proof of correctness on B-NLS or NLS systems.",
+    "Lie splitting is first-order: at dt=0.01 it gives relL2=6.1e-3, vs Strang's 5.6e-4 (11x worse). For the same accuracy as Strang you need 10x more steps, making Lie strictly worse despite being half the cost per step.",
+    "dt=0.5 is destructive at every Nx tested (relL2 > 0.88) because the linear half-step phase max((1/2)*k_max^2*dt) = (1/2)*(pi*Nx/L)^2*dt at Nx>=64 already exceeds 2*pi, fully aliasing the dispersion -- but the method does NOT blow up to NaN; it silently produces a wrong soliton with correct mass. Failure mode is degradation, not divergence."
+  ],
+  "parameter_boundaries": [
+    {"variable": "dt", "method": "Strang split-step Fourier", "stable_range": "dt <= 0.1 for any Nx; dt <= 0.01 for relL2 < 1e-3; dt = 0.001 is the recommended working point", "fails_at": "dt >= 0.5 (linear half-step phase > 2*pi at k_max for Nx>=64)", "evidence_diagnostic": "relL2 = 0.95 at dt=0.5, Nx=128"},
+    {"variable": "Nx", "method": "Strang split-step Fourier", "stable_range": "Nx >= 96 for relL2 < 1e-3 with dt=0.01; Nx = 256 is the recommended working point", "fails_at": "Nx <= 32 (dx > soliton width 1/A = 1/sqrt(2) ~ 0.71)", "evidence_diagnostic": "Nx=32 yields relL2 ~ 1.1, peak position -4.66 vs gt -3.0 at every dt tested"},
+    {"variable": "dt", "method": "Lie split-step Fourier", "stable_range": "dt <= 0.001 for relL2 < 1e-3", "fails_at": "convergence is 1st-order so dt=0.01 gives relL2=6e-3; no NaN failure observed", "evidence_diagnostic": "relL2 ~ 0.66*dt empirically"},
+    {"variable": "dt", "method": "ETD-RK1 exponential Euler", "stable_range": "NONE acceptable for NLS soliton: mass drift always O(dt). Even at dt=1e-4, |dM|/M = 1e-3, unsuitable for long-time soliton transport.", "fails_at": "all dt tested; method is structurally non-symplectic", "evidence_diagnostic": "|dM|/M = 0.14 (dt=1e-2), 1.1e-2 (dt=1e-3), 1.0e-3 (dt=1e-4) -- linear in dt"},
+    {"variable": "(dt, Nx) joint", "method": "Strang split-step Fourier", "stable_range": "dt*(Nx/L)^2 <= O(1), specifically dt <= 0.1 with Nx=256 and dt <= 0.01 with Nx=512", "fails_at": "dt*(Nx/L)^2 >> 1 produces aliased dispersion (e.g. dt=0.5/Nx=128/L=30: dt*(Nx/L)^2 ~ 9.2)", "evidence_diagnostic": "dt=0.5 destructive at every Nx in {32,64,96,128}; smaller dt always survives provided Nx >= 64"}
+  ],
+  "general_lessons_for_BNLS": [
+    "Madelung-Psi route is the right primitive for the (N, phi) sector when N > 0 everywhere: working with the smooth Psi avoids the (sqrt(N))_xx/sqrt(N) quantum-pressure singularity that direct (N, phi) evolution would face wherever N gets small.",
+    "For Hamiltonian sub-systems of B-NLS, ALWAYS use a symplectic (Strang or higher-order Yoshida) splitting on Psi. Non-symplectic Eulerian methods (forward Euler, ETD-RK1, naive RK4 in time on real (N, phi)) drift mass linearly with dt and destroy soliton structure.",
+    "Mass conservation is NOT a sufficient diagnostic of a working method: Strang preserves mass to 1e-14 even when the soliton is structurally destroyed by under-resolution. Always co-monitor energy drift, peak amplitude, and peak position against ground truth (or against a high-resolution reference).",
+    "The relevant CFL-like quantity for split-step Fourier on focusing NLS is dt*(pi*Nx/L)^2 (linear sub-step phase budget); the nonlinear sub-step contributes kappa*|Psi|^2_max*dt phase, which at |Psi|^2~2 just requires dt << 1 (no stability constraint, only accuracy). Practical rule: dt <= 0.001, Nx >= 256 on a domain L=30 with peak |Psi|^2 ~ O(1)."
+  ],
+  "files": {
+    "candidate.py": "Final solver: Strang split-step Fourier on Psi (with Lie and ETD-RK1 included as alternative methods for comparative reproducibility).",
+    "pred_results/S1.npz": "122 named arrays: x_*, Psi_initial_*, Psi_final_*, Psi_exact_* for every (method, dt, Nx) tested in E1 + E2; summary_json and probe_summary_json embed the diagnostic tables.",
+    "research_state.jsonl": "Q1, E1, F1, D1, E2, F2, D2.",
+    "reasoning.md": "Narrative discussion of methods tried, what works, what fails."
+  }
+}

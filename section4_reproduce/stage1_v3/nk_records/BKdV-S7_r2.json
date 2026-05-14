@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S7",
+  "round": 2,
+  "attempted_route": "Full BKdV (coupled u,v) with IC v0=1.5*sech^2(x+5), u0=v0^2/2 so m0=0; Fourier pseudospectral Nx=256 L=30, 2/3 dealiasing, RK4 dt=2e-4, T=10. Measured ||m||_L2, v_max, u_max, ||v_BKdV-v_Gardner||_L2 vs round1.",
+  "observation": "m=0 manifold destroyed on O(1) time: ||m||_L2 reaches 0.74 by t=0.5, 1.22 by t=1, saturates ~2.55. v_max drops 1.498->0.558 (-62.8%), u_max climbs 1.12->3.97, n_peaks 1->8. ||v_BKdV-v_Gardner||_L2 grows to 1.81 (> ||v_BKdV||=0.84). Mass conserved, no blowup.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "retry",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "Positive finding: confirms program hypothesis. The m=0 manifold is a kinematic substitution, not a dynamical invariant set of coupled BKdV; the -∂_x(u v) coupling immediately forces m_t off zero, fragmenting the Gardner-stable soliton into a dispersive train while v itself remains bounded (purely physical breakdown).",
+  "recommended_alternative": "Proceed to E3: evaluate the BKdV-S5 algebraic identity m_t|_{m=0}=(v-1)(6 v v_x + v_xxx) on v0(x); compute its L2 norm and FFT spectrum to predict the dominant unstable modes, then compare against early-time m_hat(k,t) from this round's snapshots.npz.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S1",
+  "round": 3,
+  "attempted_route": "Fourier pseudospectral + 2/3-rule dealiasing + classical RK4 (dt=2e-4, Nx=256, L=30); IC v0=amp*sech^2(x+5) with amp=3.0 (top of [1,3]), u0=v0^2/2; T=10; track sup_u, sup_v, mass_v, edge_frac.",
+  "observation": "Reached T=10 cleanly: mass_v=6.0 conserved to <1e-12, sup_u rose 4.49->~10.5 with oscillations, sup_v decayed 3.0->1.16, edge_frac peaked ~3e-6 (well below 1e-4 alert), no NaN/overflow, elapsed 22.4s.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "Positive finding: the predicted second failure mode (high-amp gradient steepening of u or Burgers-side under-resolution at the 2/3 band) did not materialize at amp=3, T=10. The 2/3 cutoff raises dispersion-CFL above dt=2e-4 and u-steepening stayed band-resolved.",
+  "recommended_alternative": "To experimentally hit a second failure mode, stress an orthogonal axis: either raise dt above the post-dealias CFL bound ~4.94e-4 (e.g. dt=8e-4 with same RK4) to trigger v_xxx dispersion stiffness, or extend T to 50-100 / use Burgers-dominant IC to force shock formation requiring MUSCL-Godunov on u*u_x.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

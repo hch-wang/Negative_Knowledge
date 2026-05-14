@@ -1,0 +1,6 @@
+# Session log: B2 / PosOnly
+
+- E1 (bug-fix re-run; same hypothesis): 30-point (u_L, A) scan at T=2.5 with soliton-inside-bore geometry. No destruction emerges; (u_L, A) plane shows smooth amplitude-driven gradient with bore producing only an advective shift. Initial design with bore-on-left + soliton-on-right at T=2.5 produced no encounter — geometry redesigned (bug-fix re-run, same hypothesis).
+- E2: 3x4 long-horizon scan (T=10) + viscosity ablation (nu in {2.5e-2, 5e-2, 1e-1}). Destruction emerges at A>=1.5 — but ALSO at u_L=0 (ablation control). Bore monotonically stabilizes survival at fixed A; viscosity ablation invariant within 6% on v_peak, 3% on L2_ratio.
+- E3: Part A dense A-sweep at u_L=0 — smooth knee near A=1 with d(L2_ratio)/dA dropping 25x and sign-flipping by A=1.7; plateau at L2_ratio~0.44 for A in [1.3, 2.0] (destruction attractor). Part B u_L-sweep at A=1.5 — non-monotone: weak-bore destabilization at u_L=0.25-0.75 (max_n_peaks=4), then monotonic stabilization plateau at u_L>=1.5, then a second regime jump at u_L=3 (single-peak co-advected soliton).
+- Wrap-up: phase boundaries are SMOOTH (not sharp) in both A and u_L; the bore stabilizes (does not destroy) the soliton at moderate-to-large u_L; the BKdV-S7 R3 (v-1) sign-flip prediction is confirmed at the source level as a knee in observable L2_ratio(A).

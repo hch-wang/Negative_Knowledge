@@ -1,0 +1,433 @@
+% =============================================================================
+% DRAFT — Section 4 v3 + new Appendix items
+% Replaces lines 563-818 in main.tex (the current Section 4 case study)
+% AND adds appendix items at the end (Eval-v2 details, IC-trap, Agent traces)
+% =============================================================================
+
+\section{Case Study: Negative Knowledge in a Multi-Agent Research Loop}
+\label{sec:case-study}
+
+We test structured negative knowledge in a real research workflow on the
+coupled Burgers-swept-KdV (BKdV) system of Holm et~al.\ (2025). Unlike
+benchmark evaluation, this setting has no closed-form reference; ``success''
+is whether the team produces a defensible physical observation. Failures
+take three forms: numerical blow-up, runs that finish but miss the phenomenon,
+and runs that are numerically valid but scientifically uninformative. The
+case study tests whether bounded negative knowledge---with explicit depth
+structure---helps a multi-agent team navigate this richer failure space.
+
+The BKdV system couples a Burgers-like current $u$ to a KdV-like wave $v$,
+\begin{align*}
+  u_t + 3 u u_x &= -\partial_x\!\left(3 v^2 + \gamma v_{xx}\right), \\
+  v_t + 6 v v_x + \gamma v_{xxx} &= -\partial_x(u v).
+\end{align*}
+The reduction $m := u - v^2/2 = 0$ collapses to a Gardner equation; the three
+limits (Burgers, KdV, Gardner) are known while the coupled regime is partially
+open. The case study runs in two stages: \textbf{Stage~1} produces a structured
+knowledge bank from \emph{multi-round} stress tests on the coupled system
+itself; \textbf{Stage~2} uses that bank to study three coupled-system
+sub-questions under four memory conditions and a strict
+progressive-complexity discipline. Full task specifications, the
+bank inventory, the eval-version derivation, and the agent trace catalogue
+are in
+\cref{appendix:bkdv-setup,appendix:bkdv-bank,appendix:eval-v2,appendix:agent-traces}.
+
+\subsection{Stage~1: Multi-round stress tests with depth-tagged curation}
+\label{sec:pde-stage1}
+
+\paragraph{From single-shot logs to depth-tagged knowledge.} Earlier rounds of
+this case study produced a 30-entry bank from \emph{single-shot} stress tests
+on isolated component PDEs. We found this insufficient: a one-round failure
+is at most an error message---an agent at Stage~2 reproduces equivalent
+information after one round on their own. Knowledge that genuinely helps must
+capture what \emph{persists} across multiple attempts: a path-level closure
+that the agent at Stage~2 would not reproduce in their own three-round
+budget. We therefore reorganise Stage~1 into seven \emph{multi-round}
+research-program stress tests (BKdV-S1 through BKdV-S7) on the coupled
+system, each conducted under the Research Graph protocol with three Experiment
+rounds, identical to Stage~2's protocol. Program summaries are in
+\cref{appendix:bkdv-bank}; we highlight three:
+\begin{itemize}
+  \item \textbf{BKdV-S5} establishes an algebraic identity
+        $m_t|_{m=0} = (v-1)(6 v v_x + v_{xxx}) \not\equiv 0$ for sech$^2$
+        initial conditions, demonstrating that the m{=}0 (Gardner) reduction
+        is \emph{not} a dynamically invariant manifold.
+  \item \textbf{BKdV-S6} establishes that the pre-validated stack
+        (pseudospectral + 2/3 dealias + RK4) is \emph{quantitatively wrong}
+        for bore-like u initial conditions: u develops Gibbs-driven
+        non-physical excursions and a usable threshold is
+        $\nu_\text{linear} \approx 5\times 10^{-2}$ (or
+        $\nu_h \approx 10^{-9}$ for $k^8$ hyperviscosity), \emph{13 orders of
+        magnitude} above the BKdV-S4 smooth-soliton ``safe envelope''.
+  \item \textbf{BKdV-S7} demonstrates that an initial condition that is
+        stable in Gardner-only evolution at amplitude $1.5$ is \emph{not}
+        stable in BKdV when initialised at $m_0 = 0$: $v_{\max}$ decays by
+        $62.8\%$ over $T{=}10$, with the mode-by-mode amplification of $m$
+        predicted by S5's identity to a cosine similarity of $0.94$ against
+        the observed spectrum.
+\end{itemize}
+
+\paragraph{Dual-pass curation.} For each program a sub-agent runs the three
+rounds; two passes of curators then read the complete trace. The
+\emph{per-round} pass produces three depth-1 records, capturing each round's
+local lesson. The \emph{deep} pass synthesises across all three rounds,
+producing one depth-3 record per program containing a
+\texttt{synthesised\_diagnosis}, a list of \texttt{ruled\_out\_routes}
+(path-level closures), and a \texttt{recommended\_alternative} field that
+must not duplicate any ruled-out route. The deep records are the carriers of
+multi-round path-closure knowledge.
+
+\paragraph{The expanded bank.} The 30 legacy single-shot entries are retained
+(re-tagged as depth-1 records) and supplemented with the 28 new entries (21
+depth-1 per-round + 7 depth-3 deep). The final bank \texttt{bank\_v3.A'}
+contains 58 entries: 15 positive + 43 negative, with 7 deep-synthesis entries
+covering S1--S7. The depth tag is used in \cref{sec:headline-result} to
+ablate ``one-round-failure log'' versus ``three-round path-closure''
+contributions.
+
+\subsection{Progressive-complexity discipline}
+\label{sec:progressive-discipline}
+
+A central methodological problem in this case study is \emph{method lookup}:
+when a bank contains validated complex methods (e.g.\ IMEX-CN spectral), a
+bank-aware agent at Stage~2 can adopt the complex method at round~1 without
+exhibiting research-style reasoning. To prevent this we impose a
+non-negotiable discipline on every Stage~2 cell:
+\begin{itemize}
+  \item \textbf{E1 must be the simplest meaningful baseline}: pseudospectral
+        spatial derivatives, no dealiasing, classical explicit RK4, no
+        operator splitting, no implicit treatment of stiff terms. Even if the
+        bank explicitly endorses a complex stack, the agent must first
+        observe baseline failure modes on the actual task.
+  \item \textbf{E2 and E3 change at most one major component} over the
+        previous experiment. If E2 simultaneously switches the time
+        integrator, adds dealiasing, and changes the discretisation, the
+        resulting outcome cannot be attributed to any single component. The
+        bank serves as guidance for \emph{which} single component to upgrade,
+        not as a recipe to bypass baseline.
+\end{itemize}
+This discipline mirrors normal research practice and is the only way to
+measure whether negative knowledge actually narrows an agent's escalation
+choices, as opposed to being silently absorbed by an already-stacked method.
+
+\subsection{Stage~2: Four memory conditions on three sub-tasks}
+\label{sec:pde-stage2}
+
+\paragraph{Sub-tasks.} \textbf{T-A} soliton stability near the $m=0$
+manifold; \textbf{T-B} whether a high-amplitude Gaussian wave packet
+decomposes into a soliton train; \textbf{T-C} whether a KdV soliton survives
+crossing a Burgers bore. None has a closed-form reference; success is judged
+by deterministic phenomenon checks (mass-drift, peak counts, amplitude,
+boundedness).
+
+\paragraph{Four conditions.} We extend the original three-condition design
+with a fourth condition, \textbf{NegOnly}, which receives only the negative
+entries of the bank. The four conditions are: \textbf{NoKB} (no bank),
+\textbf{PosOnly} (positive entries only), \textbf{NegOnly} (negative entries
+only), \textbf{PosNeg} (full bank). NegOnly tests whether negative knowledge
+alone, without positive recommendations, can carry the team to a working
+solution---a stringent test of the prescriptive content embedded in negative
+entries.
+
+\paragraph{Cells and budget.} The total $3 \times 4 = 12$ cells, each with
+$\leq 3$ Research Graph rounds under the progressive-complexity discipline.
+Per-task specifications are in \cref{appendix:bkdv-setup}.
+
+\subsection{Physics-aware phenomenon check and one corrected threshold}
+\label{sec:eval-correction}
+
+We discovered during analysis that the original T-A phenomenon-check
+threshold ($v_{\max}(T)/v_{\max}(0) \geq 0.5$) is \emph{physically
+unattainable} for our chosen initial condition. BKdV-S7's quantitative
+prediction is that an off-manifold sech$^2$ IC at amplitude $1.5$ decays by
+$62.8\%$ over $T{=}10$ as a physical consequence of the m{=}0 manifold not
+being dynamically invariant; our T-A IC is more perturbed and decays
+similarly. The original threshold mechanically rewarded runs whose
+chaotic fragmentation happened to leave a peak above $1.0$ (one out of
+14--16 spurious peaks), and punished runs that produced the physically
+correct single coherent soliton at the lower amplitude. We correct the
+threshold to $\geq 0.25$ and add an explicit single-dominant-peak requirement
+(either $n_\text{peaks} = 1$ or top-to-second-peak ratio $> 1.5$). Full
+derivation in \cref{appendix:eval-v2}. This correction is itself a finding:
+bank-aware research surfaces benchmark mis-calibration that bank-unaware
+research cannot, because only bank-aware agents arrive at the physically
+correct end-state.
+
+\subsection{Headline result: NegOnly $1/3 \to 3/3$ from one prescriptive negative}
+\label{sec:headline-result}
+
+We run Stage~2 first with the 50-entry initial bank (BKdV-S1--S5 only), then
+re-run with the expanded 58-entry bank \texttt{bank\_v3.A'} (adding the
+8 entries from S6 and S7). Both runs use the physics-aware eval of
+\cref{sec:eval-correction}. \Cref{tab:bkdv-headline} reports PASS rates.
+
+\begin{table}[tb]
+\centering
+\caption{Stage~2 PASS rate (physics-aware eval) under two bank versions.
+Bold = changed from initial to expanded.}
+\label{tab:bkdv-headline}
+\small
+\begin{tabular}{l cc cc}
+\toprule
+& \multicolumn{2}{c}{Initial bank (50)} & \multicolumn{2}{c}{Expanded bank (58)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Cond.   & T-A & PASS/3 & T-A & PASS/3 \\
+\midrule
+NoKB    & $\times$ & 0/3 & $\times$ & 0/3 \\
+PosOnly & $\times$ & 1/3 & $\times$ & 1/3 \\
+NegOnly & \cmark{} & 1/3 & \cmark{} & \textbf{3/3} \\
+PosNeg  & \cmark{} & 3/3 & \cmark{} & 3/3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The largest change is NegOnly: $1/3 \to 3/3$. Adding the BKdV-S6
+deep-synthesis entry---which contains a \emph{prescriptive}
+\texttt{recommended\_alternative} field (``adopt
+$\nu_\text{linear} = 5\times 10^{-2}$ as the default u-side dissipation for
+bore-like u-gradient ICs'')---lifts NegOnly to match PosNeg. The agent traces
+(\cref{appendix:agent-traces}) show NegOnly cells citing BKdV-S6 by name and
+adopting the prescribed coefficient directly; without this single entry,
+NegOnly's bank is categorical-vetoes-only and cannot find an actionable
+u-side dissipation level within the three-round budget.
+
+\paragraph{Bank content $\gg$ bank size.} The legacy 30-entry single-shot
+bank already covered all the same physical phenomena (Gibbs at Burgers
+shocks, KdV dispersive stiffness, aliasing under nonlinear products). Adding
+20 single-round entries (per-round records from S1--S5) lifted PosNeg only
+marginally (already at 3/3) and did not change NoKB. The change comes from
+the \emph{type} of content in the 8 newer entries (S6, S7 per-round plus
+deep): deep-synthesis records of multi-round path closures with prescriptive
+replacement recommendations are categorically more useful than depth-1
+single-shot failure logs of the same nominal subjects.
+
+\paragraph{PosNeg robustness.} PosNeg achieves 3/3 in both bank versions. The
+full bank lets an agent read prescription (positive) and warning (negative)
+together, narrowing the escalation choice from both sides; PosOnly and
+NegOnly each see only half the constraint and can be defeated when the other
+half is the binding one.
+
+\subsection{Mechanism on T-C: prescription narrows method search}
+\label{sec:tc-mechanism}
+
+The bore-soliton sub-task T-C is where the bank's prescriptive content matters
+most. Under the initial 50-entry bank, all four conditions fail T-C: NoKB and
+PosOnly let the Burgers bore grow Gibbs ringing to $|u|_{\max} > 5$; NegOnly
+correctly rejects central FD and Lax--Friedrichs but cannot find a working
+u-side dissipation level within three rounds; PosNeg passes (in the original
+v2 eval, on a related grid; not under v3.A' progressive-complexity).
+
+Under the expanded 58-entry bank, T-C is solved by three of four conditions
+in 2--3 rounds. The decisive entry is BKdV-S6's deep record, which (i)
+identifies that the BKdV-S4 ``safe hyperviscosity envelope'' is 13 orders
+of magnitude too weak for bore-like u, (ii) prescribes a concrete level
+$\nu_\text{linear} = 5\times 10^{-2}$, and (iii) explains why $\varepsilon =
+10^{-4}$ linear viscosity (the textbook small-viscosity default) is
+underdosed by 2--3 orders of magnitude. The PosNeg cell on T-C at round~2
+quotes the BKdV-S6 prescription verbatim in its bank-use rationale while
+simultaneously rejecting the BKdV-S4 envelope as ``too weak for bore-like
+IC''; full excerpt in \cref{appendix:agent-traces}. The result is a
+two-round PASS with $|u|_{\max} \approx 1.3$, an order of magnitude below
+the bound.
+
+\subsection{Limitations}
+\label{sec:case-study-limitations}
+
+The case study has three honest limitations. First, the initial T-A
+phenomenon-check threshold was physically miscalibrated; this was detected
+only because the BKdV-S7 stress test produced the correct physical
+prediction, but it raises a methodological question of how often benchmark
+thresholds for open research questions are similarly mis-calibrated in
+unidirectional ways. Second, the positive/negative split is heuristic
+(applied to the curator output by failure metadata): we observe one entry
+(BKdV-S7 round~2) misclassified as positive due to its
+\texttt{failure.recommended\_action = retry} field. The downstream effect is
+discussed in the IC-adaptation trap appendix
+(\cref{appendix:ic-trap}). Third, Stage~2 sub-agents save only the
+\emph{final} solver per cell on disk; per-round candidate code is not
+preserved. The research-graph \texttt{research\_state.jsonl} captures the
+method description for each Experiment node but is not a byte-exact code
+record. Stage~1 sub-agents save full per-round artifacts.
+
+The full bundle---all code, prompts, sub-agent prompts and outputs, both
+bank versions, both eval versions, run scripts, the agent trace catalogue,
+and per-cell logs---is preserved at \texttt{section4\_reproduce/} for
+reproduction.
+
+% =============================================================================
+% APPENDIX ADDITIONS (to be appended to existing appendix sections)
+% =============================================================================
+
+\section{Stage~1 Stress-Test Program Catalogue}
+\label{appendix:bkdv-bank}
+
+\paragraph{Seven multi-round programs.} Each program is a 3-round Research
+Graph trace producing 4 NK records (3 per-round single-shot + 1 deep
+synthesis): 21 + 7 = 28 new entries to supplement the 30 legacy single-shot
+entries from the prior pilot bank. Full prompt templates, agent traces, and
+NK record JSONs are in \texttt{section4\_reproduce/stage1\_v3/}.
+
+\begin{itemize}\itemsep0pt
+  \item \textbf{BKdV-S1} Numerical-method survey: which combinations stably
+        integrate BKdV at amplitudes 1--3 over $T=10$.
+  \item \textbf{BKdV-S2} Conservation-law audit: distinguishes
+        divergence-form trivialities ($\int u\,dx, \int v\,dx$) from physical
+        non-conservations ($\int u v\,dx$, energy candidates).
+  \item \textbf{BKdV-S3} IC-family vs.\ coherent structure: smooth-localised
+        seeds produce coherent compound structures; broadband seeds at
+        amplitude $\geq 0.8$ hit a high-k cascade.
+  \item \textbf{BKdV-S4} Numerical-resolution sensitivity: $N_x{=}256$ is
+        \emph{sub-converged} for quantitative claims; doubling $N_x$ shifts
+        diagnostics by 30--140\%. Defines a hyperviscosity safe envelope for
+        smooth ICs ($\nu_h \lesssim 10^{-20}$).
+  \item \textbf{BKdV-S5} m{=}0 manifold (non-)invariance: algebraic identity
+        and k-selective perturbation response.
+  \item \textbf{BKdV-S6} Bore-IC u-viscosity necessity:
+        $\nu_\text{linear} \approx 5\times 10^{-2}$ required; BKdV-S4
+        envelope underestimates by 13 orders.
+  \item \textbf{BKdV-S7} Gardner-stable $\not\Rightarrow$ BKdV-stable:
+        $-62.8\%$ $v_{\max}$ decay quantified with cosine-similarity-$0.94$
+        mode-by-mode prediction.
+\end{itemize}
+
+\begin{table}[tb]
+\centering
+\caption{Bank \texttt{v3.A'} composition: 58 entries. Legacy = 30 single-shot
+records from the pilot bank, retained and re-tagged as depth-1. New = 28
+records from S1--S7 (21 per-round depth-1 + 7 deep depth-3).}
+\label{tab:bkdv-bank-v3}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Source & Positive & Negative & Total \\
+\midrule
+Legacy single-shot (pilot, depth-1)         & 10 & 20 & 30 \\
+S1--S7 per-round (depth-1)                  &  4 & 17 & 21 \\
+S1--S7 deep synthesis (depth-3)             &  1 &  6 &  7 \\
+\midrule
+Total                                       & 15 & 43 & 58 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Phenomenon-Check Eval v1 vs v2}
+\label{appendix:eval-v2}
+
+\paragraph{T-A threshold derivation.} The original (v1) eval for T-A required
+$v_{\max}(T)/v_{\max}(0) \geq 0.5$ and $n_\text{peaks above } 0.5 \geq 1$.
+BKdV-S7 quantitative result: a sech$^2$ IC at $A=1.5$ with $u_0 = v_0^2/2$
+(so $m_0 = 0$ to machine precision) under BKdV decays from $v_{\max}=1.50$ to
+$v_{\max}=0.558$ over $T=10$, a $62.8\%$ amplitude loss. Our T-A IC is
+$v = 2\,\text{sech}^2(x+5)$, $u = 0.5\,v^2 + 0.2\,v$, which sits further
+off-manifold (initial $m = 0.2 v$, not zero). Bank-unaware runs that landed
+in chaotic fragmentation (14--16 peaks each $\sim 1.3$) passed v1; bank-aware
+runs that produced the physically correct single coherent peak at
+$v_{\max} \approx 0.64$ failed v1. We replace v1 with v2:
+\begin{itemize}\itemsep0pt
+  \item \textbf{v2 amplitude}: $v_{\max}(T)/v_{\max}(0) \geq 0.25$.
+  \item \textbf{v2 coherence}: single-dominant-peak requirement;
+        $n_\text{peaks above } 0.4 = 1$ \emph{OR} top-to-second peak ratio
+        $> 1.5$. This rejects chaotic fragmentation cases that v1 passed
+        mechanically.
+\end{itemize}
+T-B and T-C eval criteria are unchanged from v1. Source code for both
+versions is in \texttt{section4\_reproduce/stage2\_v3/class\_A/eval/}.
+
+\section{IC-Adaptation Trap Experiment}
+\label{appendix:ic-trap}
+
+\paragraph{Setup.} The T-B prompt under the expanded bank was modified to
+invite IC adaptation from positive bank entries (``you are invited to adapt
+this IC if positive knowledge describes a related profile validated to be
+stable''). The trap: BKdV-S7's round-1 record (a positive entry) reports a
+Gardner-stable IC at $A=1.5$; PosOnly was expected to adopt it as the
+T-B initial condition (instead of the reference Gaussian), and fail because
+the same IC is BKdV-unstable per BKdV-S7's round-2 record.
+
+\paragraph{Outcome.} No condition adopted the trap IC. Three reasons:
+(i)~Agents applied \emph{task-semantic} reasoning---``T-B is Gaussian
+decomposition, the bank's sech$^2$ is a different task class''; (ii)~Agents
+noted that the T-B reference IC already has $m_0 = -v_0^2/2 \neq 0$, so a
+Gardner-stable claim on the m{=}0 manifold does not transfer; (iii)~The
+heuristic positive/negative classification leaked BKdV-S7's
+round-2 BKdV-breakdown record into the \emph{positive} bank, so PosOnly
+in practice saw the warning along with the lure.
+
+\paragraph{What we learn.} The trap result is informative even though the
+trap was not triggered: the positive/negative split is more fragile than a
+clean binary, and agents read banks holistically rather than treating
+``positive entries'' as recommendations to follow without scrutiny. A
+cleaner split heuristic (using \texttt{failure.degree} instead of
+\texttt{failure.recommended\_action}) would make the trap more discriminating
+in future work.
+
+\section{Agent Trace Catalogue}
+\label{appendix:agent-traces}
+
+We extract verbatim text from \texttt{research\_state.jsonl} files of
+selected cells to illustrate how bank-aware agents use the bank. Each
+excerpt is the agent's own field text, written during the run.
+
+\paragraph{Excerpt~1: T-C/PosNeg E2 \texttt{bank\_use\_rationale}.}
+The cell passes at round~2 by adopting BKdV-S6's prescriptive $\nu_\text{lin}$
+while explicitly rejecting BKdV-S4's hyperviscosity envelope:
+
+\begin{quote}\small
+``POSITIVE bank guidance: BKdV-S6 r=3 establishes $\nu_\text{lin} \in
+\{10^{-2}, 5\cdot 10^{-2}\}$ both pass; $\nu = 5\cdot 10^{-2}$ yields
+$\text{TV}_\text{final}{\sim}9.6$ and $u_\text{min,final} \geq 0$ (best).
+NEGATIVE bank guidance: BKdV-S6 deep synthesis explicitly warns that
+BKdV-S4's safe envelope ($\nu_h \sim 10^{-22}$ to $10^{-20}$ for $k^8$
+hyperviscosity) is 13 orders of magnitude too weak for bore-like IC---we
+REJECT transferring that envelope. We also reject the would-be-tempting
+alternative of just shrinking dt (E1 already used dt$=10^{-4}$ which is
+below post-dealias CFL---dt alone cannot stop the bore cascade per
+BKdV-S6 r=2 finding that $\varepsilon=10^{-4}$ viscosity was ineffective).''
+\end{quote}
+
+This is the prescription-and-warning pattern in action: the agent reads
+\emph{both} which level to use AND which would-be-tempting shortcut to skip.
+
+\paragraph{Excerpt~2: T-A/PosOnly F2 rationale (physics-honest fail).}
+Under the expanded bank including BKdV-S7, PosOnly no longer applies the
+hyperviscosity ``trick'' that artificially preserves $v_{\max}$ above
+threshold; instead it diagnoses the failure as physical:
+
+\begin{quote}\small
+``Stack ran cleanly to $T=8$ with mass conserved to machine precision and
+$|$fields$|$ bounded. However the soliton is destroyed:
+$v_{\max}(T)=0.917 < 1.0$ ($0.46\times$ of initial $2.0$), and $v$ contains
+5--6 peaks above $0.7$. This matches the BKdV-S7 r2 physical breakdown of
+the m{=}0 manifold under the $-\partial_x(uv)$ coupling---and our IC is more
+perturbed ($m_0 = +0.2 v_0 = {\sim}0.4 \text{sech}^2$, not~0). The result
+\emph{may} still satisfy the [\ldots]''
+\end{quote}
+
+The agent now \emph{cites} the BKdV-S7 mechanism instead of attempting a
+numerical workaround. This is a research-character outcome:
+bank explanation of why something fails physically discourages numerical
+sleight-of-hand.
+
+\paragraph{Excerpt~3: T-C/NegOnly E2 \texttt{bank\_use\_rationale}.}
+NegOnly demonstrates that a sufficiently prescriptive negative bank carries
+its own actionable content (it does not need positive entries to recommend
+a method):
+
+\begin{quote}\small
+``Single-component upgrade vs E1: add $\nu \cdot u_{xx}$ on $u$ only
+(treated explicitly inside RK4). BKdV-S6 deep synthesis: $\nu=5\cdot 10^{-2}$
+empirically passes ($\text{TV}_\text{final} \sim 9.6$,
+$u_\text{min,final} \geq 0$) on the EXACT same bore IC used here, while the
+alternative hyperviscosity $\nu_h$ must approach the explicit-RK4 stability
+ceiling ${\sim}10^{-9}$ (10+ orders above BKdV-S4 `safe envelope' $10^{-22}$).
+REJECT BKdV-S4 ladder: $\nu_h \leq 10^{-12}$ is empirically insufficient
+($\text{TV}>115$, $u_\text{max}>3$)---would waste an iteration. REJECT
+MUSCL/Godunov on $u u_x$: a 2+ component swap from E1 (changes both
+discretisation AND adds limiter) violates progressive-complexity [\ldots]''
+\end{quote}
+
+This is what we mean by ``prescriptive negative'': the entry both \emph{rules
+out a tempting wrong direction} (transferring the BKdV-S4 envelope) and
+\emph{names a working level} ($\nu = 5\cdot 10^{-2}$). Without the named
+level the bank would still rule out BKdV-S4's $\nu_h \sim 10^{-22}$, but
+the agent would have no anchor for what level \emph{does} work.

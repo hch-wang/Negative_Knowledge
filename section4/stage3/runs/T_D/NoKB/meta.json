@@ -1,0 +1,24 @@
+{
+  "task_id": "T_D",
+  "condition": "NoKB",
+  "version": "stage3_bnls_v1",
+  "iter_budget": 3,
+  "tools_allowed": [
+    "Read",
+    "Write",
+    "Bash"
+  ],
+  "title": "Compound-soliton attractor: relaxation from off-manifold perturbations",
+  "description": "RESEARCH-GRADE TASK \u2014 direct investigation of the user's reported observation that the B-NLS system 'tends toward Compound Solitons'. Start from a bright NLS soliton in N + a controlled off-M_cs perturbation in u, and characterize the relaxation: does m(x,t) = u - N*phi_x decay? How fast? Is decay monotonic, oscillatory, or stochastic? Does the relaxation rate depend on perturbation amplitude epsilon?",
+  "ic": "kappa = 1. Same N, phi as T_A. u(x,0) = N(x,0)*phi_x(x,0) + epsilon * cos(2*pi*x/L) where epsilon in {0.05, 0.1, 0.2, 0.4}. Agent may run the full epsilon-sweep or pick a single epsilon and characterize that one carefully \u2014 research choice within the budget.",
+  "T_final": 12.0,
+  "output_path": "pred_results/T_D.npy",
+  "output_shape_spec": "shape (n_snapshots, 3, 256) for a SINGLE chosen epsilon, OR shape (n_eps, n_snapshots, 3, 256) if agent chooses the sweep. Save 20+ snapshots for fine resolution of the decay trace.",
+  "phenomenon_target": "Two-part: (1) Numerical task: integrate stably to T=12 with mass drift < 5%, boundedness. (2) Research finding (to be reported in reasoning.md): characterize ||m||_2(t) decay \u2014 fit to A*exp(-t/tau) or A*t^(-alpha) or oscillatory model; report tau or alpha and confidence; comment on epsilon-dependence if sweep done. NOTE: there is no oracle answer for the decay rate \u2014 the agent's research finding IS the deliverable.",
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx": 256,
+  "kappa": 1.0
+}

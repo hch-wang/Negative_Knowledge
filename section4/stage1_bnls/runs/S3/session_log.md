@@ -1,0 +1,6 @@
+# Session log: S3
+
+- iter 1 (E1): baseline Madelung-Psi Strang split-step at Nx=256, dt=0.001, L=30, A in {1.0,1.5,2.0,2.5,3.0}. All ok, mass conserved to 1e-13, no NaN. Peak counts at 5% threshold: {1,1,2,3,3}. Spectral tail at A=3 reached 1.4e-3 and a peak appeared at x=-13.95 (near boundary). Flagged for refinement (F1=partial, D1=change_method).
+- iter 2 (E2): refinement Nx=512, dt=5e-4 in two variants — L=30 (dx=0.058) and L=60 (dx=0.117). L=30 refined and L=60 refined DISAGREE at A>=2; L=60 refined matches baseline. Therefore dx is the discriminator and periodic wrap-around is a red herring at T=6. Peak counts at L=30 refined: {1,1,1,2,3}; at L=60 refined: {1,1,1,3,3}. F2=partial, D2=change_method.
+- iter 3 (E3): hi-res convergence check at Nx=1024, dt=2.5e-4, L=60. Matches E2-L30-refined at machine precision. Spectral tail at A=3 dropped to 6.9e-11. Final converged peak counts: A=1.0->1, A=1.5->1, A=2.0->1, A=2.5->2, A=3.0->3. F3=positive, D3=record_knowledge.
+- wrap-up: knowledge_findings.json + reasoning.md written. Final candidate.py uses converged config (Nx=1024, dt=2.5e-4, L=60). pred_results/S3.npz contains arrays from all 3 experiments (baseline, refined-L30, refined-L60, hires) so downstream consumers can compare directly.

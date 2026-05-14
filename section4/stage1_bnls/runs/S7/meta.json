@@ -1,0 +1,22 @@
+{
+  "title": "B-NLS: Burgers bore in u colliding with NLS bright soliton in N",
+  "domain": "Full B-NLS with kappa=+1",
+  "ic": "u(x,0) = 1.0 * (1 - tanh(x/0.5))/2 (smoothed bore, u_L=1, u_R=0). N(x,0) = sech^2(x+8) (soliton at x=-8). phi(x,0) = 0.6*x (so phi_x = 0.6 \u2014 soliton moves toward bore).",
+  "T_final": 8.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Unknown. The interaction could be transmission, reflection, or capture. Use to characterize which methods handle the shock-soliton coupling.",
+  "stress_question": "Bore in u creates a steep gradient. Pure spectral on u will Gibbs-oscillate. Try MUSCL-Godunov on u + Madelung-Psi on (N, phi). Does this split work? At what time does the soliton encounter the bore?",
+  "parameters_to_sweep": "Method combinations: (1) all-spectral all-RK4 [will fail at bore], (2) MUSCL-Godunov u + spectral (N, phi) RK4, (3) MUSCL-Godunov u + Madelung-Psi (N, phi).",
+  "required_observations": [
+    "u_max_during_run",
+    "soliton_survives",
+    "n_peaks_final",
+    "bore_position_final"
+  ],
+  "test_id": "S7",
+  "version": "stage1_bnls_v1"
+}

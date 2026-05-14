@@ -1,0 +1,18 @@
+{
+  "task_id": "T_C",
+  "condition": "NegOnly",
+  "version": "v2_research_graph",
+  "iter_budget": 3,
+  "tools_allowed": [
+    "Read",
+    "Write",
+    "Bash"
+  ],
+  "title": "Burgers bore interacting with a KdV soliton",
+  "description": "Initialize u as a smoothed bore (descending step) and v as a soliton to its left moving rightward. Study what happens when the soliton encounters the bore: does it transmit (refract), reflect, fuse, or get destroyed?",
+  "ic": "u(x, 0) = 1.5 * (1 - tanh(x / 0.5)) / 2     (smoothed bore: u_L = 1.5, u_R = 0, transition centered at 0 with width 0.5)\nv(x, 0) = 1.5 * sech^2(x + 8)               (KdV soliton, amplitude 1.5, initially at x = -8, will move right toward bore)",
+  "T_final": 8.0,
+  "output_path": "pred_results/T_C.npy",
+  "output_shape_spec": "shape (n_snapshots, 2, 256); save 5+ snapshots so the bore-soliton encounter is visible.",
+  "phenomenon_target": "Final v should still contain a recognizable peak with amplitude >= 0.5 (soliton survived). u should stay bounded (|u_max| < 5). Bore should not have blown up."
+}

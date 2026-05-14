@@ -1,0 +1,85 @@
+{
+  "test_id": "S5",
+  "methods_tried": [
+    {
+      "method_name": "A: on-manifold Madelung-Psi Strang split (boost-RK4(dt/2) | kinetic-exp(dt/2) | nonlinear-exp(dt) | kinetic-exp(dt/2) | boost-RK4(dt/2)); u := Im(conj(Psi) Psi_x) reconstructed every snapshot",
+      "params": {"dt": 0.001, "Nx": 256, "L": 30.0, "kappa": 1.0, "split": "Strang"},
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "m_norm_max": 8.68e-14,
+        "m_norm_end": 9.80e-18,
+        "mass_drift": 1.42e-12,
+        "energy_drift": 8.23e-2,
+        "peak_position_drift": 3.164,
+        "min_N": 3.02e-24,
+        "nan": false
+      },
+      "evidence": "||m||_2 stays at machine precision (1e-13 to 1e-17) throughout T=6 because u is algebraically tied to Psi -- m = u - N*phi_x = Im(conj Psi Psi_x) - N * Im(conj Psi Psi_x)/N = 0 identically. Mass conserved to 1e-12. Peak drifts 3.16 (matches local u_peak = N_peak*phi_x = 2*0.25 = 0.5 over T=6 -> 3.0; the extra is soliton self-propagation feedback)."
+    },
+    {
+      "method_name": "A: on-manifold Madelung-Psi Strang split, dt=0.0005",
+      "params": {"dt": 0.0005, "Nx": 256, "split": "Strang"},
+      "outcome": "pass",
+      "outcome_diagnostics": {"m_norm_max": 8.96e-14, "mass_drift": 3.06e-12, "energy_drift": 8.23e-2, "peak_position_drift": 3.164},
+      "evidence": "Halving dt gives identical ||m||, mass, peak drift -- already at machine precision; refinement helps neither Mcs preservation nor mass."
+    },
+    {
+      "method_name": "A: on-manifold Madelung-Psi Strang split, dt=0.005 (coarse)",
+      "params": {"dt": 0.005, "Nx": 256, "split": "Strang"},
+      "outcome": "partial",
+      "outcome_diagnostics": {"m_norm_max": 1.69e-14, "mass_drift": 5.86e-3, "energy_drift": 1.23e2, "peak_position_drift": -6.914},
+      "failure_mode": "Mcs preserved (representation-level) but dynamics unstable: kinetic propagator exp(-i k^2 dt/2) aliases / loses accuracy at high k for dt > ~0.003; mass drifts ~6e-3, peak wraps around backwards.",
+      "evidence": "||m||_2 stays at 1e-14 (Mcs preservation is structural) yet mass, energy, peak all wrong -- shows that ||m||~0 is necessary but NOT sufficient to certify a B-NLS solution."
+    },
+    {
+      "method_name": "A-Lie: on-manifold Madelung-Psi Lie split [boost(dt); kinetic(dt); nonlinear(dt)], dt=0.001",
+      "params": {"dt": 0.001, "Nx": 256, "split": "Lie"},
+      "outcome": "pass",
+      "outcome_diagnostics": {"m_norm_max": 7.61e-14, "mass_drift": 1.29e-12, "energy_drift": 8.23e-2, "peak_position_drift": 3.164},
+      "evidence": "Indistinguishable from Strang at dt=0.001 -- on an Mcs initial condition the boost sub-flow approximately commutes with kinetic+nonlinear (because u flows as a passive label of Psi). Ordering matters less than the choice of representation."
+    },
+    {
+      "method_name": "B: decoupled Strang -- upwind-Burgers half-steps for u (Engquist-Osher flux, 4 sub-steps) sandwich a Madelung-Psi NLS full step with NO boost",
+      "params": {"dt": 0.001, "Nx": 256, "u_substeps_per_dt": 4, "split": "Strang", "boost_in_NLS": false},
+      "outcome": "fail",
+      "outcome_diagnostics": {"m_norm_max": 2.102e-1, "mass_drift": 8.07e-13, "energy_drift": 7.69e-2, "peak_position_drift": 1.523},
+      "failure_mode": "||m||_2 grows linearly from ~8e-8 to 0.21 over T=6. Mcs is NOT preserved -- u evolves as standalone Burgers while N*phi_x evolves under a boost-free NLS, so the algebraic tie m = u - N*phi_x breaks immediately.",
+      "evidence": "m_norm(t) ~ 0, 0.086, 0.137, 0.174, 0.210 at t/T = 0, 0.25, 0.5, 0.75, 1.0 (linear growth). Soliton peak only drifts 1.5 (just the bare phi_x=0.25 boost in u, not the larger N*phi_x peak velocity 0.5)."
+    },
+    {
+      "method_name": "C: decoupled Lie -- full u-Burgers then full Madelung-Psi NLS (no boost)",
+      "params": {"dt": 0.001, "Nx": 256, "split": "Lie"},
+      "outcome": "fail",
+      "outcome_diagnostics": {"m_norm_max": 2.102e-1, "mass_drift": 8.07e-13, "energy_drift": 7.69e-2, "peak_position_drift": 1.523},
+      "failure_mode": "Same failure mode as B (decoupled). Lie vs Strang ordering does not save a decoupled splitting; the issue is structural, not order-of-accuracy.",
+      "evidence": "Numerically indistinguishable from Method B at dt=0.001."
+    },
+    {
+      "method_name": "D: fully coupled RK4 on (u, N, phi) -- no operator split; quantum-potential regularization eps=1e-8 in 1/sqrt(N)",
+      "params": {"dt": 0.0005, "Nx": 256, "qp_eps": 1.0e-8, "split": "none"},
+      "outcome": "fail",
+      "outcome_diagnostics": {"diverged_at_step": 3, "m_norm_at_divergence": 4.37e-1},
+      "failure_mode": "Quantum potential Q = sqrt(N)_xx/(2 sqrt(N)) is stiff in the soliton tail where N drops below 1e-20; explicit RK4 cannot tolerate the 1/sqrt(N) factor with any practical regularization.",
+      "evidence": "Step 3 produces inf/nan in flux_N and phi_t. The QP term must be handled inside an exponential propagator (as in Method A's kinetic step on Psi), or via implicit treatment. Direct RK4 on (u, N, phi) is not viable for solitonic profiles."
+    }
+  ],
+  "positive_findings": [
+    "On-manifold representation u := Im(conj(Psi) * Psi_x) makes Mcs preservation a structural property: ||m||_2 stays at 1e-13 to 1e-17 (machine precision) for the entire T=6 trajectory regardless of time-step.",
+    "Method A Strang split (boost/2 - kinetic/2 - nonlinear - kinetic/2 - boost/2) on Psi conserves mass to 1e-12 over T=6.",
+    "Strang and Lie orderings inside Method A are numerically indistinguishable at dt<=0.001 for this Mcs IC -- the boost sub-flow commutes with kinetic+nonlinear in the on-manifold representation.",
+    "Soliton peak drifts 3.16 over T=6, consistent with local u_peak = N_peak * phi_x = 0.5 (plus self-propagation feedback), confirming the compound-soliton hypothesis: the bright soliton rides the boost field rigidly."
+  ],
+  "negative_findings": [
+    "Decoupled splitting -- evolving u as standalone Burgers and (N,phi) as standalone NLS -- lets ||m||_2 grow linearly from ~1e-8 to 0.21 over T=6 (Strang and Lie orderings both fail in the same way).",
+    "Even when u is integrated with a shock-stable upwind scheme (so u itself doesn't blow up), the decoupled split misses the boost coupling and the soliton peak drifts at only the bare phi_x=0.25 velocity instead of the correct u_peak=0.5.",
+    "Fully coupled RK4 on (u, N, phi) -- no operator splitting -- diverges within 3 steps because the quantum potential 1/sqrt(N) is stiff in the soliton tail and QP regularization eps=1e-8 is insufficient.",
+    "Method A at dt=0.005 still preserves Mcs (||m||~1e-14) but mass drifts 6e-3 and the soliton peak wraps backwards: ||m|| at machine precision is a NECESSARY but NOT SUFFICIENT certificate of a correct B-NLS solution."
+  ],
+  "parameter_boundaries": [
+    {"variable": "dt", "method": "Method A Strang on-manifold Madelung-Psi", "stable_range": "dt <= 0.001 (mass drift 1e-12, energy drift 8e-2)", "fails_at": "dt = 0.005 (mass drift 6e-3, energy 100x, peak wraps backwards)"},
+    {"variable": "Mcs preservation", "method": "Method A (u := Im(conj Psi Psi_x))", "stable_range": "machine precision (||m||~1e-13) at any dt because preservation is structural", "fails_at": "n/a -- representation-level invariance"},
+    {"variable": "Mcs preservation", "method": "Decoupled Strang/Lie (independent u-Burgers + NLS)", "stable_range": "n/a -- always drifts", "fails_at": "||m||_2 reaches 0.21 by T=6 (any dt)"},
+    {"variable": "operator-split necessity", "method": "Fully coupled RK4 on (u,N,phi)", "stable_range": "n/a", "fails_at": "diverges within 3 steps; the QP 1/sqrt(N) demands operator splitting (exponential propagator on the Psi kinetic step absorbs the singularity)"}
+  ],
+  "key_insight": "Mcs preservation is a *representation* property, not a *time-integrator* property. Choose Psi = sqrt(N) exp(i phi) as the primary state, reconstruct u = Im(conj Psi Psi_x) on demand, and ||m|| stays at machine precision for free under any reasonable Strang/Lie split. The role of the time integrator is to manage accuracy of the dynamics on Mcs, not to keep the state on Mcs."
+}

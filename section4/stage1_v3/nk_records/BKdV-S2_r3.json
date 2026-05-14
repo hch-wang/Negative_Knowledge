@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S2",
+  "round": 3,
+  "attempted_route": "dt/Nx-scaling control for C1..C5 drifts: 3 configs at E1 IC (v0=1.5 sech^2(x+5), u0=0), T=5: A(dt=5e-4,Nx=256), B(dt=1e-4,Nx=256), C(dt=2.5e-4,Nx=512); Fourier pseudospectral + 2/3 dealias + IMEX-CN/RK2.",
+  "observation": "A vs B (5x dt change at Nx=256): drift ratios C3=1.002, C4=0.992, C5=0.996 (inferred order ~0). C1,C2 drifts ~1e-15 across all configs. Nx 256->512 shifts drifts by 2-15% only.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "general_failure",
+    "degree": "partial",
+    "recommended_action": "abandon_route",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "dt-invariance of C3/C4/C5 drift (ratio~1 over 5x dt change) shows the drift is physical, not numerical: it persists in the dt->0 limit. C1,C2 sit at FFT round-off because they are exact divergence-form mass invariants. No 'slow-drift' candidate exists in the proposed C1..C5 set.",
+  "recommended_alternative": "Search for a true BKdV Hamiltonian beyond the C1..C5 candidate list: build trial functionals with cubic densities (e.g. int(u*v^2)dx, int(v^3)dx, int(v_x*u)dx) and combinations involving v_xx; re-run E3-style dt/Nx scaling to identify any quantity whose drift -> 0 as dt -> 0.",
+  "is_trivial": false,
+  "trivial_degree": 1
+}

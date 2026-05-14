@@ -1,0 +1,146 @@
+{
+  "tag": "E3_HV_sweep",
+  "compared_to": "E1_baseline (Nx=256, dt=5e-4, \u03bd_h=1e-22)",
+  "params_common": {
+    "Nx": 256,
+    "T_final": 10.0
+  },
+  "E1_end": {
+    "m_l2_T": 2.4556987212087398,
+    "m_inf_T": 3.667195041062041,
+    "lock_T": 0.19972848040193072,
+    "L2_u_T": 2.4888646337102673,
+    "L2_v_T": 0.8291634077271617,
+    "energy_T": 3.546971654287454,
+    "u_peak_T": 3.67045177245601,
+    "v_peak_T": 0.5454010900543782,
+    "eh_u_T": 0.16062756929166264,
+    "eh_v_T": 9.62115589830121e-05
+  },
+  "E3a_strongHV_naive": {
+    "\u03bd_h": 1e-18,
+    "dt": 0.0005,
+    "blew_up": true,
+    "blow_t": 0.003,
+    "blow_step": 6,
+    "interpretation": "1e4\u00d7 larger \u03bd_h at fixed dt=5e-4 also violates the explicit-HV stability bound (\u2248 2.8e-5 at this \u03bd_h). \u039d_h-only change is INADMISSIBLE in the strong direction.",
+    "end": {
+      "m_l2_T": 0.0,
+      "m_inf_T": 0.0,
+      "lock_T": 1.0,
+      "L2_u_T": 1.0757057484009542,
+      "L2_v_T": 1.7320508075688772,
+      "energy_T": 3.278571428571429,
+      "u_peak_T": 1.1215728759261656,
+      "v_peak_T": 1.4977135079354567,
+      "eh_u_T": 0.005100467599944483,
+      "eh_v_T": 0.0031181944790524482
+    },
+    "pct_shift_vs_E1": {
+      "m_l2_T": -100.0,
+      "m_inf_T": -100.00000000000001,
+      "lock_T": 400.6797217841013,
+      "L2_u_T": -56.779258549013605,
+      "L2_v_T": 108.8913706788678,
+      "energy_T": -7.567024827830029,
+      "u_peak_T": -69.44319267882145,
+      "v_peak_T": 174.607721775204,
+      "eh_u_T": -96.8246624023282,
+      "eh_v_T": 3140.9769803262643
+    }
+  },
+  "E3b_weakHV": {
+    "\u03bd_h": 1e-26,
+    "dt": 0.0005,
+    "blew_up": false,
+    "interpretation": "Weakening HV by 1e4\u00d7 at the same (Nx,dt). Probes whether the HV regularization itself shapes the answer at Nx=256.",
+    "end": {
+      "m_l2_T": 2.4584283257344617,
+      "m_inf_T": 3.238442468841282,
+      "lock_T": 0.20313348279258303,
+      "L2_u_T": 2.492579985359136,
+      "L2_v_T": 0.8326156574555474,
+      "energy_T": 3.563682899563722,
+      "u_peak_T": 3.241390728152515,
+      "v_peak_T": 0.5530409673928085,
+      "eh_u_T": 0.1598413039504601,
+      "eh_v_T": 0.00010232954639324921
+    },
+    "pct_shift_vs_E1": {
+      "m_l2_T": 0.11115388472321824,
+      "m_inf_T": -11.69156719018113,
+      "lock_T": 1.7048156496259965,
+      "L2_u_T": 0.1492789763873247,
+      "L2_v_T": 0.4163533624631118,
+      "energy_T": 0.4711412129856787,
+      "u_peak_T": -11.689597654525162,
+      "v_peak_T": 1.400781457490043,
+      "eh_u_T": -0.48949588459181004,
+      "eh_v_T": 6.358890215381863
+    },
+    "max_abs_shift_pct_finite": 11.69156719018113
+  },
+  "E3c_strongHV_rescued": {
+    "\u03bd_h": 1e-18,
+    "dt": 1e-05,
+    "blew_up": false,
+    "interpretation": "Stable strong-HV comparison (dt below the HV stability bound). Tests the physics effect of \u03bd_h being 1e4\u00d7 stronger.",
+    "end": {
+      "m_l2_T": 1.1978716438096222,
+      "m_inf_T": 0.8755963291657961,
+      "lock_T": 0.7521734337414653,
+      "L2_u_T": 1.255818462332771,
+      "L2_v_T": 0.6757956224739915,
+      "energy_T": 1.0426186758223952,
+      "u_peak_T": 0.8862450831798823,
+      "v_peak_T": 0.3308304134350964,
+      "eh_u_T": 0.0045788158725099375,
+      "eh_v_T": 7.228315891183914e-06
+    },
+    "pct_shift_vs_E1": {
+      "m_l2_T": -51.22074082361342,
+      "m_inf_T": -76.12354076176383,
+      "lock_T": 276.597985539069,
+      "L2_u_T": -49.54251648227797,
+      "L2_v_T": -18.496690015972852,
+      "energy_T": -70.60538460852614,
+      "u_peak_T": -75.85460487914628,
+      "v_peak_T": -39.34181293951731,
+      "eh_u_T": -97.14942092898394,
+      "eh_v_T": -92.48706084010114
+    },
+    "max_abs_shift_pct_finite": 276.597985539069
+  },
+  "E3d_dt_trivial_check": {
+    "\u03bd_h": 1e-22,
+    "dt": 0.0001,
+    "blew_up": false,
+    "interpretation": "TRIVIAL-FINDING check: dt 5e-4 \u2192 1e-4 at baseline. Anticipated to give essentially no shift, as the prompt explicitly flags. Reported here to GROUND the trivial flag in data rather than declare it.",
+    "end": {
+      "m_l2_T": 2.533223677149282,
+      "m_inf_T": 3.6550679639202897,
+      "lock_T": 0.1991143626979906,
+      "L2_u_T": 2.5685871826263544,
+      "L2_v_T": 0.8545244456614078,
+      "energy_T": 3.7814817617781724,
+      "u_peak_T": 3.6570173701947013,
+      "v_peak_T": 0.5701088737630495,
+      "eh_u_T": 0.18187603217223403,
+      "eh_v_T": 9.587302688853615e-05
+    },
+    "pct_shift_vs_E1": {
+      "m_l2_T": 3.1569408442084055,
+      "m_inf_T": -0.33069081425893115,
+      "lock_T": -0.3074762811514333,
+      "L2_u_T": 3.2031693422088994,
+      "L2_v_T": 3.0586296618858113,
+      "energy_T": 6.611558544801191,
+      "u_peak_T": -0.3660149511328277,
+      "v_peak_T": 4.530204313711196,
+      "eh_u_T": 13.228403426804697,
+      "eh_v_T": -0.3518621858478834
+    },
+    "max_abs_shift_pct_finite": 13.228403426804697
+  },
+  "stability_note": "Explicit-RK4 HV stability bound: dt \u2272 2/(\u03bd_h k_max^16). At Nx=256: \u03bd_h=1e-18 \u2192 bound \u2248 2.8e-5 (dt=5e-4 violates); \u03bd_h=1e-22 \u2192 bound \u2248 0.28 (dt=5e-4 fine); \u03bd_h=1e-26 \u2192 bound \u2248 2.8e3 (dt=5e-4 trivially fine)."
+}

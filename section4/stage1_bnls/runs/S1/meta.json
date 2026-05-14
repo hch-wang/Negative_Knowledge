@@ -1,0 +1,24 @@
+{
+  "title": "NLS focusing bright soliton \u2014 Madelung-Psi split-step validation",
+  "domain": "NLS focusing (kappa=+1), no Burgers boost (u=0)",
+  "ic": "Psi(x,0) = sqrt(2) * sech(sqrt(2)*(x+5)) * exp(i*0.25*x). (Bright soliton, amplitude sqrt(2), at x=-5, moving at speed v/2 = 0.25.)",
+  "T_final": 8.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Exact sech bright soliton, mass(N) = 2*sqrt(2) exactly conserved, peak amplitude = 2 exactly conserved, peak position translates at speed 0.25, no shape change.",
+  "stress_question": "What is the minimum dt for split-step Fourier accuracy? At what Nx does the method fail? Does it conserve mass to machine precision?",
+  "parameters_to_sweep": "dt in {0.01, 0.001, 0.0001}; Nx in {128, 256, 512}",
+  "required_observations": [
+    "peak_amplitude_final",
+    "peak_position_final",
+    "mass_drift",
+    "energy_drift",
+    "phase_winding"
+  ],
+  "extra_method_to_try": "After split-step Fourier works, try direct (N, phi) evolution via FFT (no Psi reconstruction) to compare; report relative accuracy.",
+  "test_id": "S1",
+  "version": "stage1_bnls_v1"
+}

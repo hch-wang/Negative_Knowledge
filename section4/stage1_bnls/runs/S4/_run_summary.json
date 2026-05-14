@@ -1,0 +1,65 @@
+{
+  "M1": {
+    "dt": 0.001,
+    "min_N": 1.2025876889031263e-10,
+    "mass_drift": 1.382716163789155e-11,
+    "density_L2err": 5.177194030484521,
+    "density_Linf": 2.31811093967249,
+    "phase_jump": -2.112739141562383,
+    "rho_at_zero": 0.0039785874406139095,
+    "energy": 10.65995779798262
+  },
+  "M2": {
+    "eps_1e-06": {
+      "dt": 0.0005,
+      "eps": 1e-06,
+      "blew_up": true,
+      "T_reached": 0.004,
+      "min_N": -1.1080736123779187e+19,
+      "max_grad_phi": 251841705953.31006,
+      "mass_drift": NaN,
+      "density_Linf": NaN,
+      "phase_jump": NaN
+    },
+    "eps_1e-04": {
+      "dt": 0.0005,
+      "eps": 0.0001,
+      "blew_up": true,
+      "T_reached": 0.0185,
+      "min_N": -46981247724947.94,
+      "max_grad_phi": 172904085.47684115,
+      "mass_drift": NaN,
+      "density_Linf": NaN,
+      "phase_jump": NaN
+    },
+    "eps_1e-02": {
+      "dt": 0.0005,
+      "eps": 0.01,
+      "blew_up": true,
+      "T_reached": 0.03,
+      "min_N": -1.3011399853103565e+17,
+      "max_grad_phi": 4558170164.289941,
+      "mass_drift": NaN,
+      "density_Linf": NaN,
+      "phase_jump": NaN
+    }
+  },
+  "M3": {
+    "dt": 0.005,
+    "min_N": 9.20763955558238e-10,
+    "mass_drift": 2.7000623958883807e-13,
+    "density_Linf": 2.3936966865373384,
+    "phase_jump": 2.861495404318123,
+    "energy": 10.67583339509337
+  },
+  "M4": {
+    "dt": 0.001,
+    "min_N": 2.866793236856157e-32,
+    "mass_drift": 4.04298816647497e-12,
+    "density_L2err": 4.378557625455826,
+    "density_Linf": 2.7939934937364947,
+    "rho_at_zero": 1.9323671726333558e-26,
+    "phase_jump": 3.141592653588314,
+    "energy": 9.807106714541387
+  }
+}

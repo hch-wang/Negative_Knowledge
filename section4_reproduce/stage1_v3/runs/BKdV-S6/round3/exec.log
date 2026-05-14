@@ -1,0 +1,105 @@
+[grid]  Nx=256  L=30.0  dx=1.1719e-01
+[time]  T=6.0  dt=1.0000e-04  nsteps=60000
+[IC]    v0=1.5 sech^2(x+5)  u0=1.5(1-tanh(x/0.5))/2
+[sweep] 9 cases (linear + k^8 hyperviscosity)
+
+=== Case lin_1e-3  nu_lin=1.000e-03  nu_hyp=0.000e+00 ===
+  u_max:  t0=1.5000  max=3.3899  final=2.5418
+  u_min:  min=-0.9984  final=-0.6340
+  TV(u):  max=93.041  final=93.041
+  v_max:  final=0.6344  (IC 1.4977)
+  mid-k:  max=9.520e-02  final=9.520e-02
+  elapsed=16.9s  blowup_t=None
+
+=== Case lin_1e-2  nu_lin=1.000e-02  nu_hyp=0.000e+00 ===
+  u_max:  t0=1.5000  max=2.9981  final=1.6193
+  u_min:  min=-0.3165  final=-0.0339
+  TV(u):  max=56.311  final=27.122
+  v_max:  final=0.5300  (IC 1.4977)
+  mid-k:  max=3.532e-02  final=1.155e-02
+  elapsed=17.0s  blowup_t=None
+
+=== Case lin_2e-2  nu_lin=2.000e-02  nu_hyp=0.000e+00 ===
+  u_max:  t0=1.5000  max=2.9253  final=1.4311
+  u_min:  min=-0.4069  final=-0.0111
+  TV(u):  max=44.141  final=17.146
+  v_max:  final=0.5211  (IC 1.4977)
+  mid-k:  max=2.158e-02  final=4.162e-03
+  elapsed=17.1s  blowup_t=None
+
+=== Case lin_5e-2  nu_lin=5.000e-02  nu_hyp=0.000e+00 ===
+  u_max:  t0=1.5000  max=2.8555  final=1.5393
+  u_min:  min=-0.3275  final=+0.0491
+  TV(u):  max=26.949  final=9.587
+  v_max:  final=0.5318  (IC 1.4977)
+  mid-k:  max=8.577e-03  final=1.416e-03
+  elapsed=17.4s  blowup_t=None
+
+=== Case lin_1e-1  nu_lin=1.000e-01  nu_hyp=0.000e+00 ===
+  u_max:  t0=1.5000  max=2.7112  final=1.5430
+  u_min:  min=-0.2633  final=+0.0740
+  TV(u):  max=16.288  final=6.100
+  v_max:  final=0.5208  (IC 1.4977)
+  mid-k:  max=3.678e-03  final=4.266e-04
+  elapsed=17.3s  blowup_t=None
+
+=== Case hyp_1e-14  nu_lin=0.000e+00  nu_hyp=1.000e-14 ===
+  u_max:  t0=1.5000  max=3.3572  final=3.0531
+  u_min:  min=-0.9984  final=-0.5020
+  TV(u):  max=126.674  final=121.205
+  v_max:  final=0.8176  (IC 1.4977)
+  mid-k:  max=1.503e-01  final=1.380e-01
+  elapsed=17.1s  blowup_t=None
+
+=== Case hyp_1e-12  nu_lin=0.000e+00  nu_hyp=1.000e-12 ===
+  u_max:  t0=1.5000  max=3.4510  final=3.1159
+  u_min:  min=-0.9951  final=-0.6078
+  TV(u):  max=124.328  final=115.393
+  v_max:  final=0.7926  (IC 1.4977)
+  mid-k:  max=1.483e-01  final=1.047e-01
+  elapsed=17.1s  blowup_t=None
+
+=== Case hyp_1e-10  nu_lin=0.000e+00  nu_hyp=1.000e-10 ===
+  u_max:  t0=1.5000  max=3.3209  final=2.5561
+  u_min:  min=-0.5778  final=-0.1770
+  TV(u):  max=84.772  final=77.674
+  v_max:  final=0.7787  (IC 1.4977)
+  mid-k:  max=7.085e-02  final=6.109e-02
+  elapsed=17.1s  blowup_t=None
+
+=== Case hyp_1e-9  nu_lin=0.000e+00  nu_hyp=1.000e-09 ===
+  u_max:  t0=1.5000  max=3.0568  final=1.4758
+  u_min:  min=-0.4078  final=-0.1147
+  TV(u):  max=46.226  final=21.856
+  v_max:  final=0.5020  (IC 1.4977)
+  mid-k:  max=2.425e-02  final=8.441e-03
+  elapsed=17.1s  blowup_t=None
+
+[saved sweep] /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S6/round3/sweep_summary.json
+
+=== Practical-bound analysis ===
+  Criterion: u_max_max < 1.65 AND TV_u_max < 10 AND v_max_final > 1.2
+  (IC: u_max=1.5  TV(u)=3.0  v_max=1.50)
+  label       u_max_max   TV_u_max  v_max_fin  u_min_min  PASS?
+  lin_1e-3       3.3899     93.041     0.6344    -0.9984  no
+  lin_1e-2       2.9981     56.311     0.5300    -0.3165  no
+  lin_2e-2       2.9253     44.141     0.5211    -0.4069  no
+  lin_5e-2       2.8555     26.949     0.5318    -0.3275  no
+  lin_1e-1       2.7112     16.288     0.5208    -0.2633  no
+  hyp_1e-14      3.3572    126.674     0.8176    -0.9984  no
+  hyp_1e-12      3.4510    124.328     0.7926    -0.9951  no
+  hyp_1e-10      3.3209     84.772     0.7787    -0.5778  no
+  hyp_1e-9       3.0568     46.226     0.5020    -0.4078  no
+
+  Relaxed criterion: u_max_max < 2.0 AND TV_u_max < 30 AND v_max_final > 0.9
+  lin_1e-3       3.3899     93.041     0.6344  no
+  lin_1e-2       2.9981     56.311     0.5300  no
+  lin_2e-2       2.9253     44.141     0.5211  no
+  lin_5e-2       2.8555     26.949     0.5318  no
+  lin_1e-1       2.7112     16.288     0.5208  no
+  hyp_1e-14      3.3572    126.674     0.8176  no
+  hyp_1e-12      3.4510    124.328     0.7926  no
+  hyp_1e-10      3.3209     84.772     0.7787  no
+  hyp_1e-9       3.0568     46.226     0.5020  no
+
+[done] E3 sweep complete.

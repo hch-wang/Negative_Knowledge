@@ -1,0 +1,118 @@
+{
+  "test_id": "S2",
+  "stress_question": "Does direct (N, phi) evolution succeed? At what point does the quantum pressure (sqrt(N))_xx / (2 sqrt(N)) singularity affect accuracy or stability? What is the failure mode if you do NOT use Madelung-Psi transform?",
+  "methods_tried": [
+    {
+      "method_name": "Madelung-Psi split-step Fourier (Strang)",
+      "params": {"dt": 0.001, "Nx": 256, "kappa": 1, "T_final": 4.0, "dealiasing": false},
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "mass_drift_vs_initial": 1.097e-13,
+        "mass_drift_vs_exact": -3.291e-13,
+        "min_N_during_run": 3.017e-24,
+        "max_N_final": 1.999023,
+        "peak_position_final_x": -3.9844,
+        "peak_position_expected_x": -4.0,
+        "quantum_pressure_max": 0.0,
+        "where_fails_first": -1.0,
+        "wall_time_seconds": 0.08
+      },
+      "failure_mode": null,
+      "evidence": "Mass conserved to 1.1e-13 (machine precision in float64) over T=4.0; peak position at x=-3.984 matches predicted x = -5 + 0.25*4 = -4 to within one grid spacing dx=0.117. No quantum pressure is computed because Psi = sqrt(N) exp(i*phi) absorbs the singularity. min(N) at the boundary is 3e-24 (numerically zero), with no impact on stability."
+    },
+    {
+      "method_name": "Direct (N, phi) spectral FFT + RK4, eps=0 (no regularization)",
+      "params": {"dt": 0.001, "Nx": 256, "kappa": 1, "T_final": 4.0, "regularization": "none"},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "blew_up": true,
+        "blowup_step": 1,
+        "blowup_time": 0.001,
+        "quantum_pressure_max": 6.844e+07,
+        "min_N_during_run": -1.047e+18,
+        "max_N_after_step1": 1.619e+18,
+        "where_fails_first_t": "before first sampled snapshot"
+      },
+      "failure_mode": "Catastrophic quantum-pressure singularity in soliton tails (min N0 ~ 3e-24). Q = (sqrt(N))_xx / (2 sqrt(N)) involves spectral second derivative of sqrt(N) divided by sqrt(N); when N is tiny, the high-k content of sqrt(N) divided by the tail amplitude produces |Q| ~ 1e8 in one step, driving |N| to 1e18.",
+      "evidence": "After a single RK4 step (dt=0.001), max(|N|)=1.6e18, min(N)=-1.0e18, qmax=6.8e7. Mass conservation is destroyed (drift = -11.6 against initial 2.828)."
+    },
+    {
+      "method_name": "Direct (N, phi) spectral FFT + RK4, hard floor sqrt(max(N, eps))",
+      "params": {"dt": 0.001, "Nx": 256, "kappa": 1, "T_final": 4.0, "eps_sweep": [1e-12, 1e-6, 1e-3]},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "eps_1em12_blowup_step": 1, "eps_1em12_qmax": 2.412e+11,
+        "eps_1em6_blowup_step": 2,  "eps_1em6_qmax": 2.438e+08,
+        "eps_1em3_blowup_step": 6,  "eps_1em3_qmax": 5.235e+12
+      },
+      "failure_mode": "Hard floor max(N, eps) introduces a non-smooth step in sqrt(N) at the boundary between the soliton core and the regularized tail. The spectral second derivative of this step produces Gibbs oscillations with amplitude scaling like 1/dx, and dividing by the floor value sqrt(eps) amplifies them. The LARGER the eps, the wider the flat region, the MORE damaging the step artifact (qmax 5e12 at eps=1e-3 vs 6e7 at eps=0).",
+      "evidence": "Counter-intuitive: increasing regularization eps from 0 to 1e-3 only improved survival from 1 step to 6 steps (out of 4000 needed for T=4), and qmax peaked at 5.2e12 with eps=1e-3. The non-monotonic qmax-vs-eps proves the step (non-smoothness), not the magnitude of the floor, is the dominant failure mechanism."
+    },
+    {
+      "method_name": "Direct (N, phi) spectral FFT + RK4, soft regularization Nsafe = N + eps",
+      "params": {"dt": 0.001, "Nx": 256, "kappa": 1, "T_final": 4.0, "eps_sweep": [1e-6, 1e-3, 1e-1]},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "eps_1em6_blowup_step": 2,  "eps_1em6_qmax": 2.441e+08,
+        "eps_1em3_blowup_step": 5,  "eps_1em3_qmax": 1.269e+07,
+        "eps_1em1_blowup_step": 13, "eps_1em1_qmax": 3.287e+06
+      },
+      "failure_mode": "Smooth shift N -> N+eps preserves analyticity of sqrt(N+eps) and yields monotonic improvement in survival with eps (2 -> 5 -> 13 steps) and monotonic decrease in qmax (2.4e8 -> 1.3e7 -> 3.3e6). But even eps=0.1 (5% of peak amplitude N_max=2) blows up at step 13, far short of the 4000 steps needed for T=4. The fundamental issue is the non-Lipschitz coupling in the phi equation (Q ~ 1/sqrt(N) is unbounded as N -> 0) combined with explicit RK4 lacking diffusive damping.",
+      "evidence": "Smooth-vs-hard at same eps=1e-3: soft survives 5 steps (qmax 1.3e7), hard survives 6 steps (qmax 5.2e12). Soft is qualitatively healthier but still unstable."
+    },
+    {
+      "method_name": "Direct (N, phi) spectral FFT + RK4, soft eps=1e-3 + 2/3-rule dealiasing",
+      "params": {"dt": 0.001, "Nx": 256, "kappa": 1, "T_final": 4.0, "eps": 1e-3, "dealiasing": "2/3 rule"},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "blowup_step": 21,
+        "blowup_time": 0.021,
+        "quantum_pressure_max": 2.193e+24,
+        "where_fails_first_t": 0.02,
+        "max_diff_vs_madelung_at_blowup": 3.836e+05
+      },
+      "failure_mode": "Dealiasing kills the highest-k Gibbs modes but the medium-k content of sqrt(N+eps) still couples through Q to phi, then back to phi_x through 0.5*phi_x^2. Survival improves to 21 steps (best of all direct variants), but qmax explodes catastrophically to 2.2e24 once the instability triggers, indicating the explicit RK4 stability boundary has been crossed.",
+      "evidence": "Best-case direct variant blew up at t=0.021, still only 0.5% of the way to T=4.0. The fact that all 8 direct variants (4 hard + 3 soft + 1 soft+dealiased) failed pre-t=0.025 demonstrates a structural — not parametric — obstruction to direct (N, phi) evolution."
+    }
+  ],
+  "positive_findings": [
+    "Madelung-Psi split-step Fourier conserves mass to 1.1e-13 (machine precision in float64) on the bright sech soliton at dt=0.001, Nx=256, T=4.0.",
+    "Madelung-Psi correctly translates the soliton to x = -4.0 (within one grid cell, dx=0.117) with peak amplitude N_peak = 1.999 (target 2).",
+    "Madelung-Psi handles min(N) ~ 3e-24 (numerically zero) without any explicit regularization because the singular 1/sqrt(N) coupling is absorbed by the |Psi|^2 = N identity.",
+    "For the direct (N, phi) method, smooth regularization Nsafe = N + eps is monotonically better than hard floor max(N, eps): same eps gives healthier qmax and longer survival, because the hard floor injects a non-analytic step into sqrt(N) that excites spectral Gibbs modes.",
+    "2/3-rule dealiasing combined with soft regularization gives the best direct survival (21 steps vs 1-13 for unfiltered) by suppressing the high-k coupling that drives quantum-pressure blowup."
+  ],
+  "negative_findings": [
+    "Direct (N, phi) spectral FFT + RK4 with eps=0 blows up after 1 step due to (sqrt(N))_xx / (2*sqrt(N)) reaching |Q| ~ 6.8e7 when min(N) ~ 3e-24 in the soliton tails. Failure mode: NaN-not-quite-yet; |N| reaches 1.6e18 in one step.",
+    "Hard-floor regularization sqrt(max(N, eps)) does NOT make direct (N, phi) stable for the bright soliton on a periodic spectral grid. Counter-intuitively, larger eps (1e-3) produces a LARGER quantum-pressure maximum (5.2e12) than eps=0 (6.8e7), because the wider flat floor amplifies the non-smooth step's Gibbs artifact.",
+    "Smooth regularization Nsafe = N + eps at eps up to 1e-1 (5% of peak) still blows up well before T=4.0 (only 13 of 4000 needed steps). Smooth regularization is necessary but not sufficient.",
+    "Combining smooth regularization (eps=1e-3) with 2/3-rule dealiasing only extends direct-method survival to 21 steps out of 4000 (0.5% of run time). The (N, phi) PDE system has a structural instability that no amount of (eps, dealiasing) tuning at this grid resolution can fix.",
+    "Where each direct variant fails first: the failure is in the very first sampled snapshot interval (the first sample after t=0), confirming that the singularity is excited essentially instantly by the soliton tails."
+  ],
+  "parameter_boundaries": [
+    {"variable": "method", "stable_method": "Madelung-Psi split-step", "fails_method": "direct (N, phi) RK4 spectral", "boundary_kind": "qualitative"},
+    {"variable": "regularization_type", "method": "direct (N, phi) RK4 spectral", "stable_range": "(none — all regularizations tested blow up)", "fails_at": "eps in {0, 1e-12, 1e-6, 1e-3, 1e-1} (hard or soft) and with/without 2/3-rule dealiasing"},
+    {"variable": "regularization_smoothness", "method": "direct (N, phi) RK4 spectral", "best_practice": "soft Nsafe = N+eps is monotonically better than hard max(N, eps)", "evidence": "qmax(eps=1e-3 soft) = 1.3e7 vs qmax(eps=1e-3 hard) = 5.2e12"},
+    {"variable": "dt", "method": "Madelung-Psi split-step", "stable_range": "<=0.001 confirmed", "fails_at": "not tested in S2; from S1 it fails near 0.01"},
+    {"variable": "Nx", "method": "Madelung-Psi split-step", "stable_range": "256 confirmed", "fails_at": "not tested in S2"}
+  ],
+  "required_observations": {
+    "mass_drift_direct": "method-dependent; all direct variants blew up before T=4, so drift is dominated by blowup (~1e+1 to 1e+18 in N); pre-blowup drift was ~1e-16 to 1e-12 at sub-step level",
+    "mass_drift_madelung": 1.097e-13,
+    "min_N_during_run": {
+      "madelung": 3.017e-24,
+      "direct_eps0": -1.047e+18,
+      "direct_soft_eps1em1": -1.339e+08,
+      "direct_soft_eps1em3_dealias": -1.228e+42
+    },
+    "quantum_pressure_max": {
+      "madelung": "not computed (no Q in Psi formulation)",
+      "direct_eps0": 6.844e+07,
+      "direct_hard_eps1em3": 5.235e+12,
+      "direct_soft_eps1em1": 3.287e+06,
+      "direct_soft_eps1em3_dealias": 2.193e+24
+    },
+    "where_fails_first": "all direct variants: between first and second sampled snapshot, i.e. within first 20 steps. Best direct (soft+dealias eps=1e-3) deviates from Madelung at t=0.02 with max diff 3.8e5 already, then catastrophically diverges."
+  },
+  "conclusion": "Madelung-Psi split-step Fourier is the unique stable method tested for the focusing bright soliton on a periodic spectral discretization. Direct (N, phi) evolution fails almost immediately and cannot be rescued by any regularization (hard or soft, 1e-12 through 1e-1) or 2/3-rule dealiasing at Nx=256, dt=0.001. The failure mechanism is structural: the (sqrt(N))_xx / (2*sqrt(N)) coupling is non-Lipschitz at N=0 and the soliton tails reach 3e-24 (numerical zero), so any explicit time integration that touches sqrt(N) on the grid is unstable."
+}

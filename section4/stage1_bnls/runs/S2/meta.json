@@ -1,0 +1,23 @@
+{
+  "title": "NLS focusing \u2014 direct (N, phi) vs Madelung-Psi methods",
+  "domain": "NLS focusing (kappa=+1), no Burgers boost",
+  "ic": "Same IC as S1 (bright sech soliton).",
+  "T_final": 4.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Same as S1 (just shorter time).",
+  "stress_question": "Does direct (N, phi) evolution succeed? At what point does the quantum pressure (sqrt(N))_xx / (2 sqrt(N)) singularity affect accuracy or stability? What is the failure mode if you do NOT use Madelung-Psi transform?",
+  "parameters_to_sweep": "Try at least two methods: (a) direct spectral FFT on (N, phi) with quantum pressure computed directly, (b) Madelung-Psi split-step. Report which works, what fails, and ANY parameter regimes where they diverge.",
+  "required_observations": [
+    "mass_drift_direct",
+    "mass_drift_madelung",
+    "min_N_during_run",
+    "quantum_pressure_max",
+    "where_fails_first"
+  ],
+  "test_id": "S2",
+  "version": "stage1_bnls_v1"
+}

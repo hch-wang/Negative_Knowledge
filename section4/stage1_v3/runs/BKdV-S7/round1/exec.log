@@ -1,0 +1,44 @@
+[grid]  Nx=256  L=30.0  dx=1.1719e-01
+[time]  T=10.0  dt=2.0000e-04  nsteps=50000
+[IC]    A=1.5  v0 = A sech^2(x+5)
+[init]  mass_v=+3.000000e+00  L2v=1.732051e+00  H=-4.135714e+00  v_max=1.4977@x=-5.039  n_peaks=1
+[t= 0.3332] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1390e+00  v_max=1.5026@x=-3.867  npk=1  sup=1.503e+00
+[t= 0.6664] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1330e+00  v_max=1.4972@x=-2.578  npk=1  sup=1.497e+00
+[t= 0.9996] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1330e+00  v_max=1.5020@x=-1.406  npk=1  sup=1.502e+00
+[t= 1.3328] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1290e+00  v_max=1.4994@x=-0.234  npk=1  sup=1.499e+00
+[t= 1.6660] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1293e+00  v_max=1.5008@x=+0.938  npk=1  sup=1.501e+00
+[t= 1.9992] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1293e+00  v_max=1.5005@x=+2.109  npk=1  sup=1.501e+00
+[t= 2.3324] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1333e+00  v_max=1.5035@x=+3.281  npk=1  sup=1.503e+00
+[t= 2.6656] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1282e+00  v_max=1.4960@x=+4.453  npk=1  sup=1.496e+00
+[t= 2.9988] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1291e+00  v_max=1.4958@x=+5.742  npk=1  sup=1.496e+00
+[t= 3.3320] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1283e+00  v_max=1.4966@x=+6.914  npk=1  sup=1.497e+00
+[t= 3.6652] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1301e+00  v_max=1.5011@x=+8.086  npk=1  sup=1.501e+00
+[t= 3.9984] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1296e+00  v_max=1.5006@x=+9.258  npk=1  sup=1.501e+00
+[t= 4.3316] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1308e+00  v_max=1.5011@x=+10.430  npk=1  sup=1.501e+00
+[t= 4.6648] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1305e+00  v_max=1.4998@x=+11.602  npk=1  sup=1.500e+00
+[t= 4.9980] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1299e+00  v_max=1.4985@x=+12.773  npk=1  sup=1.499e+00
+[t= 5.3312] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1263e+00  v_max=1.4945@x=+13.945  npk=1  sup=1.495e+00
+[t= 5.6644] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1257e+00  v_max=1.4948@x=-14.766  npk=1  sup=1.495e+00
+[t= 5.9976] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1285e+00  v_max=1.4986@x=-13.594  npk=1  sup=1.499e+00
+[t= 6.3308] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1315e+00  v_max=1.5015@x=-12.422  npk=1  sup=1.501e+00
+[t= 6.6640] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1375e+00  v_max=1.5062@x=-11.250  npk=1  sup=1.506e+00
+[t= 6.9972] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1400e+00  v_max=1.5073@x=-10.078  npk=1  sup=1.507e+00
+[t= 7.3304] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1377e+00  v_max=1.5048@x=-8.906  npk=1  sup=1.505e+00
+[t= 7.6636] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1369e+00  v_max=1.5012@x=-7.734  npk=1  sup=1.501e+00
+[t= 7.9968] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1359e+00  v_max=1.4998@x=-6.445  npk=1  sup=1.500e+00
+[t= 8.3300] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1329e+00  v_max=1.4992@x=-5.273  npk=1  sup=1.499e+00
+[t= 8.6632] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1315e+00  v_max=1.5009@x=-4.102  npk=1  sup=1.501e+00
+[t= 8.9964] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1304e+00  v_max=1.5004@x=-2.930  npk=1  sup=1.500e+00
+[t= 9.3296] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1327e+00  v_max=1.5024@x=-1.758  npk=1  sup=1.502e+00
+[t= 9.6628] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1324e+00  v_max=1.5020@x=-0.586  npk=1  sup=1.502e+00
+[t= 9.9960] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1279e+00  v_max=1.4975@x=+0.586  npk=1  sup=1.497e+00
+[t=10.0000] mass_v=+3.0000e+00  L2v=1.7321e+00  H=-4.1279e+00  v_max=1.4957@x=+0.586  npk=1  sup=1.496e+00
+[saved] /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S7/round1/snapshots.npz  (21 snapshots)
+[final] t=10.0000  v_max=1.49566@x=+0.586  mass_v=+3.00000e+00  L2v=1.73205e+00  H=-4.12794e+00  n_peaks=1  elapsed=6.6s
+[summary] v_max range = [1.4957, 1.5067]  drift = -0.1374%
+[summary] mass_v drift  = +0.000000%
+[summary] L2v drift     = +0.000000%
+[summary] H drift       = +0.187866%
+[summary] n_peaks min/max = 1 / 1
+[summary] phase speed (peak fit) = 3.5640
+[done] E1 Gardner-only baseline complete.

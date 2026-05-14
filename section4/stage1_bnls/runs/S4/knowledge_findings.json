@@ -1,0 +1,106 @@
+{
+  "test_id": "S4",
+  "title": "NLS defocusing dark soliton: stress test for N=0 singularity handling",
+  "domain": "[-15, 15] periodic (formally), Nx=256, T=4.0, kappa=-1",
+  "ic": "Psi(x,0) = tanh(x) (anti-periodic on the box!)",
+  "methods_tried": [
+    {
+      "method_name": "Madelung-Psi Strang split-step Fourier, periodic basis",
+      "params": {"dt": 1e-3, "Nx": 256, "basis": "periodic Fourier", "T": 4.0, "kappa": -1, "n_inf": 1.0},
+      "outcome": "partial",
+      "outcome_diagnostics": {
+        "min_N_observed_T4": 1.203e-10,
+        "rho_at_zero_T4": 3.979e-3,
+        "mass_drift_T4": 1.383e-11,
+        "phase_jump_T4_rad": -2.113,
+        "density_Linf_T4_vs_tanh2": 2.318,
+        "density_Linf_T0p01": 0.741,
+        "density_Linf_T0p1": 0.981,
+        "phase_jump_T0p01_rad": -3.140
+      },
+      "failure_mode": "Periodic Fourier basis is wrong for the IC: tanh(-L)=-1 and tanh(+L)=+1, so Psi has a jump of size 2 at the periodic boundary. Gibbs ringing from this boundary jump corrupts the solution at T<0.01 (density Linf already 0.74); the dark-soliton node fills in and the phase jump drifts from -pi to -2.11 by T=4.",
+      "evidence": "rho(x=0) drifts from 0 to 4e-3; phase jump drifts from -3.140 (correct, T=0.01) to -2.113 (off by 1 rad, T=4). |Psi(L)-Psi(-L)| at t=0 is 2.0, not 1e-13 as the prompt claims."
+    },
+    {
+      "method_name": "Direct (N, phi) operator split with floor regularization N <- max(N, eps), periodic Fourier",
+      "params": {"dt": 5e-4, "Nx": 256, "basis": "periodic Fourier", "eps_sweep": [1e-6, 1e-4, 1e-2], "T": 4.0, "kappa": -1},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "eps_1e-6": {"blew_up": true, "step": 8, "T_reached": 0.004, "max_grad_phi_at_blowup": "1e8+"},
+        "eps_1e-4": {"blew_up": true, "step": 37, "T_reached": 0.018, "max_grad_phi_at_blowup": "1e8+"},
+        "eps_1e-2": {"blew_up": true, "step": 60, "T_reached": 0.030, "max_grad_phi_at_blowup": "1e8+"}
+      },
+      "failure_mode": "Quantum pressure Q = -(sqrt N)_xx / (2 sqrt N) is undefined at the density node x=0. Floor regularization N <- max(N, eps) creates two corner kinks in sqrt(N) where the floor meets the smooth profile; (sqrt N)_xx develops delta-like spikes at the corners, dividing by sqrt(eps) amplifies the kick on phi, and the resulting v=phi_x runs away in <0.05 time units. Larger eps delays blow-up but does not prevent it -- this is a structural problem with Madelung variables at phase singularities, not a numerical-strength issue.",
+      "evidence": "All three eps values diverge with max|v|>1e8 within 60 timesteps; doubling eps from 1e-4 to 1e-2 only delays blow-up from t=0.018 to t=0.030, far short of T=4."
+    },
+    {
+      "method_name": "Strang-split Crank-Nicolson on Psi (Fourier-diagonal CN factor for kinetic), periodic basis",
+      "params": {"dt": 5e-3, "Nx": 256, "basis": "periodic Fourier", "time_scheme": "CN-Fourier", "T": 4.0, "kappa": -1},
+      "outcome": "partial",
+      "outcome_diagnostics": {
+        "min_N_observed_T4": 9.208e-10,
+        "mass_drift_T4": 2.700e-13,
+        "phase_jump_T4_rad": 2.861,
+        "density_Linf_T4_vs_tanh2": 2.394
+      },
+      "failure_mode": "Same boundary-Gibbs pathology as M1 -- swapping the time scheme does not fix the basis problem. M3 is included as a cross-check confirming the failure is in the spatial basis, not in time integration. CN's mass drift (3e-13) is even better than M1's (1e-11) but the boundary contamination is identical.",
+      "evidence": "Density Linf=2.39 at T=4 ~~ M1's 2.32, despite 5x larger dt. Mass conservation 3e-13 is essentially round-off. Confirms it is a basis issue."
+    },
+    {
+      "method_name": "Madelung-Psi Strang split-step on Psi with anti-periodic Fourier basis (half-shift trick)",
+      "params": {"dt": 1e-3, "Nx": 256, "basis": "anti-periodic Fourier (k_n shifted by pi/(2L))", "T": 4.0, "kappa": -1, "n_inf": 1.0},
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "min_N_observed_T4": 2.867e-32,
+        "rho_at_zero_T4": 1.932e-26,
+        "mass_drift_T4": 4.043e-12,
+        "phase_jump_T4_rad": 3.141593,
+        "phase_jump_T4_vs_pi": 0.0,
+        "density_Linf_T0p01_vs_tanh2": 6.466e-5,
+        "density_Linf_T0p1_vs_tanh2": 6.511e-3,
+        "density_Linf_T1_vs_tanh2": 0.404,
+        "density_Linf_T4_vs_tanh2": 2.794
+      },
+      "failure_mode": null,
+      "evidence": "Anti-periodic basis matches the true BC of the dark soliton (Psi(-L)=-Psi(L)). The density node and pi phase jump are preserved to machine precision at all times. The growth of density Linf at T=4 reflects real PDE dynamics -- tanh(x) is the stationary dark soliton of i Psi_t=-Psi_xx+2|Psi|^2 Psi (g=2 NLS, healing length 1) but is NOT stationary under the prompt's bare i Psi_t=-1/2 Psi_xx+kappa|Psi|^2 Psi -- so this drift is physics, not numerics. Method preserves the SINGULARITY STRUCTURE rather than freezing the profile."
+    }
+  ],
+  "positive_findings": [
+    "Madelung-Psi (in any time scheme: M1, M3) handles N=0 nodes natively with NO regularization needed: min(|Psi|^2) reaches 1e-10 at dt=1e-3 with mass drift 1e-11.",
+    "Anti-periodic Fourier basis (M4, half-shift trick: U=exp(-i*pi*x/(2L))*Psi, kinetic wavenumbers shifted to k+pi/(2L)) is the correct BC for dark-soliton IC and preserves rho(x=0)=2e-26, phase jump=pi (7 digits), mass to 4e-12.",
+    "Switching from periodic to anti-periodic Fourier reduces the short-time (T=0.01) density error by FOUR ORDERS OF MAGNITUDE (0.74 -> 6.5e-5) at the same dt and Nx -- a pure basis fix, zero algorithmic overhead.",
+    "Crank-Nicolson on Psi (M3) gives mass conservation 2.7e-13 (better than Strang's 1.4e-11) at 5x larger dt -- useful when small dt is the bottleneck and BCs are correctly handled."
+  ],
+  "negative_findings": [
+    "Direct (N, phi) operator split with floor regularization N <- max(N, eps) BLOWS UP at all tested eps in {1e-6, 1e-4, 1e-2} within T<0.04. Larger eps delays but does not prevent blow-up. Mechanism: corner singularity of sqrt(max(N,eps)) at the node produces a delta-spike in quantum pressure, kicking phi to runaway velocities. This is a STRUCTURAL incompatibility, not a regularization-strength issue: Madelung variables (N, phi) are not single-valued at vortex/node points.",
+    "Periodic Fourier basis applied to Psi(x,0)=tanh(x) is FUNDAMENTALLY WRONG. The prompt's claim that 'on [-15,15] tanh is approximately +/-1 at the boundaries -- close enough that periodicity is satisfied to ~1e-13' is incorrect: |Psi(L)-Psi(-L)| = 2.0 (NOT 1e-13), because tanh is ODD-symmetric. The Gibbs jump at the boundary corrupts the solution at T<0.01. Confirmed both with M1 (Strang) and M3 (CN) -- same failure regardless of time scheme.",
+    "Increasing the regularization parameter eps in the direct (N,phi) scheme is COUNTERPRODUCTIVE for the goal of capturing the dark-soliton node: it does not stabilize the long-time dynamics AND it artificially raises the floor of N, masking the very physical feature one is trying to resolve."
+  ],
+  "parameter_boundaries": [
+    {"variable": "basis", "method": "Madelung-Psi Strang split-step", "stable_range": "anti-periodic Fourier (correct for dark soliton)", "fails_at": "periodic Fourier (Gibbs jump=2 at boundary, fails at T<<1)"},
+    {"variable": "eps (floor regularization)", "method": "Direct (N, phi) operator split", "stable_range": "NONE in {1e-6, 1e-4, 1e-2} -- all blow up at T<0.04", "fails_at": "every tested value; eps=1e-2 lasts longest but still T_reached=0.030 << T_final=4.0"},
+    {"variable": "dt", "method": "Madelung-Psi anti-periodic Fourier (M4)", "stable_range": "<=1e-3 gives mass drift 4e-12, phase jump preserved to 1e-7", "fails_at": "(not tested in budget; M3 with dt=5e-3 on periodic basis already has 2.7e-13 mass drift, suggesting M4 is also stable up to several e-3)"},
+    {"variable": "Nx", "method": "Madelung-Psi (any)", "stable_range": "Nx=256 sufficient for representing the tanh kink at x=0 (dx=0.117, healing length ~1)", "fails_at": "(not tested in budget)"}
+  ],
+  "answer_to_stress_question": {
+    "N_eq_0_handling": "Psi-formulation handles it natively with no regularization. Direct (N, phi) cannot handle it at all -- no eps value works.",
+    "regularization_needed": "None for Psi-based methods. The only regularization is BC: use anti-periodic Fourier instead of periodic.",
+    "periodic_vs_Dirichlet_issue": "DOMINANT. The dark soliton is anti-periodic, not periodic. Periodic Fourier introduces a Gibbs jump of 2 that destroys the solution at T<0.01. Anti-periodic Fourier (or sine/cosine Dirichlet) is correct.",
+    "phase_jump_resolved": "Yes, by M4 (anti-periodic Fourier): phase jump = 3.141593 rad (pi to 7 digits) at T=4. M1 and M3 fail: phase jump drifts to -2.11 and 2.86 respectively due to boundary contamination."
+  },
+  "min_N_observed_per_method": {
+    "M1_Madelung_Psi_periodic": 1.203e-10,
+    "M2_direct_N_phi_eps_1e-6": "(blew up at step 8, T~0.004)",
+    "M2_direct_N_phi_eps_1e-4": "(blew up at step 37, T~0.018)",
+    "M2_direct_N_phi_eps_1e-2": "(blew up at step 60, T~0.030)",
+    "M3_CN_Psi_periodic": 9.208e-10,
+    "M4_Madelung_Psi_antiperiodic": 2.867e-32
+  },
+  "phase_jump_resolved_per_method": {
+    "M1_Madelung_Psi_periodic": false,
+    "M2_direct_N_phi_any_eps": false,
+    "M3_CN_Psi_periodic": false,
+    "M4_Madelung_Psi_antiperiodic": true
+  },
+  "recommendation": "For B-NLS subproblems with non-decaying ICs that contain phase singularities (dark solitons, vortices), evolve Psi with an anti-periodic Fourier basis (half-shift trick). Avoid direct (N, phi) splittings entirely when nodes are present. Periodic Fourier should be reserved for ICs that genuinely satisfy Psi(L)=Psi(-L) (e.g., bright solitons with vanishing tails)."
+}

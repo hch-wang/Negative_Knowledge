@@ -1,0 +1,88 @@
+{
+  "test_id": "S7",
+  "methods_tried": [
+    {
+      "method_name": "All-spectral RK4 on (u, N, phi)",
+      "params": {"dt": 5e-4, "Nx": 256, "dealiasing": false, "T_final": 8.0, "kappa": 1.0},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "blew_at": 0.001,
+        "u_max_during_run": 1.0026,
+        "u_overshoot_above_1_first_step": 0.0026,
+        "N_min_at_blow": 5.32e-20,
+        "failure_location": "HJ phi-equation, quantum-pressure term (sqrt N)_xx/(2 sqrt N)"
+      },
+      "failure_mode": "The quantum-pressure term (sqrt N)_xx / (2 sqrt N) in the HJ equation overflows to NaN within the first RK4 sub-step. The initial soliton N0 = sech^2(x+8) has tails N ~ 1e-30 in the bulk; dividing the spectral second derivative of sqrt(N) by 2*sqrt(N) is catastrophically ill-conditioned. A separate, smaller failure mode (Gibbs ringing on the bore in u) appears as a 0.26% overshoot in the same first sub-step but is dwarfed by the HJ singularity.",
+      "evidence": "Run aborted at step 2 of 16000 (t=0.001 of 8.0). u_max grew to 1.0026 (overshoot above the bore's u_L = 1 value), and the spectral d2x of sqrt(N) divided by 2*sqrt(N) produced overflow warnings followed by NaN in the next RHS evaluation."
+    },
+    {
+      "method_name": "MUSCL-Godunov SSP-RK3 on u + Madelung-Psi Strang split on Psi = sqrt(N) exp(i phi)",
+      "params": {
+        "dt": 5e-4,
+        "Nx": 256,
+        "dealiasing": "2/3 rule on the linear Psi step and on |Psi|^2 before the cubic exponential",
+        "T_final": 8.0,
+        "kappa": 1.0,
+        "u_scheme": "SSP-RK3 with MUSCL van-Leer slope limiter and Godunov flux for f(u) = u^2/2",
+        "psi_scheme": "Strang split: cubic(dt/2) -> linear-disp(dt, spectral) -> advection(dt, RK2 with frozen u) -> cubic(dt/2)"
+      },
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "u_max_during_run": 1.0,
+        "u_overshoot_above_1": 0.0,
+        "u_undershoot_below_0": 0.0,
+        "TV_u_final": 1.988,
+        "N_max_during_run_range": [0.993, 1.012],
+        "N_max_final": 0.9932,
+        "soliton_survives": true,
+        "n_peaks_final": 1,
+        "bore_position_final": 3.984,
+        "soliton_position_final": 4.805,
+        "psi_mass_drift_pre_collision": 1.5e-7,
+        "psi_mass_drift_full_run": 7e-5,
+        "collision_time_estimate": 5.0
+      },
+      "failure_mode": "(passes)",
+      "evidence": "Ran cleanly to T = 8.0. The bore in u rarefies as a self-similar fan with foot (u = 0.5 contour) moving from x = 0 at t = 0 to x = 3.98 at t = 8 -- matching the rarefaction characteristic speed for u_L = 1, u_R = 0. The soliton drifts from x = -8 to x = +4.8 with N_max bounded in [0.993, 1.012] (less than 2% amplitude modulation) and a single coherent peak throughout (n_peaks_final = 1). |Psi|^2 mass conserved to 1.5e-7 before the soliton enters the bore region and 7e-5 over the full run including the interaction. The soliton crosses x = 0 (initial bore center) at t ~ 5.0 and transmits to the right (u = 0 region) without reflection or break-up."
+    },
+    {
+      "method_name": "MUSCL-Godunov SSP-RK3 on u + spectral SSP-RK3 on (N, phi) without Madelung transform",
+      "params": {"dt": 2e-3, "Nx": 256, "dealiasing": false, "T_final": 8.0, "kappa": 1.0},
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "blew_at": 0.006,
+        "u_max_during_run": 1.0,
+        "u_overshoot_above_1": 0.0,
+        "N_min_at_blow": 5.32e-20,
+        "failure_location": "HJ phi-equation, quantum-pressure term (sqrt N)_xx/(2 sqrt N)"
+      },
+      "failure_mode": "Same HJ quantum-pressure singularity as the all-spectral case, despite MUSCL+Godunov holding the bore monotone (zero overshoot/undershoot in u). This isolates the failure mode to the (N, phi) Madelung-free formulation: shock-capturing on u alone is necessary but not sufficient.",
+      "evidence": "Run aborted at step 3 of 4000 (t=0.006) with the same NaN trajectory in phi as E1. u was clean (TV unchanged), confirming MUSCL did its job; the failure is entirely in the HJ phi equation."
+    }
+  ],
+  "positive_findings": [
+    "MUSCL-Godunov SSP-RK3 on u + Madelung-Psi Strang split on Psi = sqrt(N) exp(i phi) is the correct combination for B-NLS shock-soliton problems: MUSCL holds the bore monotone (TV(u) = 1.988, no overshoot), and Madelung-Psi never divides by sqrt(N) so the quantum-pressure singularity is bypassed entirely.",
+    "At Nx = 256, dt = 5e-4, 2/3 dealiasing, the Strang-Madelung scheme conserves |Psi|^2 mass to 1.5e-7 in the pre-collision phase and 7e-5 over the full T = 8 run including a bore traversal -- a gold-standard mass-conservation level for a focusing NLS coupled to a Burgers shock.",
+    "The bore-soliton interaction observed in S7 is a clean TRANSMISSION: the bright soliton crosses x = 0 (initial bore midpoint) at t ~ 5.0 and emerges to the right of the rarefying bore with a single coherent peak and N_max within 2% of its initial value. No reflection, no capture, no break-up.",
+    "Collision-time prediction: with N initially at x = -8, phi_x = 0.6, and bore u going from 1 (left) to 0 (right) over a 0.5-wide transition at x = 0, the soliton encounter time (crossing x = 0) is t ~ 5.0 -- consistent with the simple estimate (8 + 0)/(0.6 + average_bore_boost) where the average boost integrated over the soliton trajectory is ~0.86."
+  ],
+  "negative_findings": [
+    "All-spectral RK4 on (u, N, phi) blows up at t = 0.001 (one step) due to the quantum-pressure term (sqrt N)_xx / (2 sqrt N) overflowing where N ~ 1e-20 in the soliton tails. The Madelung-free HJ formulation is intrinsically singular for any compact-support initial condition in N. Pure spectral is therefore not a viable starting point.",
+    "MUSCL-Godunov on u + spectral on (N, phi) [Madelung-free] also blows up at t = 0.006, with the same HJ singularity. This proves that shock-capturing on u alone is necessary but NOT sufficient: it fixes the bore Gibbs problem (TV(u) stays at 1.0 with zero overshoot) but does nothing about the quantum-pressure singularity in phi.",
+    "The dominant numerical pathology in B-NLS with kappa = +1 and a bright-soliton N is the HJ quantum-pressure term, NOT the bore Gibbs. Any scheme that retains the (N, phi) representation with explicit (sqrt N)_xx / (2 sqrt N) will fail in less than one bore-crossing time, regardless of the spatial scheme used on u.",
+    "Without the 2/3 dealias mask, the Strang-Madelung scheme at dt = 2e-3 develops a numerical modulational-instability cascade at the bore-soliton collision around t = 4.4 (|Psi|^2 mass grows from 2 to 8e3, N_max from 1 to 380). Adding the 2/3 dealias + reducing to dt = 5e-4 fully suppresses this cascade and keeps mass drift below 1e-4."
+  ],
+  "parameter_boundaries": [
+    {"variable": "method on (N, phi)", "method": "Madelung-Psi Strang split with 2/3 dealias", "stable_range": "passes T=8 at dt <= 5e-4", "fails_at": "Madelung-free (N, phi) formulation fails immediately regardless of dt"},
+    {"variable": "method on u", "method": "MUSCL-Godunov with van-Leer + Godunov flux", "stable_range": "TV(u) = 1.988 with zero overshoot at the bore, dt <= 5e-3 (CFL ~ u_max * dt / dx <= 0.5)", "fails_at": "spectral u develops Gibbs >= 0.26% overshoot at the bore in the first step"},
+    {"variable": "dt for E2 Strang split", "method": "MUSCL + Madelung-Psi Strang split (kappa = +1)", "stable_range": "dt = 5e-4 with 2/3 dealias gives mass drift 7e-5 over T=8", "fails_at": "dt = 2e-3 without dealias triggers a numerical modulational-instability cascade at the bore-soliton collision around t = 4.4"},
+    {"variable": "dealiasing for E2", "method": "Strang Madelung-Psi with cubic kappa = +1", "stable_range": "2/3 dealias mask on the linear FFT step and on |Psi|^2 before the cubic exponential", "fails_at": "no dealiasing: cubic-focusing aliasing inflates |Psi|^2 mass by 3 orders of magnitude post-collision"}
+  ],
+  "required_observations": {
+    "u_max_during_run": 1.0,
+    "soliton_survives": true,
+    "n_peaks_final": 1,
+    "bore_position_final": 3.984,
+    "collision_time_estimate": 5.0
+  }
+}

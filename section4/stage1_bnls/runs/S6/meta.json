@@ -1,0 +1,22 @@
+{
+  "title": "B-NLS off Mcs: relaxation from u perturbation (key research question)",
+  "domain": "Full B-NLS with kappa=+1",
+  "ic": "Same N, phi as S5. u(x,0) = 0.25 * N(x,0) + epsilon * cos(2*pi*x/30) for epsilon in {0.05, 0.2}. [Off Mcs by amount eps.]",
+  "T_final": 12.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "User's reported observation: ||m(t)|| should decay. Decay rate unknown \u2014 this is the research question. Try at least one epsilon and characterize the decay (exponential, polynomial, oscillatory).",
+  "stress_question": "Does ||m(t)||_2 decay? What is the decay rate? Does decay rate scale with epsilon? Pick an integration method that is stable for T=12 with conservation properties (mass and energy).",
+  "parameters_to_sweep": "epsilon in {0.05, 0.2}; integration methods: Strang split with Madelung-Psi (S5 method) vs direct (N, phi, u) IMEX.",
+  "required_observations": [
+    "m_norm_trajectory",
+    "fit_to_exp_or_power_law",
+    "decay_constant_tau_or_alpha",
+    "epsilon_dependence_if_swept"
+  ],
+  "test_id": "S6",
+  "version": "stage1_bnls_v1"
+}

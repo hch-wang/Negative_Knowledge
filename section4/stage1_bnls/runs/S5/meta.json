@@ -1,0 +1,22 @@
+{
+  "title": "B-NLS on Mcs: focusing bright soliton with matched u = N*phi_x",
+  "domain": "Full B-NLS with kappa=+1",
+  "ic": "N(x,0) = 2 * sech^2(sqrt(2)*(x+5)), phi(x,0) = 0.25*x (so phi_x = 0.25 everywhere), u(x,0) = 0.25 * N(x,0). [On Mcs: m = u - N*phi_x = 0.]",
+  "T_final": 6.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "If the compound-soliton hypothesis is right, the soliton structure propagates approximately rigidly with the boost. Mass conserved exactly. m(x,t) should stay close to zero.",
+  "stress_question": "Does Strang-splitting B-NLS (Madelung-Psi for NLS sector + RK4 or upwind for u equation) preserve Mcs? Does ||m(t)||_2 grow numerically? What is the natural method coupling between the two sub-systems?",
+  "parameters_to_sweep": "Time-splitting strategy: Strang first vs Lie-first; coupling order; dt in {0.001, 0.0005}.",
+  "required_observations": [
+    "mass_drift",
+    "m_norm_over_time",
+    "peak_position_drift",
+    "energy_drift"
+  ],
+  "test_id": "S5",
+  "version": "stage1_bnls_v1"
+}

@@ -1,0 +1,74 @@
+# E1 summary: BKdV from 6 ICs, T=10
+# Diagnostics: locking R = <u v^2/2>/<(v^2/2)^2> inside v>0.3*vmax
+# R=1 means u = v^2/2 in support exactly
+====================================================================================================
+
+sech2_A1.5_m0              nu_u=0e+00  Canonical sech^2 amp 1.5, m0=0 (BKdV-S7 baseline)
+    vmax_final               :  8.3419e-01
+    umax_final               :  8.9060e+00
+    norm_m_global_final      :  8.1489e+00
+    norm_m_inside_final      :  3.2447e+00
+    norm_m_outside_final     :  7.4750e+00
+    R_locking_final          : -2.2645e+00
+    R2_locking_final         : -2.1296e-01
+    n_peaks_final            : 11
+
+gauss_A1.5_m0              nu_u=0e+00  Gaussian amp 1.5 (not sech^2), m0=0
+    vmax_final               :  5.4133e+00
+    umax_final               :  2.1981e+01
+    norm_m_global_final      :  2.9990e+01
+    norm_m_inside_final      :  1.7029e+01
+    norm_m_outside_final     :  2.4686e+01
+    R_locking_final          : -2.6092e-01
+    R2_locking_final         : -2.9360e-01
+    n_peaks_final            : 34
+
+sech2_A1.5_u0zero          nu_u=0e+00  sech^2 v but u0=0 (m0 = -v^2/2 nonzero)
+    vmax_final               :  8.1849e-01
+    umax_final               :  5.6796e+00
+    norm_m_global_final      :  6.8520e+00
+    norm_m_inside_final      :  3.1568e+00
+    norm_m_outside_final     :  6.0815e+00
+    R_locking_final          : -3.2978e+00
+    R2_locking_final         :  1.0940e-02
+    n_peaks_final            : 11
+
+sech2_A0.4_m0              nu_u=0e+00  Small amp 0.4 sech^2 (below v=1 threshold, BKdV-S4 small-amp)
+    vmax_final               :  2.1889e-01
+    umax_final               :  3.1819e-01
+    norm_m_global_final      :  4.5702e-01
+    norm_m_inside_final      :  2.2215e-01
+    norm_m_outside_final     :  3.9939e-01
+    R_locking_final          : -4.1928e+00
+    R2_locking_final         : -1.4182e+00
+    n_peaks_final            : 8
+
+bimodal_m0                 nu_u=0e+00  Two sech^2 pulses with m0=0, different amplitudes
+    vmax_final               :  7.8600e-01
+    umax_final               :  5.4878e+00
+    norm_m_global_final      :  5.7853e+00
+    norm_m_inside_final      :  3.1369e+00
+    norm_m_outside_final     :  4.8611e+00
+    R_locking_final          : -1.9836e+00
+    R2_locking_final         :  2.5683e-02
+    n_peaks_final            : 9
+
+bore_plus_v                nu_u=5e-02  Bore-shaped u0 + sech^2 v0 (strong u-gradient, BKdV-S6 viscosity)
+    vmax_final               :  4.6120e-01
+    umax_final               :  1.9918e+00
+    norm_m_global_final      :  4.0173e+00
+    norm_m_inside_final      :  2.0003e+00
+    norm_m_outside_final     :  3.4839e+00
+    R_locking_final          :  3.4515e+00
+    R2_locking_final         : -1.5468e-02
+    n_peaks_final            : 7
+
+====================================================================================================
+Cross-IC summary table
+IC                           vmax   R_lock  R2_lock   m_glob     m_in    m_out  n_peaks
+sech2_A1.5_m0               0.834   -2.265   -0.213    8.149    3.245    7.475       11
+gauss_A1.5_m0               5.413   -0.261   -0.294   29.990   17.029   24.686       34
+sech2_A1.5_u0zero           0.818   -3.298    0.011    6.852    3.157    6.082       11
+sech2_A0.4_m0               0.219   -4.193   -1.418    0.457    0.222    0.399        8
+bimodal_m0                  0.786   -1.984    0.026    5.785    3.137    4.861        9
+bore_plus_v                 0.461    3.452   -0.015    4.017    2.000    3.484        7

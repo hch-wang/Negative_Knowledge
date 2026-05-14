@@ -1,0 +1,67 @@
+[source] m_t|_(m=0)(t=0) at A=1.5
+  ||m_t_source||_L2 = 1.7682e+00
+  ||m_t_source||_Linf = 1.3189e+00
+  integrated source (signed) = 2.2565e-17
+  integrated |source|        = 3.6648e+00
+  spatial support (5% threshold): x in [-8.20, -1.76]
+
+[source spectral content] top 10 positive-k modes (k_index, k, |hat|)
+  n=  4  k=+0.838  |src_hat|=2.374e+01
+  n=  5  k=+1.047  |src_hat|=2.240e+01
+  n=  3  k=+0.628  |src_hat|=2.205e+01
+  n=  6  k=+1.257  |src_hat|=1.874e+01
+  n=  2  k=+0.419  |src_hat|=1.710e+01
+  n=  7  k=+1.466  |src_hat|=1.367e+01
+  n= 15  k=+3.142  |src_hat|=1.095e+01
+  n= 14  k=+2.932  |src_hat|=1.088e+01
+  n= 16  k=+3.351  |src_hat|=1.046e+01
+  n= 13  k=+2.723  |src_hat|=1.010e+01
+
+[prediction] d/dt ||m||_L2|_(t->0+) = ||source||_L2 = 1.7682e+00
+  Hence m_norm(t=0.1) ≈ 1.7682e-01,  m_norm(t=0.5) ≈ 8.8409e-01  (linear extrapolation)
+
+[source decomposition]
+  ||(v-1) * 6 v v_x||_L2  (quadratic-flux piece) = 2.3868e+00
+  ||(v-1) * v_xxx||_L2    (dispersive piece)     = 1.9090e+00
+  ratio quad/disp = +1.2503
+
+[load] round2 snapshots: 21 times, t in [0.000, 10.000]
+
+[early-time m_norm verification]
+  t       observed ||m||_L2   linear-extrap t*||source||_L2
+  0.000   0.0000e+00        0.0000e+00    (ratio obs/pred = 0.000)
+  0.500   7.3649e-01        8.8409e-01    (ratio obs/pred = 0.833)
+  1.000   1.2157e+00        1.7682e+00    (ratio obs/pred = 0.688)
+  1.500   1.5868e+00        2.6523e+00    (ratio obs/pred = 0.598)
+  2.000   1.8739e+00        3.5364e+00    (ratio obs/pred = 0.530)
+
+[spectral verification at t = 0.5]
+  top 10 positive-k modes in observed |m_hat|/t  vs  |source_hat|:
+  n=  4  k=+0.838  |m_hat|(t=0.5)/0.5=2.279e+01  |source_hat|=2.374e+01  ratio=+0.960
+  n=  3  k=+0.628  |m_hat|(t=0.5)/0.5=2.251e+01  |source_hat|=2.205e+01  ratio=+1.021
+  n=  5  k=+1.047  |m_hat|(t=0.5)/0.5=1.967e+01  |source_hat|=2.240e+01  ratio=+0.878
+  n=  2  k=+0.419  |m_hat|(t=0.5)/0.5=1.821e+01  |source_hat|=1.710e+01  ratio=+1.065
+  n=  6  k=+1.257  |m_hat|(t=0.5)/0.5=1.445e+01  |source_hat|=1.874e+01  ratio=+0.771
+  n=  1  k=+0.209  |m_hat|(t=0.5)/0.5=1.032e+01  |source_hat|=9.364e+00  ratio=+1.102
+  n=  7  k=+1.466  |m_hat|(t=0.5)/0.5=8.547e+00  |source_hat|=1.367e+01  ratio=+0.625
+  n= 11  k=+2.304  |m_hat|(t=0.5)/0.5=6.325e+00  |source_hat|=5.746e+00  ratio=+1.101
+  n= 12  k=+2.513  |m_hat|(t=0.5)/0.5=5.997e+00  |source_hat|=8.429e+00  ratio=+0.711
+  n= 10  k=+2.094  |m_hat|(t=0.5)/0.5=5.802e+00  |source_hat|=2.010e+00  ratio=+2.886
+
+[spectral correlation] cos-sim(|m_hat|(t=0.5)/t, |source_hat|) = 0.9400
+
+[A-sweep] ||source||_L2 vs A
+  A=0.25  ||source||_L2 = 6.6085e-01
+  A=0.50  ||source||_L2 = 8.0182e-01
+  A=0.75  ||source||_L2 = 8.3385e-01
+  A=1.00  ||source||_L2 = 1.0794e+00
+  A=1.25  ||source||_L2 = 1.4307e+00
+  A=1.50  ||source||_L2 = 1.7682e+00
+  A=1.75  ||source||_L2 = 2.4056e+00
+  A=2.00  ||source||_L2 = 4.0316e+00
+  A=2.50  ||source||_L2 = 1.1801e+01
+  loglog slope on A in [0.25, 0.75]: 0.219   (expected ~3 if cubic dominates, ~1 if linear-dispersive dominates)
+  loglog slope on A in [1.0, 2.5]: 2.489
+
+[saved] /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S7/round3/source_diag.npz
+[done] E3 mechanism complete.

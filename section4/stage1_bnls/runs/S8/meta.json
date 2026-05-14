@@ -1,0 +1,22 @@
+{
+  "title": "B-NLS: low-density 'hole' \u2014 quantum pressure singularity stress test",
+  "domain": "Full B-NLS with kappa=+1",
+  "ic": "N(x,0) = sech^2(x-5) + 0.001 (a sech^2 soliton plus tiny background \u2014 so N is small at x=-5 region). phi(x,0) = 0.1*x. u(x,0) = 0.1*N(x,0). Where N is small, (sqrt(N))_xx / sqrt(N) becomes singular numerically.",
+  "T_final": 4.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Unknown. The system may evolve smoothly (if quantum pressure is well-handled) or develop singular behavior.",
+  "stress_question": "How small can N get before the chosen method fails? Madelung-Psi should handle this well (Psi=sqrt(N+0.001)*e^{i*phi} stays bounded); direct (N, phi) almost certainly fails. Where does each method break?",
+  "parameters_to_sweep": "Try Madelung-Psi vs direct (N, phi). For direct, try regularizations eps in {1e-6, 1e-3}. Report min_N over the run for each.",
+  "required_observations": [
+    "min_N_during_run_each_method",
+    "method_blowup_time_each",
+    "quantum_pressure_max_each",
+    "comparison_madelung_vs_direct"
+  ],
+  "test_id": "S8",
+  "version": "stage1_bnls_v1"
+}

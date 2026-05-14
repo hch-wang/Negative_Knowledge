@@ -1,0 +1,21 @@
+{
+  "title": "NLS focusing Gaussian \u2014 modulational instability and soliton emission threshold",
+  "domain": "NLS focusing (kappa=+1), no Burgers boost",
+  "ic": "Psi(x,0) = A * exp(-(x+5)^2 / 4.5) for A in {1.0, 1.5, 2.0, 2.5, 3.0}. Five amplitudes \u2014 agent picks at least 3 to sweep within budget.",
+  "T_final": 6.0,
+  "domain_x": [
+    -15.0,
+    15.0
+  ],
+  "Nx_default": 256,
+  "ground_truth": "Karpman-Maslov: number of emitted bright solitons N_sol approximately equals integer part of (A*sigma*sqrt(2)) for sigma=1.5/sqrt(2). Expected: A=1.0 -> 0-1, A=1.5 -> 1-2, A=2.0 -> 2-3, A=2.5 -> 3, A=3.0 -> 3-4.",
+  "stress_question": "What is the practical soliton-emission threshold for this Gaussian IC under Madelung-Psi split-step? Compare to Karpman-Maslov prediction. At what A does the method itself fail (rather than the physics)?",
+  "parameters_to_sweep": "Amplitudes A in {1.0, 2.0, 3.0} at minimum. dt fixed at 0.001.",
+  "required_observations": [
+    "n_solitons_emitted_per_A",
+    "peak_amplitudes_final_per_A",
+    "method_breakdown_threshold_A"
+  ],
+  "test_id": "S3",
+  "version": "stage1_bnls_v1"
+}

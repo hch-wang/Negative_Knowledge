@@ -1,0 +1,75 @@
+[grid]  Nx=256  L=30.0  dx=1.1719e-01
+[time]  T=15  dt=1e-4
+[IC]    amp=1.0  delta_v = white noise (seed=42, zero-mean, ||.||_L2 matched to E2)
+[IC]    target_L2 = 1.9365e-01  actual_L2 = 1.9365e-01
+[IC]    delta_v0 sup = 1.1139e-01
+[init]  mass_v=+2.000000e+00 energy=7.901752e-01 m_norm=2.6525e-02 v_peak=1.0184
+[IC]    delta_v0 spectral content (top 5 modes): 
+          k-index=71  |hat|^2=1.464e+00
+          k-index=112  |hat|^2=1.347e+00
+          k-index=14  |hat|^2=1.067e+00
+          k-index=47  |hat|^2=9.484e-01
+          k-index=66  |hat|^2=9.002e-01
+[E1 ref] loaded 16 snapshots from /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round1/snapshots.npz
+[t= 0.5000] energy=1.143e+00 m_norm=8.574e-01 v_peak=0.653 sup=8.427e-01 ||dv vs E1||=1.2368e+00
+[t= 1.0000] energy=1.373e+00 m_norm=1.091e+00 v_peak=0.528 sup=8.676e-01 ||dv vs E1||=2.5583e-01
+[t= 1.5000] energy=1.528e+00 m_norm=1.229e+00 v_peak=0.534 sup=1.035e+00 ||dv vs E1||=1.4845e+00
+[t= 2.0000] energy=1.922e+00 m_norm=1.448e+00 v_peak=0.600 sup=9.782e-01 ||dv vs E1||=5.5039e-01
+[t= 2.5000] energy=2.281e+00 m_norm=1.614e+00 v_peak=0.839 sup=8.388e-01 ||dv vs E1||=1.7300e+00
+[t= 3.0000] energy=4.350e+00 m_norm=2.279e+00 v_peak=0.995 sup=1.490e+00 ||dv vs E1||=1.6251e+00
+[t= 3.5000] energy=1.071e+01 m_norm=3.772e+00 v_peak=1.486 sup=1.659e+00 ||dv vs E1||=3.3173e+00
+[t= 4.0000] energy=3.498e+01 m_norm=7.924e+00 v_peak=2.634 sup=2.634e+00 ||dv vs E1||=5.6634e+00
+[t= 4.5000] energy=1.397e+02 m_norm=2.519e+01 v_peak=5.291 sup=5.759e+00 ||dv vs E1||=1.1651e+01
+[t= 5.0000] energy=9.862e+02 m_norm=1.411e+02 v_peak=14.692 sup=1.562e+01 ||dv vs E1||=3.0795e+01
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:58: RuntimeWarning: overflow encountered in square
+  fL = 1.5 * wL ** 2
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:58: RuntimeWarning: overflow encountered in multiply
+  fL = 1.5 * wL ** 2
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:59: RuntimeWarning: overflow encountered in square
+  fR = 1.5 * wR ** 2
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:59: RuntimeWarning: overflow encountered in multiply
+  fR = 1.5 * wR ** 2
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:84: RuntimeWarning: overflow encountered in multiply
+  d_uv = np.real(np.fft.ifft(ik * (np.fft.fft(uv) * dealias)))
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: overflow encountered in ifft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in ifft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:47: RuntimeWarning: invalid value encountered in multiply
+  return np.fft.fft(a) * dealias
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:53: RuntimeWarning: invalid value encountered in divide
+  r = np.where(np.abs(dw_p) > 1e-14, dw_m / dw_p, 0.0)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:54: RuntimeWarning: invalid value encountered in divide
+  phi = (r + np.abs(r)) / (1.0 + np.abs(r) + 1e-14)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:55: RuntimeWarning: invalid value encountered in multiply
+  slope = phi * dw_p
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/candidate.py:66: RuntimeWarning: invalid value encountered in subtract
+  return -(flux_right - flux_left) / dx
+[t= 5.5000] energy=nan m_norm=nan v_peak=nan sup=nan ||dv vs E1||=nan
+[BLOWUP] at t=5.5000
+[saved] /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S5/round3/snapshots.npz
+
+[deviation series, E3 vs E1]
+  t= 0.000  ||dv vs E1||=1.9365e-01  ||du vs E1||=0.0000e+00  ||dv vs E2||=2.7556e-01
+  t= 1.000  ||dv vs E1||=2.5583e-01  ||du vs E1||=2.7973e-01  ||dv vs E2||=3.3762e-01
+  t= 2.000  ||dv vs E1||=5.5039e-01  ||du vs E1||=5.8773e-01  ||dv vs E2||=5.9643e-01
+  t= 3.000  ||dv vs E1||=1.6251e+00  ||du vs E1||=1.7001e+00  ||dv vs E2||=1.6426e+00
+  t= 4.000  ||dv vs E1||=5.6634e+00  ||du vs E1||=5.8519e+00  ||dv vs E2||=5.6663e+00
+  t= 5.000  ||dv vs E1||=3.0795e+01  ||du vs E1||=3.1979e+01  ||dv vs E2||=3.0794e+01
+[summary] effective exponential growth rate of ||dv vs E1||: +1.0206 (1/time-unit)
+
+[E2 vs E3 deviation comparison (vs same baseline E1)]
+  Time |  E2 ||dv||  |  E3 ||dv||  |  ratio E3/E2
+  t= 0.00  1.9365e-01    1.9365e-01    1.000
+  t= 1.00  2.0594e-01    2.5583e-01    1.242
+  t= 2.00  2.0885e-01    5.5039e-01    2.635
+  t= 3.00  2.1094e-01    1.6251e+00    7.704
+  t= 4.00  2.1408e-01    5.6634e+00    26.454
+  t= 5.00  2.1467e-01    3.0795e+01    143.451
+
+[summary] init ||dv vs E1||=1.936e-01 -> final ||dv vs E1||=3.080e+01
+[summary] elapsed=4.6s
+[done] E3 broadband-perturbation complete.
+EXIT_CODE=

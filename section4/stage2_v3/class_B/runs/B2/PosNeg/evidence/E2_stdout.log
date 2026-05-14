@@ -1,0 +1,55 @@
+# B2/PosNeg E2: Nx=256, L=30.0, dt=0.0001, T=2.0, nu=0.05, n_steps=20000
+# 2/3 dealias kept 171 / 256 modes; k_max=26.808
+# Geometry: soliton at x=-5.0 (moves right), bore at x=7.0 (right of soliton)
+# uL grid: [0.0, 0.5, 1.5], A grid: [0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.5]
+# Phase 1: free-prop references
+  run sol_only_A0.30
+  run sol_only_A0.60
+  run sol_only_A0.90
+  run sol_only_A1.20
+  run sol_only_A1.50
+  run sol_only_A1.80
+  run sol_only_A2.10
+  run sol_only_A2.50
+# Phase 2: interaction sweep
+  run inter_uL0.50_A0.30
+    -> v_peak=0.197 (free=0.188) npk=3 xc=-4.31 (free_xc=-5.06) bore_h=0.545 m_l2=2.318 cls=ambiguous
+  run inter_uL0.50_A0.60
+    -> v_peak=0.368 (free=0.384) npk=2 xc=-3.27 (free_xc=-3.93) bore_h=0.751 m_l2=2.365 cls=coherent_stalled
+  run inter_uL0.50_A0.90
+    -> v_peak=0.485 (free=0.600) npk=1 xc=-1.67 (free_xc=-2.14) bore_h=1.197 m_l2=2.608 cls=coherent_stalled
+  run inter_uL0.50_A1.20
+    -> v_peak=0.560 (free=0.815) npk=1 xc=0.06 (free_xc=-0.11) bore_h=1.770 m_l2=2.985 cls=coherent_stalled
+  run inter_uL0.50_A1.50
+    -> v_peak=0.617 (free=0.967) npk=1 xc=1.50 (free_xc=1.88) bore_h=2.163 m_l2=3.331 cls=coherent_stalled
+  run inter_uL0.50_A1.80
+    -> v_peak=0.634 (free=1.038) npk=1 xc=2.46 (free_xc=3.44) bore_h=2.429 m_l2=3.623 cls=coherent_stalled
+  run inter_uL0.50_A2.10
+    -> v_peak=0.709 (free=0.942) npk=1 xc=2.96 (free_xc=4.28) bore_h=2.542 m_l2=3.875 cls=coherent_stalled
+  run inter_uL0.50_A2.50
+    -> v_peak=0.745 (free=0.942) npk=1 xc=3.20 (free_xc=4.56) bore_h=2.716 m_l2=4.097 cls=coherent_stalled
+  run inter_uL1.50_A0.30
+    -> v_peak=0.196 (free=0.188) npk=2 xc=-2.79 (free_xc=-5.06) bore_h=1.574 m_l2=6.785 cls=coherent_stalled
+  run inter_uL1.50_A0.60
+    -> v_peak=0.379 (free=0.384) npk=2 xc=-1.62 (free_xc=-3.93) bore_h=1.691 m_l2=6.803 cls=coherent_stalled
+  run inter_uL1.50_A0.90
+    -> v_peak=0.507 (free=0.600) npk=1 xc=-0.56 (free_xc=-2.14) bore_h=2.065 m_l2=6.900 cls=coherent_stalled
+  run inter_uL1.50_A1.20
+    -> v_peak=0.543 (free=0.815) npk=1 xc=0.37 (free_xc=-0.11) bore_h=2.420 m_l2=7.131 cls=coherent_stalled
+  run inter_uL1.50_A1.50
+    -> v_peak=0.558 (free=0.967) npk=1 xc=1.34 (free_xc=1.88) bore_h=2.757 m_l2=7.421 cls=coherent_stalled
+  run inter_uL1.50_A1.80
+    -> v_peak=0.596 (free=1.038) npk=1 xc=2.08 (free_xc=3.44) bore_h=2.940 m_l2=7.719 cls=coherent_stalled
+  run inter_uL1.50_A2.10
+    -> v_peak=0.618 (free=0.942) npk=1 xc=2.59 (free_xc=4.28) bore_h=3.420 m_l2=7.906 cls=coherent_stalled
+  run inter_uL1.50_A2.50
+    -> v_peak=0.626 (free=0.942) npk=1 xc=3.11 (free_xc=4.56) bore_h=3.564 m_l2=8.040 cls=coherent_stalled
+
+# Classification grid (rows = uL, cols = A):
+uL\A    0.30   0.60   0.90   1.20   1.50   1.80   2.10   2.50
+ 0.00  solit  solit  solit  solit  solit  solit  solit  solit
+ 0.50  ambig  coher  coher  coher  coher  coher  coher  coher
+ 1.50  coher  coher  coher  coher  coher  coher  coher  coher
+
+# Wall time: 146.8s
+# Saved: /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage2_v3/class_B/runs/B2/PosNeg/evidence/E2_summary.json

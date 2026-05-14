@@ -1,0 +1,19 @@
+{
+  "task_id": "T_B",
+  "condition": "NoKB",
+  "version": "v3A_class_A",
+  "iter_budget": 3,
+  "tools_allowed": [
+    "Read",
+    "Write",
+    "Bash"
+  ],
+  "bank": "bank_v3.A (50 entries: 12 pos + 38 neg)",
+  "title": "Gaussian wave packet -> soliton train decomposition",
+  "description": "Initialize v as a localized Gaussian wave packet in v (u=0 initially) and check whether the dispersive coupling decomposes it into a train of solitons (a hallmark of KdV-type integrable inverse scattering).",
+  "ic": "v(x, 0) = 4 * exp(-((x + 5)^2) / 2.25)   (Gaussian, amplitude 4, width sigma=1.5)\nu(x, 0) = 0",
+  "T_final": 6.0,
+  "output_path": "pred_results/T_B.npy",
+  "output_shape_spec": "shape (n_snapshots, 2, 256) where dim-1 channels are (u, v); save at least 5 snapshots. Eval focuses on final snapshot.",
+  "phenomenon_target": "Final v should contain >= 2 well-separated peaks each with amplitude >= 0.8 (soliton train). mass(v) drift < 8%."
+}

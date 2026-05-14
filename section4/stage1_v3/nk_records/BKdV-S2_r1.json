@@ -1,0 +1,18 @@
+{
+  "task_id": "BKdV-S2",
+  "round": 1,
+  "attempted_route": "Baseline diagnostic sweep of 5 candidate conserved functionals (C1=int u, C2=int v, C3=int uv, C4=(1/2)int(u^2+v^2+v_x^2), C5=int m^2 with m=u-v^2/2) on soliton IC v0=1.5 sech^2(x+5), u0=0, T=20, Fourier pseudospectral Nx=256, IMEX-CN + midpoint RK2, dt=2.5e-4.",
+  "observation": "C1 stayed at O(1e-15) and C2 stayed at 3.0 to O(1e-15) (machine precision); C3 drifted 0 -> +0.539 with excursions ~1.81; C4 grew 2.70 -> 5.90 (+119%); C5 grew 1.16 -> 9.54 (+724%); sup-norm ~3.5, no blowup, finite throughout.",
+  "failure": {
+    "layer": "measurement_failure",
+    "scope": "local_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Both u- and v-equations are in divergence form on a periodic domain, so int u dx and int v dx are conserved by construction — numerics merely echo the analytical fact. Worse, u0=0 makes C1 conservation indistinguishable from a u=>0 invariance for this specific IC, so the C1 measurement cannot discriminate structural vs IC-symmetry conservation.",
+  "recommended_alternative": "Re-run with u0 having nonzero spatial mean (e.g. u0 = 0.4 sin(2*pi*x/L) + 0.2 cos(6*pi*x/L) + 0.15, v0 = 0.6 cos(2*pi*x/L) + 0.3 sin(4*pi*x/L) + 0.10) to break u=>0 invariance and confirm C1/C2 are IC-invariant structural conservation laws; same solver and diagnostics, T=10.",
+  "is_trivial": true,
+  "trivial_degree": 2,
+  "trivial_reason": "C1 and C2 conservation is true-by-construction (both equations are in divergence form on a periodic domain); the numerical 'finding' re-derives a known analytical constraint. The C3/C4/C5 screening is informative, so the round is partly tautological but not pure."
+}

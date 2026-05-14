@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S5",
+  "round": 3,
+  "attempted_route": "E3: sech^2(x+5) baseline (amp=1.0) + zero-mean broadband Gaussian noise on v (rng seed=42), rescaled to ||delta_v0||_L2=0.1936 (matched to E2's mode-5 sin); same IMEX-CN/MUSCL stack, T=15, dt=1e-4, Nx=256, L=30. Observable: ||v_E3(t)-v_E1(t)||_L2 vs E2 trajectory.",
+  "observation": "||dv||_L2 grows ~exp(1.02 t): 0.194@t=0 -> 0.256@t=1 -> 5.66@t=4 -> 30.8@t=5; ratio E3/E2 climbs from 1.24 to 143.5 over t=1..5; numerical blow-up (v_peak=14.7, sup=15.6, then nan) at t~5.5, while matched-norm mode-5 stayed flat.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Positive finding for k-selectivity: high-k components of delta_v have small L2 but large v_xxx, and the explicit coupling u_t -= d_x(3 v^2 + v_xxx) injects huge forcing into u, driving runaway. But the late-time state is numerical blow-up, not a saturated physical regime, so 'into what state' is not answered.",
+  "recommended_alternative": "Re-run E3 at higher resolution (Nx=512 and 1024) with same seed and tighter dt (e.g. 2.5e-5) to test stack-dependence of the +1.02/unit growth rate; then sweep single-mode delta_v across k-index k=1..N/3 with eps fixed to map a growth-rate dispersion lambda(k) and confirm continuum k-selectivity.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

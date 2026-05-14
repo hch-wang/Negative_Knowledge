@@ -1,0 +1,21 @@
+E3: sharpness + falsification.  T=12.0, dt=0.0001, NU=0.05
+
+=== Arm A: sharpness of A-boundary at u_L=1.0 ===
+  uL=1.00 A=0.900  n_peaks=1  max_v_T=0.331  x_peak=13.71  L2_v_T=0.788  t=15.5s
+  uL=1.00 A=1.000  n_peaks=1  max_v_T=0.339  x_peak=13.95  L2_v_T=0.824  t=15.2s
+  uL=1.00 A=1.050  n_peaks=2  max_v_T=0.343  x_peak=14.06  L2_v_T=0.842  t=15.3s
+  uL=1.00 A=1.100  n_peaks=2  max_v_T=0.347  x_peak=14.06  L2_v_T=0.859  t=15.4s
+  uL=1.00 A=1.150  n_peaks=2  max_v_T=0.352  x_peak=14.18  L2_v_T=0.875  t=15.5s
+
+=== Arm B: long-time asymptote at (u_L=1.0, A=1.0) ===
+  uL=1.00 A=1.00 T=24  n_peaks=2  max_v_T=0.285  x_peak=-4.34  t=31.6s
+  npeaks(t) traj: [1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 3, 3, 3, 3, 4, 2, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+=== Arm C: dt convergence at (u_L=1.0, A=1.10) ===
+  uL=1.00 A=1.10 dt=5e-5  n_peaks=2  max_v_T=0.347  x_peak=14.06  L2_v_T=0.859  t=31.3s
+
+=== Arm D: reflection probe (u_L=2.0, A=0.2) ===
+  uL=2.00 A=0.20  n_peaks=1  max_v_T=0.181  x_peak=-13.83  L2_v_T=0.385  u_max=1.83  t=15.9s
+
+Total wall: 155.7s
+Saved evidence/E3_summary.json

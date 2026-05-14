@@ -1,0 +1,28 @@
+{
+  "task_id": "BKdV-S3",
+  "depth": 3,
+  "rounds_summary": [
+    {"round": 1, "attempted_route": "Scan 5 IC families (Gauss, sech^2, noise, two-pulse, sinusoid) at A=0.8 with pre-validated Fourier pseudospectral + 2/3 dealias + IF-RK4 + hyperviscosity stack, T=12.", "observation": "Smooth localized ICs (G/S/P2) keep 1-2 peaks, ~99% energy at |k|<=2, no blow-up; broadband ICs (N_noise, K_sin) cascade beyond dealias band and blow up before T=10."},
+    {"round": 2, "attempted_route": "Sweep amplitude A in {0.1..1.2} on a single sech^2(v) seed, flat u, same solver; dt=1e-4 for A>=1; add retention metric vmax_late/vmax0.", "observation": "Structural coherence (npeaks=1, fracL_v>=0.99) is universal across all A; retention ~50-60% throughout; lock_corr is non-monotonic, peaking at A~0.4 (lock~0.79). No amplitude threshold for sech^2 coherence."},
+    {"round": 3, "attempted_route": "Fix A=0.6 sech^2 seed, sweep additive Gaussian-envelope noise level sigma in {0..0.80} to interpolate between localized and broadband regimes; same solver/T/dt.", "observation": "No blow-up at any sigma. fracL_v slides smoothly 0.999->0.545; lock_corr robust to sigma~0.2 then collapses by sigma=0.6. npeaks_v jumps from 1 to >=10 at any sigma>0 (texture artifact). Soft boundary, sigma_c~0.3-0.4 by lock."}
+  ],
+  "ruled_out_routes": [
+    "Broadband ICs (Gaussian-envelope white noise, spatial cosine K_sin) at A=0.8 on Nx=256 / L=30 / 2-3 dealias: high-k cascade exceeds dealias band -> NaN blow-up before T=10. Not a usable Stage-2 IC at that L2 budget.",
+    "Searching for a sharp amplitude threshold A_c for coherence inside the sech^2 family: structural coherence is universal across A in [0.1, 1.2]; only the absolute vmax>=0.5 calibration moves with A.",
+    "Using npeaks_v as the primary coherence label when noise is present in the IC: oversensitive to noise texture, jumps from 1 to >=10 even when 99% of energy is still in the soliton core.",
+    "Treating coherent->incoherent as a single sharp phase boundary in sigma: it is a soft margin spanning sigma in [0.2, 0.6]; lock_corr and fracL_v place sigma_c at different positions inside that window.",
+    "Single-pulse Gaussian (G) or sech^2 (S) at A=0.8 as a 'strict coherent' reference (vmax>=0.5 fails): radiation drops vmax to ~0.42-0.46 by T=12, so they only pass the relaxed retention-based criterion, not the absolute-vmax one."
+  ],
+  "synthesised_diagnosis": "BKdV's coherence map is governed by the IC's spectral support, not its amplitude: smooth-localized seeds (single/double sech^2, Gaussian) sit inside a soliton-like attractor basin with margin sigma~0.3-0.4 of low-pass noise; broadband seeds (white noise, sinusoid) at A>=0.8 trip a hard high-k cascade that breaches the 2/3 dealias band and blows up. The boundary between regimes is soft (in noise sigma) but the broadband-L2 blow-up wall is hard, and the choice of coherence diagnostic (lock_corr / fracL_v vs npeaks_v) reshapes where the boundary appears.",
+  "failure": {
+    "layer": "measurement_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Each round produced a real physical finding, but the program's pre-registered 'sharp phase boundary' framing was wrong: the boundary is soft and metric-dependent, and the npeaks_v diagnostic conflated noise texture with incoherence. Diagnostic choice, not solver or IC, is the load-bearing failure.",
+  "recommended_alternative": "In Stage-2, fix the diagnostic stack BEFORE sweeping: replace npeaks_v with (i) the spectral low-k fraction fracL_v at k_split tuned per-IC, (ii) lock_corr between u and 0.5 v^2, and (iii) a centroid-tracked peak height after low-pass filtering v (e.g. numpy.fft mask |k|<=k_cut~2 then scipy.signal.find_peaks on the smoothed field). Then probe the broadband-blow-up wall by sweeping L2 budget at fixed IC family (e.g. K_sin amplitude A in [0.2, 0.8] with Nx=512 to push the dealias band higher) to map the HARD boundary that E1 only glimpsed.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

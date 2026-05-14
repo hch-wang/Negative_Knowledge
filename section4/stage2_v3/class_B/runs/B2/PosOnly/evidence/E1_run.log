@@ -1,0 +1,71 @@
+=== E1_uL0.00_A0.25 ===
+            transmission vpeak=0.239/0.25 L2_ratio=0.981 npk=1 vx=1.41 t=16.6s
+=== E1_uL0.00_A0.50 ===
+            transmission vpeak=0.438/0.5 L2_ratio=0.915 npk=1 vx=2.93 t=17.0s
+=== E1_uL0.00_A1.00 ===
+            transmission vpeak=0.749/1.0 L2_ratio=0.789 npk=1 vx=5.98 t=15.1s
+=== E1_uL0.00_A1.50 ===
+    partial_transmission vpeak=0.902/1.5 L2_ratio=0.670 npk=1 vx=8.55 t=14.8s
+=== E1_uL0.00_A2.00 ===
+    partial_transmission vpeak=0.839/2.0 L2_ratio=0.569 npk=1 vx=10.66 t=14.6s
+=== E1_uL0.25_A0.25 ===
+            transmission vpeak=0.252/0.25 L2_ratio=1.001 npk=1 vx=2.34 t=14.5s
+=== E1_uL0.25_A0.50 ===
+            transmission vpeak=0.450/0.5 L2_ratio=0.922 npk=1 vx=3.75 t=14.5s
+=== E1_uL0.25_A1.00 ===
+            transmission vpeak=0.712/1.0 L2_ratio=0.772 npk=1 vx=6.45 t=15.4s
+=== E1_uL0.25_A1.50 ===
+    partial_transmission vpeak=0.823/1.5 L2_ratio=0.649 npk=1 vx=8.79 t=13.5s
+=== E1_uL0.25_A2.00 ===
+                boundary vpeak=0.769/2.0 L2_ratio=0.555 npk=1 vx=10.20 t=12.0s
+=== E1_uL0.50_A0.25 ===
+            transmission vpeak=0.256/0.25 L2_ratio=1.014 npk=1 vx=3.05 t=11.8s
+=== E1_uL0.50_A0.50 ===
+            transmission vpeak=0.435/0.5 L2_ratio=0.922 npk=1 vx=4.34 t=12.5s
+=== E1_uL0.50_A1.00 ===
+    partial_transmission vpeak=0.649/1.0 L2_ratio=0.753 npk=2 vx=6.80 t=13.4s
+=== E1_uL0.50_A1.50 ===
+    partial_transmission vpeak=0.737/1.5 L2_ratio=0.635 npk=1 vx=8.91 t=14.2s
+=== E1_uL0.50_A2.00 ===
+                boundary vpeak=0.768/2.0 L2_ratio=0.551 npk=1 vx=10.08 t=13.4s
+=== E1_uL1.00_A0.25 ===
+            transmission vpeak=0.261/0.25 L2_ratio=1.030 npk=1 vx=4.22 t=13.7s
+=== E1_uL1.00_A0.50 ===
+            transmission vpeak=0.416/0.5 L2_ratio=0.939 npk=1 vx=5.16 t=14.0s
+=== E1_uL1.00_A1.00 ===
+    partial_transmission vpeak=0.559/1.0 L2_ratio=0.750 npk=2 vx=7.27 t=14.4s
+=== E1_uL1.00_A1.50 ===
+    partial_transmission vpeak=0.603/1.5 L2_ratio=0.641 npk=2 vx=9.02 t=15.5s
+=== E1_uL1.00_A2.00 ===
+                boundary vpeak=0.696/2.0 L2_ratio=0.570 npk=2 vx=10.20 t=15.4s
+=== E1_uL1.50_A0.25 ===
+            transmission vpeak=0.265/0.25 L2_ratio=1.037 npk=1 vx=5.39 t=15.0s
+=== E1_uL1.50_A0.50 ===
+            transmission vpeak=0.456/0.5 L2_ratio=0.978 npk=1 vx=6.09 t=14.8s
+=== E1_uL1.50_A1.00 ===
+    partial_transmission vpeak=0.544/1.0 L2_ratio=0.794 npk=2 vx=7.73 t=16.0s
+=== E1_uL1.50_A1.50 ===
+                boundary vpeak=0.562/1.5 L2_ratio=0.680 npk=2 vx=9.02 t=16.4s
+=== E1_uL1.50_A2.00 ===
+                boundary vpeak=0.607/2.0 L2_ratio=0.618 npk=2 vx=10.43 t=15.4s
+=== E1_uL2.00_A0.25 ===
+            transmission vpeak=0.267/0.25 L2_ratio=1.037 npk=1 vx=6.68 t=15.6s
+=== E1_uL2.00_A0.50 ===
+            transmission vpeak=0.483/0.5 L2_ratio=0.996 npk=1 vx=7.38 t=15.5s
+=== E1_uL2.00_A1.00 ===
+    partial_transmission vpeak=0.697/1.0 L2_ratio=0.887 npk=1 vx=8.32 t=15.8s
+=== E1_uL2.00_A1.50 ===
+    partial_transmission vpeak=0.647/1.5 L2_ratio=0.750 npk=2 vx=9.26 t=14.5s
+=== E1_uL2.00_A2.00 ===
+                boundary vpeak=0.736/2.0 L2_ratio=0.676 npk=2 vx=6.68 t=14.9s
+
+Total elapsed: 440.4s
+
+Phase grid (rows=u_L, cols=A):
+  u_L\A  0.25   0.50   1.00   1.50   2.00
+   0.00    T     T     T     P     P   
+   0.25    T     T     T     P     B   
+   0.50    T     T     P     P     B   
+   1.00    T     T     P     P     B   
+   1.50    T     T     P     B     B   
+   2.00    T     T     P     P     B   

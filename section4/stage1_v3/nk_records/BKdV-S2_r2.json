@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S2",
+  "round": 2,
+  "attempted_route": "IC-invariance probe: same Fourier+2/3-dealias+IMEX-CN/midpoint-RK2 solver (Nx=256, dt=2.5e-4, T=10); IC changed to smooth multi-mode periodic u0=0.4sin(2pi x/L)+0.2cos(6pi x/L)+0.15, v0=0.6cos(2pi x/L)+0.3sin(4pi x/L)+0.10; track C1..C5.",
+  "observation": "C1=4.5 and C2=3.0 held to 1.6e-14 / 3.6e-15 (IC-invariantly conserved, not just stuck at 0). C3, C4, C5 drift monotonically and faster than E1: rel_drift C3=+33, C4=+15.7, C5=+34.5 over T=10; sup-norm grows 0.9->6.5, no blowup.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "general_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "C1, C2 are divergence-form integrals so conserved by construction regardless of IC (machine-precision drift). C4 = (1/2)int(u^2+v^2+v_x^2)dx is not the BKdV Hamiltonian: by-hand IBP gives d/dt C4 = +(5/2)int u_x v^2 + int u_x v_xx (cubic residual), monotonic growth signals wrong-functional, not numerical drift.",
+  "recommended_alternative": "Run a numerical-artifact control (E3): keep E1 soliton IC and vary dt by ~5x (e.g. 5e-4 vs 1e-4 at Nx=256) and Nx by 2x (256 vs 512 at dt=2.5e-4) over T=5; if C3/C4/C5 drift ratios ~ 1 across dt, drift is physical; otherwise it scales as dt^p. Separately, search for true energy with cubic terms (int u v^2 dx, int v^3 dx, int v_x u dx).",
+  "is_trivial": false,
+  "trivial_degree": 1
+}

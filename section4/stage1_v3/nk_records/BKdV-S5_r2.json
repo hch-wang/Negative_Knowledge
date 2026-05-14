@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S5",
+  "round": 2,
+  "attempted_route": "E2: E1 baseline IC (v0=sech^2(x+5), u0=v0^2/2, amp=1.0) + structured single-mode delta_v0 = 0.05*sin(k0*x), k0=2pi*5/L (Fourier mode 5); diagnostic = ||v_E2(t)-v_E1(t)||_L2 over t in [0,15] with dt=1e-4, Nx=256, L=30.",
+  "observation": "||delta_v||_L2 stays flat at ~0.19-0.22 (1x initial) for t in [0,13]; jumps to 0.358 at t=14 and 1.153 at t=15 (~6x). Full-window fit gives growth rate +0.0493/unit dominated by the late-time jump; early-time rate ~0.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Mode 5 (k0~1.05) is a low-k perturbation with small delta_v_x/v_xx/v_xxx, so the coupling u_t -= d_x(3 v^2 + v_xx) injects little forcing; there is no linear dispersion-relation pole at this k, so no direct linear amplification. Late-time jump reflects indirect nonlinear cascade or onset of baseline chaotic separation, not mode-5 instability.",
+  "recommended_alternative": "E3: replace structured mode-5 sin perturbation with zero-mean Gaussian white-noise delta_v0 rescaled to the SAME L2 norm (0.1936) (np.random.default_rng(42).standard_normal scaled); track ||v_E3-v_E1||_L2 vs E2 to test k-selectivity (high-k carries large derivatives that drive coupling).",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

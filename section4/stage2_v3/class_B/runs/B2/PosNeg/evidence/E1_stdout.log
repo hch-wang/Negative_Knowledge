@@ -1,0 +1,55 @@
+# B2/PosNeg E1: Nx=256, L=30.0, dt=0.0001, T=4.0, nu=0.05, n_steps=40000
+# 2/3 dealias kept 171 / 256 modes; k_max=26.808
+# Phase 1: soliton-only references
+  run sol_only_A0.50
+  run sol_only_A1.00
+  run sol_only_A1.50
+  run sol_only_A2.00
+# Phase 2: bore-only references
+  run bore_only_uL0.50
+  run bore_only_uL1.00
+  run bore_only_uL1.50
+  run bore_only_uL2.00
+# Phase 3: interaction sweep
+  run inter_uL0.50_A0.50
+    -> v_peak=0.311 A=0.50 n_peaks=3 xc=4.21 bore_h=0.566 m_l2=1.393 cls=ambiguous
+  run inter_uL0.50_A1.00
+    -> v_peak=0.536 A=1.00 n_peaks=4 xc=10.34 bore_h=0.863 m_l2=1.777 cls=ambiguous
+  run inter_uL0.50_A1.50
+    -> v_peak=0.598 A=1.50 n_peaks=1 xc=-8.64 bore_h=1.412 m_l2=2.270 cls=fusion
+  run inter_uL0.50_A2.00
+    -> v_peak=0.549 A=2.00 n_peaks=1 xc=-6.72 bore_h=1.625 m_l2=2.855 cls=fusion
+  run inter_uL1.00_A0.50
+    -> v_peak=0.311 A=0.50 n_peaks=3 xc=4.01 bore_h=1.017 m_l2=2.414 cls=ambiguous
+  run inter_uL1.00_A1.00
+    -> v_peak=0.575 A=1.00 n_peaks=3 xc=10.23 bore_h=0.987 m_l2=2.668 cls=ambiguous
+  run inter_uL1.00_A1.50
+    -> v_peak=0.612 A=1.50 n_peaks=1 xc=-8.79 bore_h=1.421 m_l2=3.038 cls=fusion
+  run inter_uL1.00_A2.00
+    -> v_peak=0.521 A=2.00 n_peaks=1 xc=-6.68 bore_h=1.654 m_l2=3.480 cls=fusion
+  run inter_uL1.50_A0.50
+    -> v_peak=0.299 A=0.50 n_peaks=3 xc=3.96 bore_h=1.450 m_l2=3.298 cls=ambiguous
+  run inter_uL1.50_A1.00
+    -> v_peak=0.599 A=1.00 n_peaks=3 xc=10.19 bore_h=1.425 m_l2=3.443 cls=ambiguous
+  run inter_uL1.50_A1.50
+    -> v_peak=0.626 A=1.50 n_peaks=1 xc=-8.66 bore_h=1.546 m_l2=3.587 cls=fusion
+  run inter_uL1.50_A2.00
+    -> v_peak=0.507 A=2.00 n_peaks=1 xc=-6.50 bore_h=1.657 m_l2=3.857 cls=fusion
+  run inter_uL2.00_A0.50
+    -> v_peak=0.276 A=0.50 n_peaks=4 xc=4.07 bore_h=1.812 m_l2=4.075 cls=ambiguous
+  run inter_uL2.00_A1.00
+    -> v_peak=0.608 A=1.00 n_peaks=3 xc=10.23 bore_h=1.719 m_l2=4.029 cls=ambiguous
+  run inter_uL2.00_A1.50
+    -> v_peak=0.633 A=1.50 n_peaks=1 xc=-8.24 bore_h=1.702 m_l2=4.118 cls=fusion
+  run inter_uL2.00_A2.00
+    -> v_peak=0.491 A=2.00 n_peaks=1 xc=-5.98 bore_h=1.692 m_l2=4.341 cls=fusion
+
+# Classification grid (rows = uL, cols = A):
+uL\A   0.50   1.00   1.50   2.00
+0.50  ambig  ambig  fusio  fusio
+1.00  ambig  ambig  fusio  fusio
+1.50  ambig  ambig  fusio  fusio
+2.00  ambig  ambig  fusio  fusio
+
+# Wall time: 351.8s
+# Saved: /Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage2_v3/class_B/runs/B2/PosNeg/evidence/E1_summary.json

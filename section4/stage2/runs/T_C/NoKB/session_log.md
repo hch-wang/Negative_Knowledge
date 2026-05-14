@@ -1,0 +1,5 @@
+# Session log: T_C / NoKB
+
+iter 1: E1 = Fourier pseudospectral + explicit RK4, no dealiasing, dt=0.001. F1: blowup at t=0.005 step 5, NaN. Root cause: dispersive CFL violated (dt=0.001 vs required ~1.5e-4 for v_xxx).
+iter 2: E2 = E1 + integrating-factor RK4 on linear v_xxx (single-component upgrade: time integrator). F2: still blowup at t=0.056 step 28. Diagnostic with FE dt=1e-5 shows blowup at t=0.013 — aliasing-driven nonlinear instability on the bore, not dt or dispersive stiffness.
+iter 3: E3 = E2 + 2/3-rule dealiasing on nonlinear products (single-component upgrade: dealiasing). F3: ran cleanly through t=2.0 with mass exactly conserved (5 valid snapshots), blowup at t=2.34 with |u|max=16. Remaining failure mode is inviscid-Burgers shock formation at the bore producing Gibbs oscillations; PDE has no physical viscosity on u, so Fourier without a filter or shock-capturing cannot saturate the bore front. Iteration budget exhausted. Final pred_results/T_C.npy has valid t in [0,2] then padded copies.

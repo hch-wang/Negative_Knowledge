@@ -1,0 +1,18 @@
+[init] dx=1.1719e-01 amp=1.5 mass_v=3.000000e+00 energy=2.078571e+00 sup=1.4977e+00
+[time] dt=2.0000e-04 nsteps=50000
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S1/round1/candidate.py:50: RuntimeWarning: overflow encountered in multiply
+  v2 = v * v
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S1/round1/candidate.py:52: RuntimeWarning: overflow encountered in multiply
+  rhs_u = -3.0 * u * u_x - dx_spec(3.0 * v2 + v_xx)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/numpy/fft/_pocketfft.py:101: RuntimeWarning: invalid value encountered in fft
+  return ufunc(a, fct, axes=[(axis,), (), (axis,)], out=out)
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S1/round1/candidate.py:35: RuntimeWarning: invalid value encountered in multiply
+  return np.real(np.fft.ifft(ik * np.fft.fft(f)))
+/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3/runs/BKdV-S1/round1/candidate.py:57: RuntimeWarning: overflow encountered in multiply
+  rhs_v = -6.0 * v * v_x - v_xxx - dx_spec(u * v)
+[t= 0.5000] mass_v=+nan energy=nan sup=nan finite=False
+[BLOWUP] at t=0.5000
+[final] t_final=0.5000 sup=nan mass_v=+nan energy=nan finite=False elapsed=0.84s
+[summary] blowup_t=0.5 reached_T10=False
+
+EXIT_CODE=0

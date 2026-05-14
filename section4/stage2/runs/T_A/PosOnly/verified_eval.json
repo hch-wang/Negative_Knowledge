@@ -1,0 +1,18 @@
+{
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_v0": 3.9999999926838457,
+    "mass_vT": 3.999999992683833,
+    "mass_drift_rel": 3.1086244746362326e-15,
+    "u_max": 2.39329760252243,
+    "v_max": 1.9969513439288096,
+    "bounded": true,
+    "v0_max": 1.9969513439288096,
+    "vT_max": 0.9165448938226202,
+    "amp_ratio": 0.4589720709065481,
+    "n_dominant_peaks_vT": 6,
+    "useful": false,
+    "reason": "amp ratio 0.46 < 0.5"
+  }
+}

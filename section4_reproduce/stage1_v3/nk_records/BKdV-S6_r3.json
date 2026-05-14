@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S6",
+  "round": 3,
+  "attempted_route": "Sweep u-side dissipation atop Fourier+2/3-dealias+RK4 (Nx=256, dt=1e-4, T=6) for smoothed bore u0=1.5(1-tanh(x/0.5))/2 + v0=1.5 sech^2(x+5): linear nu*u_xx in {1e-3..1e-1} and k^8 hyperviscosity nu_h in {1e-14..1e-9}.",
+  "observation": "Linear nu>=1e-2 yields u_max_final<=1.62, TV(u)_final<=27, u_min_final>=-0.03 (passes practical bound); nu_h<=1e-10 fails (u_max_final~2.5-3.1, TV~80-120), only nu_h=1e-9 (near RK4 stability ceiling 4e-8) passes. All cases show transient u_max~2.7-3.4 during early bore steepening.",
+  "failure": {
+    "layer": "hypothesis_failure",
+    "scope": "regime_bound_failure",
+    "degree": "partial",
+    "recommended_action": "narrow_claim",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "The bare stack cannot bound the Burgers self-flux for strong-gradient ICs: the bore physically injects high-k energy faster than dealiasing alone can absorb. Linear viscosity at nu~1e-2-5e-2 matches the Burgers shock-thickness scale; k^8 hyperviscosity needs nu_h near the explicit-stability ceiling to be effective at this Nx.",
+  "recommended_alternative": "Adopt nu_linear=5e-2 as the default u-side dissipation for downstream BKdV runs with bore-like u-gradients (TV_final~9.6, u_min_final>=0). For higher Nx, use implicit/IMEX integration of nu*u_xx (e.g., scipy IMEX-RK or split-step exp(-nu*k^2*dt)) to remove the dt~1/(nu*k_max^2) constraint, and re-test amp/IC sensitivity.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

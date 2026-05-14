@@ -1,0 +1,45 @@
+======================================================================
+E2 part 1: coarse 3x4 long-horizon scan T=10
+======================================================================
+=== E2_uL0.00_A0.50 ===
+    partial_transmission vpeak=0.322/0.5 L2r=0.725 npk_fin=1 npk_max=1 t=44.0s
+=== E2_uL0.00_A1.00 ===
+    partial_transmission vpeak=0.383/1.0 L2r=0.496 npk_fin=1 npk_max=1 t=42.3s
+=== E2_uL0.00_A1.50 ===
+             destruction vpeak=0.405/1.5 L2r=0.436 npk_fin=1 npk_max=1 t=43.1s
+=== E2_uL0.00_A2.00 ===
+             destruction vpeak=0.476/2.0 L2r=0.455 npk_fin=1 npk_max=2 t=44.1s
+=== E2_uL1.00_A0.50 ===
+            transmission vpeak=0.386/0.5 L2r=0.901 npk_fin=1 npk_max=1 t=43.6s
+=== E2_uL1.00_A1.00 ===
+    partial_transmission vpeak=0.357/1.0 L2r=0.693 npk_fin=2 npk_max=2 t=43.6s
+=== E2_uL1.00_A1.50 ===
+             destruction vpeak=0.416/1.5 L2r=0.588 npk_fin=2 npk_max=3 t=43.7s
+=== E2_uL1.00_A2.00 ===
+             destruction vpeak=0.408/2.0 L2r=0.525 npk_fin=3 npk_max=4 t=43.3s
+=== E2_uL2.00_A0.50 ===
+            transmission vpeak=0.382/0.5 L2r=0.870 npk_fin=1 npk_max=1 t=41.5s
+=== E2_uL2.00_A1.00 ===
+    partial_transmission vpeak=0.506/1.0 L2r=0.760 npk_fin=1 npk_max=1 t=41.4s
+=== E2_uL2.00_A1.50 ===
+                boundary vpeak=0.503/1.5 L2r=0.640 npk_fin=2 npk_max=2 t=41.8s
+=== E2_uL2.00_A2.00 ===
+             destruction vpeak=0.540/2.0 L2r=0.595 npk_fin=2 npk_max=3 t=42.6s
+
+E2-part1 total: 514.9s
+
+Long-horizon grid (rows=u_L, cols=A):
+  u_L\A  0.50   1.00   1.50   2.00
+   0.00    P     P     D     D   
+   1.00    T     P     D     D   
+   2.00    T     P     B     D   
+
+======================================================================
+E2 part 2: viscosity ablation at (u_L=1.5, A=1.5), T=5
+======================================================================
+=== E2abl_nu2.500e-02 ===
+    partial_transmission vpeak=0.612 L2r=0.709 npk_fin=2 npk_max=2 t=21.5s
+=== E2abl_nu5.000e-02 ===
+    partial_transmission vpeak=0.590 L2r=0.694 npk_fin=2 npk_max=2 t=21.8s
+=== E2abl_nu1.000e-01 ===
+    partial_transmission vpeak=0.575 L2r=0.687 npk_fin=2 npk_max=2 t=21.3s

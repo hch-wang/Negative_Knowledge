@@ -1,0 +1,17 @@
+{
+  "task_id": "BKdV-S4",
+  "round": 1,
+  "attempted_route": "BKdV baseline reference run on Gardner-manifold IC v0=1.5 sech^2(x+5), u0=v0^2/2 (m0=0); pre-validated Fourier pseudospectral + 2/3-dealias + IF on v_xxx + RK4 stack at dt=5e-4, Nx=256, nu_h=1e-22, T=10. Diagnostics: ||m||_L2, ||m||_inf, L2_u, L2_v, mass_u/v, energy=int 0.5(u^2+v^2+v_x^2)dx, lock_corr, low/high spectral partition.",
+  "observation": "Run completed in 3.3s, no blow-up. mass_u/v conserved to 1e-9. m_l2: 0->2.456, m_inf: 0->3.667, lock: 1.0->0.1997, L2_u: 1.076->2.489, L2_v: 1.732->0.829, energy drift +8.2% (3.279->3.547), u_peak 1.125->3.67 (front sharpening), v_peak 1.5->0.55, eh_u(T)=0.161 (high-k content in u).",
+  "failure": {
+    "layer": "method_failure",
+    "scope": "local_failure",
+    "degree": "partial",
+    "recommended_action": "change_method",
+    "risk": "medium_risk_drift"
+  },
+  "rationale": "Positive setup round: the baseline ran cleanly and produced finite, mass-conserving end-state values. But energy already drifts +8.2% and u develops high-k content (eh_u=0.161) at Nx=256, hinting the spatial cutoff is being pushed; the numbers are reference values, not yet a claim about convergence. Real informativeness requires the resolution sweep planned for E2/E3.",
+  "recommended_alternative": "Run E2: double Nx 256->512 keeping dt=5e-4 and nu_h=1e-22 fixed as a one-parameter sensitivity probe. Compare t_end values (m_l2, m_inf, L2_u, L2_v, lock, energy, u_peak, eh_u) against this baseline at the prompt's 5% shift threshold. Anticipate co-constraints among (nu_h, dt, Nx) via explicit-RK4 hyperviscous stability bound dt <= 2/(nu_h*k_max^16) and u-equation v_xx dispersion CFL ~2.83/k_max^3.",
+  "is_trivial": false,
+  "trivial_degree": 0
+}

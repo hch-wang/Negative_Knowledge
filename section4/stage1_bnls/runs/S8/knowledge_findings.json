@@ -1,0 +1,129 @@
+{
+  "test_id": "S8",
+  "test_title": "B-NLS low-density 'hole' — quantum pressure singularity stress test",
+  "stress_question": "How small can N get before the chosen method fails? Madelung-Psi should handle this well; direct (N, phi) almost certainly fails.",
+  "methods_tried": [
+    {
+      "method_name": "direct (u, N, phi_tilde) RK4 spectral, eps_reg=1e-6",
+      "params": {
+        "Nx": 256,
+        "dt": 5e-4,
+        "eps_reg": 1.0e-6,
+        "scheme": "explicit RK4 with 2/3 dealiasing",
+        "phi_split": "phi = 0.1*x + phi_tilde (periodic)",
+        "kappa": 1.0
+      },
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "min_N_overall_at_blowup": -1.406,
+        "min_N_first_negative_time": 0.0245,
+        "min_N_first_negative_value": -7.86e-5,
+        "blowup_time": 0.027,
+        "T_final_completed_fraction": 0.00675,
+        "Q_max_at_blowup": 1.081e5,
+        "Q_max_at_first_N_negative": 2225.0,
+        "mass_pre_blowup": 2.030,
+        "mass_drift_pre_blowup": "exact to 1e-12"
+      },
+      "failure_mode": "Catastrophic dispersive cascade: spectral oscillations push min(N) below 0 around t=0.0245. Once N<0, sqrt(N+eps) saturates at sqrt(eps)=1e-3 and Q=(sqrt(N))_xx/(2 sqrt(N)) carries no physical meaning, but its numerical value explodes by 5 orders of magnitude in ~10 dt. This back-reacts through phi_t -> phi_x_t -> u_t and the entire state blows up by t=0.027.",
+      "evidence": "min_N history shows monotonic decrease 1.0e-3 -> 5e-4 -> 0 -> -8e-5 over 50 dt steps, then exponential blowup. Mass conservation is exact up to the blowup moment (so this is NOT a continuity-equation problem; it is a Q-singularity problem)."
+    },
+    {
+      "method_name": "direct (u, N, phi_tilde) RK4 spectral, eps_reg=1e-3",
+      "params": {
+        "Nx": 256,
+        "dt": 5e-4,
+        "eps_reg": 1.0e-3,
+        "scheme": "explicit RK4 with 2/3 dealiasing",
+        "phi_split": "phi = 0.1*x + phi_tilde (periodic)",
+        "kappa": 1.0
+      },
+      "outcome": "fail",
+      "outcome_diagnostics": {
+        "min_N_overall_at_blowup": -1.194,
+        "min_N_first_negative_time": 0.032,
+        "min_N_first_negative_value": -3.6e-5,
+        "blowup_time": 0.0435,
+        "T_final_completed_fraction": 0.0109,
+        "Q_max_at_blowup": 3658.0,
+        "mass_pre_blowup": 2.030,
+        "delay_relative_to_eps_1e-6": "1.6x in blowup_time, 30x lower peak Q"
+      },
+      "failure_mode": "Same dispersive cascade as M1 but slower. Raising eps_reg to 1e-3 (matching the initial background) flattens Q at t=0 and delays the moment when min_N first crosses 0 from 0.0245 to 0.032, but does not prevent the crossing. Once N is below 0, the regularization eps cannot prevent Q from blowing up because the spectral derivative (sqrt(N+eps))_xx is itself oscillatory when N is at the noise floor.",
+      "evidence": "Comparing E1 vs E2: identical mass conservation, identical pre-blowup dynamics shape, just rescaled in time by ~1.6x. This is a structural failure mode that no eps choice cures."
+    },
+    {
+      "method_name": "Madelung-Psi Strang split-step, eps_mad=1e-3",
+      "params": {
+        "Nx": 256,
+        "dt": 5e-4,
+        "eps_mad": 1.0e-3,
+        "scheme": "Strang split: L(dt/2) N(dt) L(dt/2). Linear half-step exp(-i (k^2/2) dt/2) in Fourier (gives -Q in phi_t). Nonlinear full step exp(-i V_nl dt) pointwise, with V_nl = -2 kappa(|psi|^2 - eps_mad) - u*(c+phi_tilde_x) - 0.5(c+phi_tilde_x)^2. u updated by RK4 of m-equation with frozen N, phi_x.",
+        "phi_split": "phi = 0.1*x + arg(psi)",
+        "kappa": 1.0
+      },
+      "outcome": "pass",
+      "outcome_diagnostics": {
+        "min_N_overall": -9.9985e-4,
+        "min_N_first_negative_time": 1.8,
+        "min_N_first_negative_value": -4.3e-7,
+        "min_N_at_T_final": -8.40e-4,
+        "blowup_time": 4.0,
+        "T_final_completed_fraction": 1.0,
+        "Q_max_overall": 1760.0,
+        "Q_max_at_T_final": 121.9,
+        "mass_at_t0": 2.030,
+        "mass_at_T_final": 2.0283,
+        "mass_relative_drift": 8.6e-4,
+        "min_N_floor_is_minus_eps_mad": true
+      },
+      "failure_mode": "none — full T=4 completed.",
+      "evidence": "Madelung representation enforces |psi|^2 >= 0 by construction, so N = |psi|^2 - eps_mad >= -eps_mad analytically under exact unitary evolution. Numerically min_N stays at floor -eps_mad = -1e-3 (only briefly touches -9.999e-4 at noise floor). Q_max bounded around 1.7e3 (transient, never runaway). Mass drift 0.09% is from the split-step truncation error in advecting |psi|^2 by u, not from any singular behavior."
+    }
+  ],
+  "positive_findings": [
+    "Madelung-Psi Strang split-step at dt=5e-4, eps_mad=1e-3 completes T=4 on the S8 low-density problem with mass drift 0.09% and min_N always at the -eps_mad floor (i.e. effectively zero physical density).",
+    "Splitting phi = c*x + phi_tilde (periodic) is REQUIRED for any spectral method on this problem — without it spectral derivatives of phi_0=0.1*x produce Gibbs oscillations with phi_x range [-17, +8] instead of constant 0.1, and every method fails immediately for the wrong reason.",
+    "2/3 dealiasing on the nonlinear products (u*m, u*phi_x, phi_x^2, (u+phi_x)*N) is necessary even for Madelung — without it the u-equation accumulates high-k errors.",
+    "Madelung-Psi keeps Q_max bounded (1.76e3 peak) even when min(|psi|^2) saturates at the eps_mad floor — i.e., the quantum-pressure-from-(sqrt(N))_xx singularity is fully cured at the representation level, not just regularized."
+  ],
+  "negative_findings": [
+    "Direct (N, phi) RK4 spectral with eps_reg=1e-6 FAILS at t=0.027 for the S8 IC (min_N0=1e-3): first N<0 happens at t=0.0245 with value -7.9e-5, then catastrophic blowup with max|Q|=1.08e5 within 10 more steps.",
+    "Direct (N, phi) RK4 spectral with eps_reg=1e-3 FAILS at t=0.044 — only 1.6x delay relative to eps=1e-6. Raising eps_reg merely postpones the blowup; it does not cure the structural problem that spectral dispersion drives N below 0 when min(N) ~ background_level.",
+    "Direct (N, phi) without N-positivity-preserving structure cannot evolve a soliton-on-background with min(N0) <= 1e-3 to any non-trivial time on this problem class, regardless of eps_reg in {1e-6, 1e-3}. The quantum pressure (sqrt(N))_xx/(2 sqrt(N)) is not the immediate cause — the immediate cause is that N drops below 0 due to dispersive oscillations, after which Q is meaningless.",
+    "The failure mode is INDEPENDENT of mass conservation: in both direct experiments, mass remained exact at 2.030 right up to the moment N went negative. This is therefore a sign-preservation failure, not a flux-divergence failure.",
+    "The quantum-pressure singularity is the central new failure mode in B-NLS that is absent in BKdV (which has no Q term). For any IC with min(N) below ~1e-2 of the peak, direct (N, phi) is structurally non-viable and Madelung-Psi must be used."
+  ],
+  "parameter_boundaries": [
+    {
+      "variable": "min_N (initial, or developed during run)",
+      "method": "direct (N, phi) RK4 spectral",
+      "stable_range": "min_N >> background, i.e. min_N / max_N > ~0.1 throughout (untested here, see other S tests)",
+      "fails_at": "min_N / max_N <= 1e-3 (this test) — fails within 50 time steps regardless of eps_reg",
+      "evidence": "S8 IC has min_N0/max_N0 = 1e-3 and both eps=1e-6 and eps=1e-3 fail before t=0.05"
+    },
+    {
+      "variable": "eps_reg in direct method",
+      "method": "direct (N, phi) RK4 spectral",
+      "stable_range": "no value of eps_reg in [1e-6, 1e-3] gives stability on this problem",
+      "fails_at": "all tested values fail; the failure time only scales as ~1.6x when going from 1e-6 to 1e-3",
+      "evidence": "blowup_t(1e-6) = 0.027, blowup_t(1e-3) = 0.044 — sublinear in eps_reg"
+    },
+    {
+      "variable": "min_N (developed during run)",
+      "method": "Madelung-Psi Strang split-step",
+      "stable_range": "min_N >= -eps_mad by construction; tested down to min_N = -1.0e-3 with eps_mad = 1e-3",
+      "fails_at": "not observed for T=4; the structure |psi|^2 >= 0 is preserved by unitary split-step",
+      "evidence": "min_N history saturates at -eps_mad floor throughout T=4 with no instability; mass drift 0.09%"
+    },
+    {
+      "variable": "eps_mad in Madelung",
+      "method": "Madelung-Psi Strang split-step",
+      "stable_range": "eps_mad >= O(noise floor), eps_mad <= O(background). 1e-3 (matching background) works.",
+      "fails_at": "untested in this run; predicted that eps_mad too small (~1e-12) could cause cancellation in N = |psi|^2 - eps_mad",
+      "evidence": "single setting eps_mad=1e-3 tested; works."
+    }
+  ],
+  "central_finding_for_paper": "The quantum-pressure term (sqrt(N))_xx/(2 sqrt(N)) is the central new failure mode of B-NLS relative to BKdV. Direct (N, phi) formulations fail catastrophically within ~1% of T_final when min(N) approaches the background level, because spectral dispersion drives N below zero at the noise floor. Regularization via eps in sqrt(N+eps) does not cure this — it merely delays failure by a factor of ~1.6 per 3 orders of magnitude in eps. The Madelung-Psi representation (psi = sqrt(N + eps_mad) e^{i phi}) handles the singularity at the level of representation: |psi|^2 = N + eps_mad >= 0 is preserved structurally by unitary split-step integration, and the quantum pressure becomes a regular linear half-step in Fourier space. On the S8 IC, Madelung-Psi achieves min_N at the -eps_mad floor (-1e-3) with 0.09% mass drift over T=4, while direct methods at the same dt blow up at t=0.027 (eps=1e-6) and t=0.044 (eps=1e-3).",
+  "method_recommendation": "For B-NLS problems with min(N) below ~1% of the peak density, Madelung-Psi with Strang split-step is the only viable method tested. Direct (N, phi) is appropriate only when N is safely bounded away from zero throughout the simulation."
+}
