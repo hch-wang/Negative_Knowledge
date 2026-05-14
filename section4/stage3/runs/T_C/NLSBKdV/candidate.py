@@ -1,9 +1,15 @@
 """
-T_C / NLSBKdV — E2
-Single component upgrade over E1: SPECTRAL on u -> MUSCL-Godunov SSP-RK3 on u.
-Still NO dealiasing on |Psi|^2.
+T_C / NLSBKdV — E3 (final method)
+Single component upgrade over E2: add 2/3 dealiasing on |Psi|^2 (before pointwise
+nonlinear exponential) and on the linear FFT step.
+
+Final method = MUSCL-Godunov SSP-RK3 on u + Strang Madelung-Psi on Psi + 2/3 dealias.
+This matches kb-nls-muscl-madelung-bore-soliton's full stacked recipe.
 
 Sign convention: STANDARD NLS -(1/2)*Psi_xx (HYPOTHESIS per kb-nls-sign-convention).
+The user's literal +Q sign in the phi equation does not admit a stable explicit
+Madelung-Psi propagator; we adopt the standard sign as the working hypothesis per
+the bank entry's recommended_action (iii).
 """
 import numpy as np
 import os, time
@@ -18,6 +24,13 @@ k  = 2.0*np.pi*np.fft.fftfreq(Nx, d=dx)
 
 kappa = 1.0
 c_phi = 0.6
+
+# 2/3 dealias mask
+k_cut = Nx//3
+dealias = np.ones(Nx)
+# zero out top 1/3 of |k| modes
+abs_k = np.abs(k)
+dealias[abs_k > (2.0/3.0) * np.max(abs_k)] = 0.0
 
 # ---------- IC ----------
 u0   = 1.0 * (1.0 - np.tanh(x/0.5))/2.0
@@ -37,45 +50,31 @@ snap_steps  = set(int(round(t/dt)) for t in snap_times)
 k_shift = k + c_phi
 lin_phase_full = np.exp(-1j * 0.5 * k_shift**2 * dt)
 
-# ---------- MUSCL-Godunov SSP-RK3 on u for f(u) = u^2/2 (Burgers) ----------
-# Periodic BCs. Cell-centered values at x_i. Use van-Leer limited reconstruction
-# at cell faces, Godunov exact Riemann for f(u)=u^2/2.
-
+# ---------- MUSCL-Godunov SSP-RK3 on u (Burgers, f=u^2/2) ----------
 def van_leer(a, b):
-    # van Leer limiter on slopes a (left) and b (right): 2ab/(a+b) when same sign, else 0
     out = np.zeros_like(a)
     same = (a*b > 0.0)
     out[same] = 2.0*a[same]*b[same] / (a[same] + b[same] + 1e-300)
     return out
 
 def godunov_burgers_flux(uL, uR):
-    # exact Riemann for f(u)=u^2/2 (Burgers)
     fL = 0.5*uL*uL
     fR = 0.5*uR*uR
     flux = np.where(uL > uR,
-                    # shock: pick the upwind face value via Rankine-Hugoniot
                     np.where(0.5*(uL+uR) >= 0.0, fL, fR),
-                    # rarefaction: sonic point u=0 if it lies between uL, uR
                     np.where(uL >= 0.0, fL,
                              np.where(uR <= 0.0, fR, 0.0)))
     return flux
 
 def burgers_rhs_muscl(u):
-    # slopes on cell-centered u with periodic BCs
-    um = np.roll(u, +1)   # u_{i-1}
-    up = np.roll(u, -1)   # u_{i+1}
-    a = u - um  # backward
-    b = up - u  # forward
+    um = np.roll(u, +1)
+    up = np.roll(u, -1)
+    a = u - um
+    b = up - u
     slope = van_leer(a, b)
-    # Reconstruct face values:
-    #   uR_{i+1/2} = u_i + 0.5*slope_i        (right state at face i+1/2)
-    #   uL_{i+1/2} = u_{i-? } ... actually:
-    # Left state at face i+1/2 comes from cell i: u_i + 0.5*slope_i
-    # Right state at face i+1/2 comes from cell i+1: u_{i+1} - 0.5*slope_{i+1}
-    uL_face = u + 0.5*slope               # at face i+1/2, left state (from cell i)
-    uR_face = np.roll(u - 0.5*slope, -1)  # at face i+1/2, right state (from cell i+1)
-    F = godunov_burgers_flux(uL_face, uR_face)  # flux at face i+1/2
-    # divergence: (F_{i+1/2} - F_{i-1/2}) / dx
+    uL_face = u + 0.5*slope
+    uR_face = np.roll(u - 0.5*slope, -1)
+    F = godunov_burgers_flux(uL_face, uR_face)
     F_im = np.roll(F, +1)
     return -(F - F_im)/dx
 
@@ -86,6 +85,26 @@ def step_u_muscl_ssprk3(u, dt_u):
     u2 = 0.75*u + 0.25*(u1 + dt_u*k2)
     k3 = burgers_rhs_muscl(u2)
     return (1.0/3.0)*u + (2.0/3.0)*(u2 + dt_u*k3)
+
+# ---------- Strang Madelung-Psi with 2/3 dealiasing ----------
+def strang_step(Psi_tilde):
+    # half-step nonlinear with dealiased |Psi|^2
+    rho = (np.abs(Psi_tilde))**2
+    rho_hat = np.fft.fft(rho)
+    rho_hat *= dealias
+    rho_d = np.real(np.fft.ifft(rho_hat))
+    Psi_tilde = Psi_tilde * np.exp(1j * kappa * rho_d * (dt/2))
+    # linear full-step with dealiasing
+    Psi_hat = np.fft.fft(Psi_tilde)
+    Psi_hat *= lin_phase_full * dealias
+    Psi_tilde = np.fft.ifft(Psi_hat)
+    # half-step nonlinear
+    rho = (np.abs(Psi_tilde))**2
+    rho_hat = np.fft.fft(rho)
+    rho_hat *= dealias
+    rho_d = np.real(np.fft.ifft(rho_hat))
+    Psi_tilde = Psi_tilde * np.exp(1j * kappa * rho_d * (dt/2))
+    return Psi_tilde
 
 # ---------- Diagnostics ----------
 def reconstruct_full(Psi_tilde_now):
@@ -122,18 +141,8 @@ save_snap(0.0, u, Psi_tilde)
 t0 = time.time()
 diverged = False
 for step in range(1, n_steps+1):
-    # Strang Madelung-Psi
-    rho = (np.abs(Psi_tilde))**2
-    Psi_tilde = Psi_tilde * np.exp(1j * kappa * rho * (dt/2))
-    Psi_hat = np.fft.fft(Psi_tilde)
-    Psi_hat = Psi_hat * lin_phase_full
-    Psi_tilde = np.fft.ifft(Psi_hat)
-    rho = (np.abs(Psi_tilde))**2
-    Psi_tilde = Psi_tilde * np.exp(1j * kappa * rho * (dt/2))
-
-    # u sector: MUSCL-Godunov SSP-RK3
+    Psi_tilde = strang_step(Psi_tilde)
     u = step_u_muscl_ssprk3(u, dt)
-
     t = step*dt
 
     if (step % 200) == 0 or step in snap_steps:
