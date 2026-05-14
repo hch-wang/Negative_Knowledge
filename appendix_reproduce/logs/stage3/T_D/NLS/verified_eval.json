@@ -1,0 +1,23 @@
+{
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_N0": 2.9999999999997655,
+    "mass_NT": 0.032266366028242455,
+    "mass_drift_rel": 0.9892445446572518,
+    "u_max_abs": 1.8997128798727632,
+    "N_max": 2.2422928842780503,
+    "N_min": 1.1200960070206537e-25,
+    "phi_max_abs": 10.56274947305991,
+    "bounded": true,
+    "n_padding_steps": 0,
+    "m_norm_t0": 0.19364916731038567,
+    "m_norm_tT": 0.2695505284004392,
+    "m_norm_max": 9.059154466283976,
+    "m_norm_min": 0.19364916731038567,
+    "m_relative_change": 0.3919529432749739,
+    "m_qualitative": "PLATEAUS",
+    "useful": false,
+    "reason": "mass drift 98.92%"
+  }
+}

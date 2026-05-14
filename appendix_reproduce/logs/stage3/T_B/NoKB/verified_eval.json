@@ -1,0 +1,20 @@
+{
+  "useful": false,
+  "diag": {
+    "all_finite": true,
+    "mass_N0": 5.317361552716548,
+    "mass_NT": 5.31736155271655,
+    "mass_drift_rel": 3.34067341817812e-16,
+    "u_max_abs": 0.6766844836341058,
+    "N_max": 2.019579920220262,
+    "N_min": -9.205746978928078e-05,
+    "phi_max_abs": 4.619992175050382,
+    "bounded": true,
+    "N0_max": 1.9986441230028786,
+    "NT_max": 2.019579920220262,
+    "n_peaks_T": 1,
+    "n_padding_steps": 5,
+    "useful": false,
+    "reason": "only 1 peaks (need >= 2)"
+  }
+}

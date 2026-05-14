@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Generate 5 BKdV-S program prompts from the master template."""
-import pathlib
+"""Generate 7 BKdV-S program prompts from the master template."""
+from _paths import BKDV_PROGRAMS, PROMPTS, PY, RUNS
 
-ROOT = pathlib.Path("/Users/dietcoke/Documents/Project/00-simulation_software/paper/Negative_Knowledge/section4/stage1_v3")
-TPL = (ROOT / "prompts" / "program_template.md").read_text()
-VENV_PY = "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pde_pilot_2026-05-11/.venv/bin/python"
+TPL = (PROMPTS / "stage1_program_template.md").read_text()
+VENV_PY = str(PY)
 
 PROGRAMS = {
     "BKdV-S1": {
@@ -56,10 +55,40 @@ A clean negative answer ("no observable instability up to T=15 across tested per
 
 Trivial-findings expected: "constant zero solution is stable" is trivial."""
     },
+    "BKdV-S6": {
+        "research_question": "Under the standard pre-validated stack with no explicit u-side viscosity, does the u-equation remain bounded for bore-like moderately-amplitude ICs? If not, what minimum explicit u-side dissipation restores boundedness without distorting v?",
+        "program_specific_notes": """Use the fixed stress IC across rounds:
+- v(x,0) = 1.5 sech²(x+5)
+- u(x,0) = 1.5 (1 - tanh(x/0.5)) / 2
+- periodic x ∈ [-15,15], Nx=256, T=6.
+
+This program stresses Burgers self-flux under coupling.
+- E1: pre-validated spectral + 2/3 dealiasing + RK4 stack with NO u-viscosity/filter. Track |u|max(t), Gibbs oscillations, and boundedness.
+- E2: add one component only: small linear viscosity epsilon*u_xx on u, epsilon=1e-4. Keep every other parameter fixed.
+- E3: based on F2, either increase epsilon or switch to k^8 hyperviscosity; quantify the smallest dissipation that keeps u bounded.
+
+The key downstream lesson should distinguish aliasing control from real shock regularisation: dealiasing prevents spectral wraparound, but it does not dissipate intrinsic high-k content from a developing bore."""
+    },
+    "BKdV-S7": {
+        "research_question": "Find an IC that is stable in Gardner-only evolution but unstable in full BKdV when initialized with u0 = v0^2/2. Characterize whether m=0 drifts, which modes amplify, and on what timescale.",
+        "program_specific_notes": """Compare a Gardner-only solver against the full BKdV solver with identical numerical parameters:
+- v(x,0) = A sech²(x+5), A=1.5
+- Gardner: evolve v only.
+- BKdV: use the same v plus u(x,0)=v(x,0)^2/2, so m0=0.
+- periodic x ∈ [-15,15], Nx=256, T=10.
+
+- E1: Gardner-only baseline. Verify whether the profile remains a single coherent peak with amplitude preserved.
+- E2: full BKdV with matching IC. Track ||m||_L2(t), v_max(t), u_max(t), and L2 distance between BKdV v and Gardner v.
+- E3: either scan a nearby amplitude threshold or track which spectral modes of m first grow.
+
+Tie the mechanism back to the m=0 non-invariance identity from BKdV-S5: a Gardner-stable profile is not automatically BKdV-stable."""
+    },
 }
 
-for prog_id, spec in PROGRAMS.items():
-    cwd = ROOT / "runs" / prog_id
+for prog_id in BKDV_PROGRAMS:
+    spec = PROGRAMS[prog_id]
+    cwd = RUNS / "stage1" / prog_id
+    cwd.mkdir(parents=True, exist_ok=True)
     text = (TPL
             .replace("{program_id}", prog_id)
             .replace("{research_question}", spec["research_question"])

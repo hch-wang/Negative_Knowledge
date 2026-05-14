@@ -12,7 +12,8 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from _paths import (STAGE2_RUNS, VERIFIED_RESULTS, STAGE2_TASKS, STAGE2_CONDS)
+from _paths import (RUNS, STAGE2_RUNS, VERIFIED_RESULTS, STAGE2_TASKS,
+                    STAGE2_CONDS)
 
 EVAL_PY = HERE / "phenomenon_checks.py"
 spec = importlib.util.spec_from_file_location("pc", EVAL_PY)
@@ -21,11 +22,17 @@ spec.loader.exec_module(pc)
 
 
 def main():
+    stage2_root = RUNS / "stage2"
+    if not stage2_root.exists():
+        stage2_root = STAGE2_RUNS
+    results_root = RUNS / "verified_results" if stage2_root != STAGE2_RUNS else VERIFIED_RESULTS
+
     rows = []
     print(f"\n========= Stage 2: phenomenon-aware eval =========")
+    print(f"reading cells from {stage2_root}")
     for t in STAGE2_TASKS:
         for c in STAGE2_CONDS:
-            cell = STAGE2_RUNS / t / c
+            cell = stage2_root / t / c
             out = cell / "pred_results" / f"{t}.npy"
             if not out.exists():
                 useful, diag = False, {"error": "no output"}
@@ -52,8 +59,8 @@ def main():
         n = sum(1 for r in rows if r["cond"] == c and r["useful"])
         print(f"  {c:8s}: {n}/3 PASS")
 
-    VERIFIED_RESULTS.mkdir(exist_ok=True)
-    out_path = VERIFIED_RESULTS / "verified_results.json"
+    results_root.mkdir(parents=True, exist_ok=True)
+    out_path = results_root / "verified_results.json"
     out_path.write_text(json.dumps(rows, indent=2, default=float))
     print(f"\nwrote {out_path}")
 

@@ -8,6 +8,30 @@ summary of one or more failed attempts on a task.
 
 ---
 
+## Repository layout
+
+This release keeps only the three reviewer-facing reproduction packages:
+
+- `section3_reproduce/` — §3 ScienceAgentBench negative-knowledge study
+- `section4_reproduce/` — §4 BKdV controlled memory-condition study
+- `appendix_reproduce/` — Burgers-NLS appendix transfer study
+
+The older working directories used during paper development were removed
+from the GitHub tree. The reproduce packages bundle the logs, banks,
+prompts, eval scripts, and minimal pipeline entry points needed by a
+reviewer.
+
+For §4 and appendix verification/eval scripts:
+
+```bash
+pip install -r requirements.txt
+```
+
+The Anthropic SDK is only needed for fresh LLM dispatches; verify-only
+mode reads bundled artifacts and does not require an API key.
+
+---
+
 ## The bounded failure schema
 
 The NK record is a JSON object with a fixed shape. Every field draws
@@ -64,6 +88,34 @@ A `score=1` reproduces the §3 task_072 PASS.
 
 Full guide:
 [`section3_reproduce/README.md`](section3_reproduce/README.md).
+
+---
+
+## Running the §4 experiment
+
+```bash
+cd section4_reproduce
+python analyze_results.py
+python run_pipeline.py --task T_C --cond NegOnly --use-saved-trace
+```
+
+Expected verify output: `20/20 claims match`.
+Full guide:
+[`section4_reproduce/README.md`](section4_reproduce/README.md).
+
+---
+
+## Running the appendix experiment
+
+```bash
+cd appendix_reproduce
+python analyze_results.py
+python run_pipeline.py --task T_C --cond NLS --use-saved-trace
+```
+
+Expected verify output: `54/54 claims match`.
+Full guide:
+[`appendix_reproduce/README.md`](appendix_reproduce/README.md).
 
 ---
 
