@@ -1,9 +1,0 @@
-{
-  "useful": false,
-  "diag": {
-    "all_finite": false,
-    "n_nan": 3584,
-    "useful": false,
-    "reason": "non-finite or unbounded"
-  }
-}

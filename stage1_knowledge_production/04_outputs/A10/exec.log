@@ -1,7 +1,0 @@
-exit_code=0
-duration_sec=0.1
---- stdout ---
-Saved pred_results/sw_A10.npy with shape (2, 200)
-
---- stderr ---
-
