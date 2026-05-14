@@ -112,17 +112,4 @@ Expected verify output: `54/54 claims match`.
 Full guide:
 [`appendix_reproduce/README.md`](appendix_reproduce/README.md).
 
----
-
-## Citation
-
-```bibtex
-@inproceedings{NegativeKnowledge2026,
-  title  = {Negative Knowledge as Failure-aware shared memory for AutoResearch},
-  author = {Hanchun Wang},
-  booktitle = {ICML 2026 AI4Research Workshop},
-  year   = {2026},
-}
-```
-
 
