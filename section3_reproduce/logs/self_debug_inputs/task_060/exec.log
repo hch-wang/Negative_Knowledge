@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=0.4
+--- stdout ---
+Saved pred_results/accuracies.csv with shape (7, 15)
+
+--- stderr ---
+

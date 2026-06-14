@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=0.3
+--- stdout ---
+Filtered dataset saved to pred_results/papyrus_filtered.pkl with 336 rows.
+
+--- stderr ---
+

@@ -1,0 +1,14 @@
+exit_code=1
+duration_sec=0.0
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_085/sonnet_4.6/v3/round1/_eval.py", line 34, in <module>
+    print(eval())
+          ~~~~^^
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_085/sonnet_4.6/v3/round1/_eval.py", line 19, in eval
+    pred_value = pred_values[key]
+                 ~~~~~~~~~~~^^^^^
+KeyError: 'argmax'
+

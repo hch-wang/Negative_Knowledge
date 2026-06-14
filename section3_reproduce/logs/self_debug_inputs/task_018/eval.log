@@ -1,0 +1,21 @@
+exit_code=1
+duration_sec=1.0
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_018/sonnet_4.6/v3/round1/_eval.py", line 35, in <module>
+    print(eval())
+          ~~~~^^
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_018/sonnet_4.6/v3/round1/_eval.py", line 18, in eval
+    if not (predicted_df.standardised_smiles == gold_df.standardised_smiles).all():
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/ops/common.py", line 76, in new_method
+    return method(self, other)
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/arraylike.py", line 40, in __eq__
+    return self._cmp_method(other, operator.eq)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/series.py", line 6133, in _cmp_method
+    raise ValueError("Can only compare identically-labeled Series objects")
+ValueError: Can only compare identically-labeled Series objects
+

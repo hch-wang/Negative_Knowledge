@@ -1,0 +1,9 @@
+exit_code=0
+duration_sec=0.7
+--- stdout ---
+Written 1 model-rule combinations to /Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_058/sonnet_4.6/v3/round1/pred_results/individuals.csv
+  Model    Rule  Num persons
+Unknown Unknown          139
+
+--- stderr ---
+

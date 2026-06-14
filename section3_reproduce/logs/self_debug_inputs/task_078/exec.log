@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=1.3
+--- stdout ---
+Saved 147 predictions to pred_results/pucci-proteins_test_pred.csv
+
+--- stderr ---
+
