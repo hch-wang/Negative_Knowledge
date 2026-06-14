@@ -41,24 +41,32 @@ results/claim_report.md
 results/claim_report.json
 ```
 
-### Recompute the Table 1 token figures
+### Verify the Table 1 token figures
 
-The pass-rate column above uses byte sizes for memory comparison.
-Table 1 of the paper instead reports memory-object size in
-**`cl100k_base` tokens** (296 / 1,109 / 795, with savings 73.3% and
-28.3%). To reproduce those exact numbers from the bundled artifacts:
+Table 1 of the paper reports memory-object size in **`cl100k_base`
+tokens** (296 / 1,109 / 795, with savings 73.3% and 28.3%). The
+per-task token counts are precomputed and shipped as
+`logs/memory_tokens.json` (the token-side analogue of the existing
+`logs/b2_covering_bytes.json` byte file). To verify the medians match
+the paper:
 
 ```bash
-pip install tiktoken
 python count_tokens.py
 ```
 
-The script reads `logs/nk_records/` (depth-1 and depth-3 records) and
-`logs/self_debug_inputs/` (the three round-1 artifacts the self-debug
-condition shows to the next attempt: `candidate.py`, `exec.log`,
-`eval.log`). It prints per-task token counts, the three medians, and
-the savings percentages, exits 0 when all three medians match the
-paper, and otherwise lists the mismatches. No LLM API is called.
+Stdlib only, no install, no LLM API. The script prints per-task token
+counts and the three medians, and exits 0 when all three match the
+paper.
+
+The raw self-debug inputs are also bundled under
+`logs/self_debug_inputs/task_<id>/` (`candidate.py` + `exec.log` +
+`eval.log`, the artifacts the self-debug condition shows to the next
+attempt). To re-derive `memory_tokens.json` from these primary inputs:
+
+```bash
+pip install tiktoken
+python count_tokens.py --regenerate
+```
 
 ## B. End-to-end (Anthropic API)
 
