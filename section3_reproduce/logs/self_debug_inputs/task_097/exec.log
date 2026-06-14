@@ -1,0 +1,29 @@
+exit_code=1
+duration_sec=4.5
+--- stdout ---
+
+--- stderr ---
+WARNING:tensorflow:From /Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/tensorflow/python/util/deprecation.py:588: calling function (from tensorflow.python.eager.polymorphic_function.polymorphic_function) with experimental_relax_shapes is deprecated and will be removed in a future version.
+Instructions for updating:
+experimental_relax_shapes is deprecated, use reduce_retracing instead
+Traceback (most recent call last):
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/deepchem/models/torch_models/cgcnn.py", line 183, in __init__
+    import dgl
+ModuleNotFoundError: No module named 'dgl'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_097/sonnet_4.6/v3/round1/candidate.py", line 52, in <module>
+    model = CGCNNModel(
+        mode="regression",
+    ...<2 lines>...
+        learning_rate=0.001,
+    )
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/deepchem/models/torch_models/cgcnn.py", line 321, in __init__
+    model = CGCNN(in_node_dim, hidden_node_dim, in_edge_dim, num_conv,
+                  predictor_hidden_feats, n_tasks, mode, n_classes)
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/deepchem/models/torch_models/cgcnn.py", line 185, in __init__
+    raise ImportError("This class requires DGL to be installed.")
+ImportError: This class requires DGL to be installed.
+

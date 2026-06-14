@@ -1,0 +1,8 @@
+exit_code=0
+duration_sec=0.8
+--- stdout ---
+Saved 240 rows → pred_results/polynomial_fit_pred.csv
+Polynomial coefficients (a, b, c): [ 1.75172831e-04 -6.71562904e-01  9.28594822e+02]
+
+--- stderr ---
+

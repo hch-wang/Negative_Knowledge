@@ -1,0 +1,7 @@
+exit_code=0
+duration_sec=1.0
+--- stdout ---
+(0, 'MAE: 67.15730037565984')
+
+--- stderr ---
+

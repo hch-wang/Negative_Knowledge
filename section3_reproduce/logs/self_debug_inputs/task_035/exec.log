@@ -1,0 +1,10 @@
+exit_code=1
+duration_sec=1.4
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_035/sonnet_4.6/v3/round1/candidate.py", line 23, in <module>
+    rsp_rate = nk.rsp_rate(rsp_peaks, sampling_rate=sampling_rate, desired_length=len(rsp_signal))
+TypeError: rsp_rate() got an unexpected keyword argument 'desired_length'
+

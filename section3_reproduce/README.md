@@ -41,6 +41,25 @@ results/claim_report.md
 results/claim_report.json
 ```
 
+### Recompute the Table 1 token figures
+
+The pass-rate column above uses byte sizes for memory comparison.
+Table 1 of the paper instead reports memory-object size in
+**`cl100k_base` tokens** (296 / 1,109 / 795, with savings 73.3% and
+28.3%). To reproduce those exact numbers from the bundled artifacts:
+
+```bash
+pip install tiktoken
+python count_tokens.py
+```
+
+The script reads `logs/nk_records/` (depth-1 and depth-3 records) and
+`logs/self_debug_inputs/` (the three round-1 artifacts the self-debug
+condition shows to the next attempt: `candidate.py`, `exec.log`,
+`eval.log`). It prints per-task token counts, the three medians, and
+the savings percentages, exits 0 when all three medians match the
+paper, and otherwise lists the mismatches. No LLM API is called.
+
 ## B. End-to-end (Anthropic API)
 
 ```bash
@@ -77,6 +96,7 @@ section3_reproduce/
 ├── nk_curator.py            NK production module
 ├── curator_prompt.md        canonical curator prompt
 ├── analyze_results.py       Mode A: recompute the paper-format table from logs
+├── count_tokens.py          recompute Table 1 token figures (296/1,109/795)
 ├── run_pipeline.py          Mode B: curator + solver + evaluator pipeline
 ├── prompts/                 curator prompt variants
 ├── scripts/                 sandbox, dispatch, and execution utilities
