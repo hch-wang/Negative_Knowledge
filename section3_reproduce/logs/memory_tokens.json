@@ -1,0 +1,119 @@
+{
+  "per_task": {
+    "002": {
+      "nkr_d1": 285,
+      "nkr_d3": 719,
+      "self_debug": 747
+    },
+    "003": {
+      "nkr_d1": 289
+    },
+    "005": {
+      "nkr_d1": 266,
+      "self_debug": 725
+    },
+    "012": {
+      "nkr_d1": 305,
+      "nkr_d3": 880,
+      "self_debug": 4566
+    },
+    "015": {
+      "nkr_d1": 289,
+      "self_debug": 124796
+    },
+    "018": {
+      "nkr_d1": 289,
+      "nkr_d3": 802,
+      "self_debug": 35105
+    },
+    "021": {
+      "nkr_d1": 311,
+      "nkr_d3": 817,
+      "self_debug": 1058
+    },
+    "022": {
+      "nkr_d1": 282,
+      "nkr_d3": 781,
+      "self_debug": 282897
+    },
+    "026": {
+      "nkr_d1": 265,
+      "nkr_d3": 715,
+      "self_debug": 1219
+    },
+    "029": {
+      "nkr_d1": 315,
+      "nkr_d3": 776,
+      "self_debug": 1273
+    },
+    "034": {
+      "nkr_d1": 303,
+      "nkr_d3": 706,
+      "self_debug": 821
+    },
+    "035": {
+      "nkr_d1": 296,
+      "nkr_d3": 751,
+      "self_debug": 453
+    },
+    "037": {
+      "nkr_d1": 301,
+      "nkr_d3": 795,
+      "self_debug": 1062
+    },
+    "044": {
+      "nkr_d1": 273,
+      "nkr_d3": 778,
+      "self_debug": 818
+    },
+    "058": {
+      "nkr_d1": 276,
+      "nkr_d3": 815,
+      "self_debug": 2650
+    },
+    "060": {
+      "nkr_d1": 304,
+      "nkr_d3": 854,
+      "self_debug": 2072
+    },
+    "067": {
+      "nkr_d1": 316,
+      "nkr_d3": 802,
+      "self_debug": 1170
+    },
+    "071": {
+      "nkr_d1": 291,
+      "self_debug": 656
+    },
+    "072": {
+      "nkr_d1": 310,
+      "nkr_d3": 813,
+      "self_debug": 2204
+    },
+    "078": {
+      "nkr_d1": 297,
+      "nkr_d3": 913,
+      "self_debug": 1796
+    },
+    "085": {
+      "nkr_d1": 286,
+      "nkr_d3": 775,
+      "self_debug": 415
+    },
+    "087": {
+      "nkr_d1": 290,
+      "nkr_d3": 881,
+      "self_debug": 693
+    },
+    "097": {
+      "nkr_d1": 304,
+      "self_debug": 1109
+    },
+    "101": {
+      "nkr_d1": 349,
+      "nkr_d3": 792,
+      "self_debug": 1099
+    }
+  },
+  "tokenizer": "cl100k_base"
+}
