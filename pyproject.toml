@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "negative-knowledge"
+version = "0.1.0"
+description = "A failure-aware shared memory layer for AutoResearch: turn failed attempts into bounded, typed negative-knowledge records."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "Hanchun Wang", email = "hw660@cam.ac.uk" }]
+keywords = ["AutoResearch", "LLM agents", "negative knowledge", "agent memory"]
+dependencies = ["anthropic>=0.40"]
+
+[project.urls]
+Repository = "https://github.com/hch-wang/Negative_Knowledge"
+
+[project.scripts]
+negative-knowledge = "negative_knowledge.curator:main"
+
+[tool.setuptools]
+packages = ["negative_knowledge"]
+
+[tool.setuptools.package-data]
+negative_knowledge = ["prompts/*.md"]

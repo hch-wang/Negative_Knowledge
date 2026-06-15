@@ -1,0 +1,14 @@
+{
+  "task_id": "demo",
+  "attempted_route": "per-feature importance via shap.TreeExplainer on a RandomForestRegressor",
+  "observation": "ModuleNotFoundError: No module named 'shap' at import time; script crashes before fitting",
+  "failure": {
+    "layer": "implementation_failure",
+    "scope": "local_failure",
+    "degree": "artifact_driven",
+    "recommended_action": "change_method",
+    "risk": "low_risk_omission"
+  },
+  "rationale": "The shap package is absent from the execution environment, so the import fails before any model is fit. This is a dependency/environment failure, not a modelling failure.",
+  "recommended_alternative": "Use sklearn.inspection.permutation_importance on the fitted RandomForestRegressor (or the model's built-in feature_importances_), both available without extra installs."
+}
