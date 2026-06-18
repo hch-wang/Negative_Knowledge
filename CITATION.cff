@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the paper below."
+title: "Negative Knowledge as Failure-aware Shared Memory for AutoResearch"
+authors:
+  - family-names: Wang
+    given-names: Hanchun
+    affiliation: "Department of Applied Mathematics and Theoretical Physics, University of Cambridge"
+    email: hw660@cam.ac.uk
+url: "https://github.com/hch-wang/Negative_Knowledge"
+preferred-citation:
+  type: conference-paper
+  title: "Negative Knowledge as Failure-aware Shared Memory for AutoResearch"
+  authors:
+    - family-names: Wang
+      given-names: Hanchun
+      affiliation: "Department of Applied Mathematics and Theoretical Physics, University of Cambridge"
+  collection-title: "ICML 2026 AI4Research Workshop on AI as a Tool for Mathematics, Computer Science, and Machine Learning"
+  year: 2026
+  url: "https://github.com/hch-wang/Negative_Knowledge"
