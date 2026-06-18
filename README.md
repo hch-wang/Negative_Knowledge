@@ -12,17 +12,14 @@ This is the reference implementation for the ICML 2026 AI4Research
 Workshop paper *Negative Knowledge as Failure-aware Shared Memory for
 AutoResearch*.
 
-```
-                failed attempt artifacts
-        (candidate.py, exec.log, reasoning.md, …)
-                          │
-                          ▼
-                   ┌─────────────┐      bounded, typed
-                   │   curator   │  ──▶  NK record  ──▶  shared bank
-                   └─────────────┘                          │
-                                                            ▼
-   next experiment  ◀──  research agent  ◀── adopt / reject records
-```
+![Overview of the negative knowledge memory layer in a multi-agent AutoResearch workflow.](docs/overview.png)
+
+*A separate curator agent converts the artifacts of each failed attempt
+(code, logs, traces, reasoning outputs) into a bounded, typed record in a
+shared project-level bank. Before proposing a new experiment, downstream
+research agents must inspect the bank and explicitly adopt or reject the
+relevant records, so documented dead ends become reusable constraints
+that redirect exploration toward routes not yet ruled out.*
 
 ## Install
 
@@ -125,3 +122,17 @@ python count_tokens.py                                   # Table 1 token figures
 
 See [`reproduction/README.md`](reproduction/README.md) for the full
 guide, including the optional end-to-end (Anthropic API) re-runs.
+
+## Citation
+
+If you find this work useful, please cite the paper:
+
+```bibtex
+@inproceedings{wang2026negative,
+  title     = {Negative Knowledge as Failure-aware Shared Memory for {AutoResearch}},
+  author    = {Wang, Hanchun},
+  booktitle = {ICML 2026 AI4Research Workshop on AI as a Tool for Mathematics, Computer Science, and Machine Learning},
+  year      = {2026},
+  url       = {https://github.com/hch-wang/Negative_Knowledge}
+}
+```
