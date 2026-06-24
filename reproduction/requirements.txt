@@ -1,0 +1,9 @@
+# Dependencies for *reproducing the paper* (the reproduction/ studies).
+#
+# The core module (../negative_knowledge.py) is dependency-free; these are
+# only needed to re-run the bundled experiments:
+#   - anthropic : default backend for the reproduction curator
+#   - numpy / scipy : reproduction analysis scripts (e.g. section4 phenomenon checks)
+anthropic
+numpy
+scipy

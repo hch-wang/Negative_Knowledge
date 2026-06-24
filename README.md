@@ -6,11 +6,10 @@
 
 A failure-aware shared memory layer for AutoResearch. Instead of
 discarding failed attempts as transient debugging noise, a **curator**
-agent turns each failure into a bounded, typed *negative-knowledge (NK)
-record* in a shared bank, and a downstream **research agent** reads the
-bank — adopting or rejecting records — before proposing its next
-experiment. Failures become reusable constraints that steer exploration
-away from dead ends.
+turns each failure into a bounded, typed *negative-knowledge (NK)
+record*, and downstream **research agents** read the bank — adopting or
+rejecting records — before proposing their next experiment. Failures
+become reusable constraints that steer exploration away from dead ends.
 
 This is the reference implementation for the ICML 2026 AI4Research
 Workshop paper [*Negative Knowledge as Failure-aware Shared Memory for
@@ -18,43 +17,52 @@ AutoResearch*](https://arxiv.org/abs/2606.21024).
 
 ![Overview of the negative knowledge memory layer in a multi-agent AutoResearch workflow.](docs/overview.png)
 
-*A separate curator agent converts the artifacts of each failed attempt
-(code, logs, traces, reasoning outputs) into a bounded, typed record in a
-shared project-level bank. Before proposing a new experiment, downstream
-research agents must inspect the bank and explicitly adopt or reject the
-relevant records, so documented dead ends become reusable constraints
-that redirect exploration toward routes not yet ruled out.*
+*A separate curator converts the artifacts of each failed attempt (code,
+logs, traces, reasoning) into a bounded, typed record in a shared
+project-level bank. Before proposing a new experiment, downstream agents
+inspect the bank and explicitly adopt or reject the relevant records, so
+documented dead ends become reusable constraints that redirect
+exploration toward routes not yet ruled out.*
 
 ## Install
 
+The core is a single, dependency-free module. Copy
+[`negative_knowledge.py`](negative_knowledge.py) straight into your
+project, or install from a checkout / Git:
+
 ```bash
-pip install -e .          # from a checkout
-# or just run from the repo root without installing
+pip install .                                       # from a checkout
+pip install git+https://github.com/hch-wang/Negative_Knowledge.git
 ```
 
-The only runtime dependency is the `anthropic` SDK (used by the
-curator). Validating records needs nothing beyond the standard library.
+It is **provider-neutral**: you supply any JSON-capable model backend, so
+nothing in the core depends on a particular LLM SDK.
 
 ## Quickstart
 
 ```python
-from negative_knowledge import NKCurator, FailureArtifacts
+from negative_knowledge import curate, validate, append, load
 
-curator = NKCurator(model="sonnet")           # needs ANTHROPIC_API_KEY
-result = curator.produce_depth1(
+def backend(prompt: str) -> str:
+    # Call any model you like; it must return one JSON object as text.
+    return your_agent.complete(prompt)
+
+record = curate(
+    backend,
     task_id="072",
-    task_inst="Map Sub01 EEG signals to Sub03 ...",
-    round_artifacts=FailureArtifacts(
-        candidate="round1/candidate.py",
-        exec_log="round1/exec.log",
-        reasoning="round1/reasoning.md",
-    ),
-    output_path="nk_records/task_072.json",
+    task="Map Sub01 EEG signals to Sub03 ...",
+    evidence={
+        "code": failed_code,
+        "error": stderr,
+        "reasoning": reasoning,
+    },
 )
-print(result.nk["recommended_alternative"])   # what to try instead
+
+append("negative_knowledge.jsonl", record)          # persist as JSONL
+memory = load("negative_knowledge.jsonl")            # read the bank back
 ```
 
-A runnable end-to-end demo (works offline without an API key):
+A runnable end-to-end demo (offline — no API key, no SDK):
 
 ```bash
 python examples/quickstart.py
@@ -62,9 +70,9 @@ python examples/quickstart.py
 
 ## The NK record schema
 
-Every record is a JSON object with a fixed shape; each typed field draws
-from a closed vocabulary, so no field is free text in a way that defeats
-machine consumption. The base (depth-1) record has six fields:
+Each record is a JSON object whose typed core fields draw from closed
+vocabularies, so no field is free text in a way that defeats machine
+consumption:
 
 ```
 task_id, attempted_route, observation,
@@ -72,60 +80,53 @@ failure { layer, scope, degree, recommended_action, risk },
 rationale, recommended_alternative
 ```
 
-A **depth-N** record (one curator pass over N failed rounds) adds three
-cross-round fields: `rounds_summary`, `ruled_out_routes`,
-`synthesised_diagnosis`.
-
-Validation is pure Python and needs no API key:
+`validate(record)` enforces this contract — the six core fields plus the
+closed `failure.*` vocabulary — and returns a list of problems (empty
+means valid). Records may also carry **extra fields** (for example a
+round index or cross-round notes); these are accepted as extensions. The
+controlled vocabularies (`LAYERS`, `SCOPES`, `DEGREES`, `ACTIONS`,
+`RISKS`) live at the top of
+[`negative_knowledge.py`](negative_knowledge.py).
 
 ```python
-from negative_knowledge import validate_nk
-issues = validate_nk(record, depth=1)         # [] == valid
+from negative_knowledge import validate
+issues = validate(record)                            # [] == valid
 ```
-
-The controlled vocabularies live in `negative_knowledge/curator.py`
-(`LAYERS`, `SCOPES`, `DEGREES`, `RECOMMENDED_ACTIONS`, `RISKS`).
 
 ## API
 
-| Object | Purpose |
+| Function | Purpose |
 |---|---|
-| `NKCurator(model, base_dir=None)` | curator agent; `produce_depth1(...)`, `produce_deep(...)` |
-| `FailureArtifacts(candidate, exec_log, reasoning, eval_log=None)` | the file bundle one curator pass reads |
-| `CurationResult` | `.nk`, `.schema_issues`, `.dispatch` (token usage) |
-| `validate_nk(record, depth)` | list of schema violations (empty = valid) |
-| `CuratorPrompt` | load / override the curator prompt templates |
-
-CLI:
-
-```bash
-python -m negative_knowledge depth1 --task-id 072 \
-    --task-inst-file inst.txt --round-dir runs/round1/task_072 \
-    --output nk_records/task_072.json
-```
+| `curate(backend, *, task_id, task, evidence)` | ask any JSON-capable backend to turn failure evidence into one validated record |
+| `validate(record)` | list of schema problems (empty = valid) |
+| `append(path, record)` | validate and append one record to a JSONL bank |
+| `load(path)` | load and validate every record from a JSONL bank |
 
 ## Repository layout
 
 ```
-negative_knowledge/     the reusable module (curator, schema, runtime, prompts)
+negative_knowledge.py   the single-file, dependency-free module
 examples/               quickstart.py + a self-contained sample failure
 reproduction/           everything behind the paper's numbers (see below)
+tests/                  unit tests: python -m unittest discover -s tests
 ```
 
 ## Reproducing the paper
 
 All experiments, logs, banks, and verification scripts live under
 [`reproduction/`](reproduction/) — one subdirectory per study
-(`section3/`, `section4/`, `appendix/`). Every number in the paper can
-be re-derived from bundled artifacts with no API key:
+(`section3/`, `section4/`, `appendix/`). Every number in the paper can be
+re-derived from bundled artifacts with no API key:
 
 ```bash
 cd reproduction/section3 && python analyze_results.py   # 31/31 claims match
 python count_tokens.py                                   # Table 1 token figures
 ```
 
-See [`reproduction/README.md`](reproduction/README.md) for the full
-guide, including the optional end-to-end (Anthropic API) re-runs.
+Optional fresh-agent re-runs are provider-neutral via the
+`NK_AGENT_COMMAND` protocol (see
+[`reproduction/agent_command.py`](reproduction/agent_command.py) and
+[`reproduction/README.md`](reproduction/README.md)).
 
 ## Citation
 

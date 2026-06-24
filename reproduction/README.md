@@ -33,7 +33,7 @@ memory-object token figures (296 / 1,109 / 795) from
 rebuild the artifacts:
 
 ```bash
-pip install -r ../requirements.txt
+pip install -r requirements.txt
 export ANTHROPIC_API_KEY=sk-ant-...
 
 # §3: rerun the depth-3 deepNKR pipeline on the breakthrough task
