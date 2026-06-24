@@ -4,13 +4,13 @@ duration_sec=1.0
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/sonnet_4.6/v3/round1/candidate.py", line 191, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/primary_4.6/v3/round1/candidate.py", line 191, in <module>
     train()
     ~~~~~^^
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/sonnet_4.6/v3/round1/candidate.py", line 151, in train
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/primary_4.6/v3/round1/candidate.py", line 151, in train
     X_train, Y_train, X_test, mean3, std3 = load_and_normalize()
                                             ~~~~~~~~~~~~~~~~~~^^
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/sonnet_4.6/v3/round1/candidate.py", line 139, in load_and_normalize
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_072/primary_4.6/v3/round1/candidate.py", line 139, in load_and_normalize
     X_test  = (X_test  - mean) / std
                ~~~~~~~~^~~~~~
 ValueError: operands could not be broadcast together with shapes (17,200,200) (1,16540,1) 

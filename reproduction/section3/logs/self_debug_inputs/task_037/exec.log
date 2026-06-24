@@ -4,7 +4,7 @@ duration_sec=2.0
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_037/sonnet_4.6/v3/round1/candidate.py", line 19, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_037/primary_4.6/v3/round1/candidate.py", line 19, in <module>
     df["hr"] = df[hr_channels].mean(axis=1)
                ~~^^^^^^^^^^^^^
   File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/frame.py", line 4119, in __getitem__

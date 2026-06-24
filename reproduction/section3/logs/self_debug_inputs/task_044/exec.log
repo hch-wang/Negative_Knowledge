@@ -4,7 +4,7 @@ duration_sec=1.8
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_044/sonnet_4.6/v3/round1/candidate.py", line 34, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_044/primary_4.6/v3/round1/candidate.py", line 34, in <module>
     sleep_results = predict_pipeline_acceleration(acc_data)
 TypeError: predict_pipeline_acceleration() missing 1 required positional argument: 'sampling_rate'
 

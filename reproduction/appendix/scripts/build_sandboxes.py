@@ -5,9 +5,9 @@ This self-contained builder reads bank files from the appendix's own
 bank/ directory and writes cell artifacts under logs/stage3/.
 
 Usage:
-  python scripts/build_sandboxes.py                # rebuild all 16 cells
-  python scripts/build_sandboxes.py --task T_C    # subset by task
-  python scripts/build_sandboxes.py --cond BKdV   # subset by condition
+  python3 scripts/build_sandboxes.py                # rebuild all 16 cells
+  python3 scripts/build_sandboxes.py --task T_C    # subset by task
+  python3 scripts/build_sandboxes.py --cond BKdV   # subset by condition
 """
 import argparse
 import json

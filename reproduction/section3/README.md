@@ -27,7 +27,7 @@ the Self-debug memory baseline.
 ## A. Verify-only (no API key)
 
 ```bash
-python analyze_results.py
+python3 analyze_results.py
 ```
 
 Expected output: all provenance checks pass. The generated report starts with
@@ -51,7 +51,7 @@ per-task token counts are precomputed and shipped as
 the paper:
 
 ```bash
-python count_tokens.py
+python3 count_tokens.py
 ```
 
 Stdlib only, no install, no LLM API. The script prints per-task token
@@ -65,28 +65,27 @@ attempt). To re-derive `memory_tokens.json` from these primary inputs:
 
 ```bash
 pip install tiktoken
-python count_tokens.py --regenerate
+python3 count_tokens.py --regenerate
 ```
 
-## B. End-to-end (Anthropic API)
+## B. End-to-end (your agent stack)
 
 ```bash
-pip install anthropic
-export ANTHROPIC_API_KEY=sk-ant-...
+export NK_AGENT_COMMAND="python3 /absolute/path/to/agent_adapter.py"
 git clone https://github.com/OSU-NLP-Group/ScienceAgentBench
 export SAB_BENCH=/absolute/path/to/ScienceAgentBench/benchmark
 export PY_VENV=/absolute/path/to/python
 
-python run_pipeline.py --task 072 --use-saved-trace --skip-haiku
+python3 run_pipeline.py --task 072 --use-saved-trace --skip-secondary
 ```
 
 This command:
 
 1. reuses the saved three-round Self-debug trace from `logs/`;
 2. dispatches the depth-3 curator to produce a negative-knowledge record;
-3. builds a fresh Sonnet solver sandbox using only that record;
+3. builds a fresh Primary solver sandbox using only that record;
 4. runs `candidate.py` and the task evaluator;
-5. writes the result under `runs/solver-deep-sonnet/task_072/result.json`.
+5. writes the result under `runs/solver-deep-primary/task_072/result.json`.
 
 A successful reproduction has `eval_score=1`. For `task_072`, the evaluator
 message should report a task-specific metric of approximately `0.763`.
@@ -117,7 +116,7 @@ section3_reproduce/
 ```python
 from nk_curator import NKCurator, FailureArtifacts
 
-curator = NKCurator(model="sonnet")
+curator = NKCurator(model="default")
 
 nk = curator.produce_depth1(
     task_id="072",

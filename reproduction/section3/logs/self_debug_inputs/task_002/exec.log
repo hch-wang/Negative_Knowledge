@@ -4,7 +4,7 @@ duration_sec=1.2
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_002/sonnet_4.6/v3/round1/candidate.py", line 10, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_002/primary_4.6/v3/round1/candidate.py", line 10, in <module>
     import shap
 ModuleNotFoundError: No module named 'shap'
 

@@ -3,14 +3,14 @@
 
 This script reads ONLY the archive under logs/ and recomputes the
 headline ScienceAgentBench pass-rate and memory table, together with
-count-based provenance checks. It does NOT touch the Anthropic API; it
-does NOT re-run any sub-agent. Each check prints a one-line provenance
+count-based provenance checks. It does not call an external agent or
+re-run any sub-agent. Each check prints a one-line provenance
 noting the files it was computed from, so a reader can independently
 re-derive it by hand.
 
 Run:
-    python analyze_results.py
-    python analyze_results.py --logs /custom/path/to/logs
+    python3 analyze_results.py
+    python3 analyze_results.py --logs /custom/path/to/logs
 
 Outputs:
     results/claim_report.md     Markdown report: paper table + provenance checks
@@ -38,8 +38,8 @@ What this script computes (in execution order)
 (C) Controlled view
     -- NKR depth-1 on 24:           2/24
     -- B2 covering on 24:           5/24
-    -- deepNKR-Sonnet on 19 hard:   1/19  ★ depth-3 breakthrough
-    -- deepNKR-Haiku on 19 hard:    0/19  ★ cross-model bound
+    -- deepNKR-Primary on 19 hard:   1/19  ★ depth-3 breakthrough
+    -- deepNKR-Secondary on 19 hard:    0/19  ★ cross-model bound
 
 (D) Memory bytes (median per task, n=23 excluding task_003's log bomb)
     -- B2 covering:        4,272 bytes
@@ -49,8 +49,8 @@ What this script computes (in execution order)
 (E) Solver tokens per dispatch (median)
     -- round-1 baseline:   16,262
     -- NKR (depth-1):      18,080
-    -- deepNKR Sonnet:     19,247
-    -- deepNKR Haiku:      48,360  ★ 2.5x Sonnet's cost on same NK
+    -- deepNKR Primary:     19,247
+    -- deepNKR Secondary:      48,360  ★ 2.5x Primary's cost on same NK
 
 (F) NK error rate (r2 curator self-report)
     -- correct_but_insufficient:  13
@@ -59,10 +59,10 @@ What this script computes (in execution order)
     -- misapplied:                 0
 
 (G) task_072 verification
-    -- The single deepNKR-Sonnet PASS on the hard 19. The depth-3 NK
+    -- The single deepNKR-Primary PASS on the hard 19. The depth-3 NK
        diagnosed "CPU-bound tensor arithmetic, not iteration count"
        across 3 rounds of PyTorch U-Net timeouts, recommended
-       numpy.linalg.lstsq closed-form regression; the Sonnet solver
+       numpy.linalg.lstsq closed-form regression; the Primary solver
        implemented it and PASSed.
 ================================================================
 """
@@ -167,12 +167,12 @@ def analyze(logs: pathlib.Path):
     check("baseline round-1 PASS (38 tasks)", 12, len(baseline_pass),
           "logs/baseline_results/task_*.json with eval_score==1")
 
-    nk_test_24 = all_tasks_in_cell(solvers, "sonnet_4.6", "round1")
+    nk_test_24 = all_tasks_in_cell(solvers, "primary_4.6", "round1")
     check("NK-test subset size", 24, len(nk_test_24),
           "v3 round1 cell in logs/dispatches/solver/")
 
-    b2_any = (passes_by_cell(solvers)[("sonnet_4.6", "round2_B2")] |
-              passes_by_cell(solvers)[("sonnet_4.6", "round3_B2")])
+    b2_any = (passes_by_cell(solvers)[("primary_4.6", "round2_B2")] |
+              passes_by_cell(solvers)[("primary_4.6", "round3_B2")])
     hard_19 = nk_test_24 - b2_any
     check("hard subset size (B2 fails all 3 rounds)", 19, len(hard_19),
           "round2_B2 + round3_B2 cells")
@@ -181,9 +181,9 @@ def analyze(logs: pathlib.Path):
     print("\n(B) Benchmark-wide PASS rate (Table 1 in paper)")
     print("    Each line *adds* the corresponding memory component to baseline.")
 
-    pass_b0 = passes_by_cell(solvers)[("sonnet_4.6", "round2_B0")]
-    pass_nkr = passes_by_cell(solvers)[("sonnet_4.6", "round2_NKR")]
-    pass_deep = passes_by_cell(solvers)[("sonnet_4.6", "deepNKR_sonnet")]
+    pass_b0 = passes_by_cell(solvers)[("primary_4.6", "round2_B0")]
+    pass_nkr = passes_by_cell(solvers)[("primary_4.6", "round2_NKR")]
+    pass_deep = passes_by_cell(solvers)[("primary_4.6", "deepNKR_primary")]
 
     cum_baseline = baseline_pass
     cum_b0 = cum_baseline | pass_b0
@@ -200,7 +200,7 @@ def analyze(logs: pathlib.Path):
     check("Table 1: + B2 covering / 38", "17/38",
           f"{len(cum_b2)}/38", "round2_B2 + round3_B2 cells")
     check("Table 1: + deepNKR depth-3 / 38", "18/38",
-          f"{len(cum_deep)}/38", "deepNKR_sonnet cell")
+          f"{len(cum_deep)}/38", "deepNKR_primary cell")
 
     print(f"\n    Headline lift: {len(cum_deep) - len(cum_baseline):+d} tasks "
           f"({len(cum_baseline)/38*100:.1f}% → {len(cum_deep)/38*100:.1f}%) "
@@ -221,14 +221,14 @@ def analyze(logs: pathlib.Path):
     check("B2 covering on 24", "5/24",
           f"{len(b2_any & nk_test_24)}/24",
           "round2_B2 + round3_B2 cells")
-    check("deepNKR-Sonnet on 19 hard", "1/19",
+    check("deepNKR-Primary on 19 hard", "1/19",
           f"{len(pass_deep & hard_19)}/19",
-          "deepNKR_sonnet cell on hard subset")
+          "deepNKR_primary cell on hard subset")
 
-    pass_haiku = passes_by_cell(solvers)[("haiku_4.5", "deepNKR_haiku")]
-    check("deepNKR-Haiku (cross-model) on 19 hard", "0/19",
-          f"{len(pass_haiku & hard_19)}/19",
-          "deepNKR_haiku cell")
+    pass_secondary = passes_by_cell(solvers)[("secondary_4.5", "deepNKR_secondary")]
+    check("deepNKR-Secondary (cross-model) on 19 hard", "0/19",
+          f"{len(pass_secondary & hard_19)}/19",
+          "deepNKR_secondary cell")
 
     # ============== (D) Memory bytes ==============
     print("\n(D) Memory byte efficiency (median per task, n=23 ex task_003)")
@@ -281,17 +281,17 @@ def analyze(logs: pathlib.Path):
     def med(ts): return int(statistics.median(ts)) if ts else 0
 
     check("solver tokens: round-1 median", 16262,
-          med(by_cell_tok[("sonnet_4.6", "round1")]),
+          med(by_cell_tok[("primary_4.6", "round1")]),
           "round1 dispatches")
     check("solver tokens: NKR median", 18080,
-          med(by_cell_tok[("sonnet_4.6", "round2_NKR")]),
+          med(by_cell_tok[("primary_4.6", "round2_NKR")]),
           "round2_NKR dispatches")
-    check("solver tokens: deepNKR-Sonnet median", 19247,
-          med(by_cell_tok[("sonnet_4.6", "deepNKR_sonnet")]),
-          "deepNKR_sonnet dispatches")
-    check("solver tokens: deepNKR-Haiku median", 48360,
-          med(by_cell_tok[("haiku_4.5", "deepNKR_haiku")]),
-          "deepNKR_haiku dispatches")
+    check("solver tokens: deepNKR-Primary median", 19247,
+          med(by_cell_tok[("primary_4.6", "deepNKR_primary")]),
+          "deepNKR_primary dispatches")
+    check("solver tokens: deepNKR-Secondary median", 48360,
+          med(by_cell_tok[("secondary_4.5", "deepNKR_secondary")]),
+          "deepNKR_secondary dispatches")
 
     # ============== (F) NK error rate ==============
     print("\n(F) Depth-1 NK self-reported error rate (r2 curator)")
@@ -317,18 +317,18 @@ def analyze(logs: pathlib.Path):
     # ============== (G) task_072 specifics ==============
     print("\n(G) task_072 — the depth-3 deepNKR breakthrough")
 
-    check("task_072 in deepNKR_sonnet PASS set", True,
+    check("task_072 in deepNKR_primary PASS set", True,
           "072" in pass_deep,
-          "deepNKR_sonnet dispatch for task_072")
+          "deepNKR_primary dispatch for task_072")
 
     deep_072 = next(
         (d for d in solvers if d["task_id"] == "072"
-         and d["cell"] == "deepNKR_sonnet"), None
+         and d["cell"] == "deepNKR_primary"), None
     )
     if deep_072:
-        check("task_072 deepNKR-Sonnet eval_score", 1,
+        check("task_072 deepNKR-Primary eval_score", 1,
               deep_072["execution"]["eval_score"],
-              "task_072__deepNKR_sonnet.json")
+              "task_072__deepNKR_primary.json")
 
     # ============== Write reports ==============
     n_match = sum(1 for c in CLAIMS if c["match"])

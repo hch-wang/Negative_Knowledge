@@ -57,7 +57,7 @@ def ensure_bench_exists():
 
 # Canonical task sets (encoded once here, used everywhere).
 # 38 pilot tasks: derived from tasks/ JSON files at runtime.
-# 24 NK-test: Sonnet-4.6 round-1 failures (hand-curated by the original
+# 24 NK-test: Primary-4.6 round-1 failures (hand-curated by the original
 #             v3 builder; see section3_journal_2026-05-13.md §1).
 # 19 hard: 24 minus B2 round-1/2/3 PASS (003, 005, 015, 071, 097).
 NK_TEST_24 = [

@@ -53,7 +53,7 @@ def regenerate() -> int:
     import importlib.util
     spec = importlib.util.spec_from_file_location("ar", HERE / "analyze_results.py")
     ar = importlib.util.module_from_spec(spec); spec.loader.exec_module(ar)
-    nk24 = ar.all_tasks_in_cell(ar.load_solver_dispatches(LOGS), "sonnet_4.6", "round1")
+    nk24 = ar.all_tasks_in_cell(ar.load_solver_dispatches(LOGS), "primary_4.6", "round1")
 
     out: dict = {"tokenizer": "cl100k_base", "per_task": {}}
     for tid in sorted(nk24):

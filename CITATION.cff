@@ -1,12 +1,15 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite the paper below."
 title: "Negative Knowledge as Failure-aware Shared Memory for AutoResearch"
+version: "0.2.0"
+license: MIT
 authors:
   - family-names: Wang
     given-names: Hanchun
     affiliation: "Department of Applied Mathematics and Theoretical Physics, University of Cambridge"
     email: hw660@cam.ac.uk
 url: "https://github.com/hch-wang/Negative_Knowledge"
+repository-code: "https://github.com/hch-wang/Negative_Knowledge"
 preferred-citation:
   type: conference-paper
   title: "Negative Knowledge as Failure-aware Shared Memory for AutoResearch"

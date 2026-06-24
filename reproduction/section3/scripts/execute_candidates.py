@@ -3,14 +3,14 @@
 
 For each solver sandbox (round1 / solver-nkr / solver-deep / etc.):
   1. cd into the sandbox
-  2. run `python candidate.py` (180s timeout) via PY_VENV
+  2. run `python3 candidate.py` (180s timeout) via PY_VENV
   3. if it produced the expected output, run the eval script (120s timeout)
   4. parse the eval's last stdout line as a `(score, msg)` tuple
   5. write result.json + exec.log + eval.log
 
 Reviewer CLI:
-  python execute_candidates.py --cell round1 --tasks 072
-  python execute_candidates.py --cell solver-deep --tasks all
+  python3 execute_candidates.py --cell round1 --tasks 072
+  python3 execute_candidates.py --cell solver-deep --tasks all
 """
 from __future__ import annotations
 import argparse

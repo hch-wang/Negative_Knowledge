@@ -14,8 +14,8 @@ Computed from `logs`. **30/30 claims match.**
 | Table 1: + deepNKR depth-3 PASS / 38 | `18/38` | `18/38` | ✓ |
 | controlled: NKR r2 on 24 | `2/24` | `2/24` | ✓ |
 | controlled: B2 covering on 24 | `5/24` | `5/24` | ✓ |
-| controlled: deepNKR-Sonnet on 19 hard | `1/19` | `1/19` | ✓ |
-| controlled: deepNKR-Haiku (cross-model) on 19 | `0/19` | `0/19` | ✓ |
+| controlled: deepNKR-Primary on 19 hard | `1/19` | `1/19` | ✓ |
+| controlled: deepNKR-Secondary (cross-model) on 19 | `0/19` | `0/19` | ✓ |
 | headline: baseline % | `31.6` | `31.6` | ✓ |
 | headline: final % | `47.4` | `47.4` | ✓ |
 | headline: PASS lift | `+6` | `+6` | ✓ |
@@ -30,6 +30,6 @@ Computed from `logs`. **30/30 claims match.**
 | r2 NK error rate (%) | `9.1` | `9.1` | ✓ |
 | solver tokens: round-1 median | `16262` | `16262` | ✓ |
 | solver tokens: round2_NKR median | `18080` | `18080` | ✓ |
-| solver tokens: deepNKR-Sonnet median | `19247` | `19247` | ✓ |
-| solver tokens: deepNKR-Haiku median | `48360` | `48360` | ✓ |
-| task_072 in deepNKR_sonnet PASS set | `True` | `True` | ✓ |
+| solver tokens: deepNKR-Primary median | `19247` | `19247` | ✓ |
+| solver tokens: deepNKR-Secondary median | `48360` | `48360` | ✓ |
+| task_072 in deepNKR_primary PASS set | `True` | `True` | ✓ |

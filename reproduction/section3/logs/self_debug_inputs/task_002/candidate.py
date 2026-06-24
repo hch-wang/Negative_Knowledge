@@ -13,7 +13,7 @@ import shap
 from mastml.feature_generators import ElementalFeatureGenerator
 
 # ── paths ─────────────────────────────────────────────────────────────────────
-WORK_DIR = "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_002/sonnet_4.6/v3/round1"
+WORK_DIR = "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_002/primary_4.6/v3/round1"
 DATA_PATH = os.path.join(WORK_DIR, "benchmark/datasets/mat_diffusion/diffusion_data_nofeatures_new.xlsx")
 OUT_DIR   = os.path.join(WORK_DIR, "pred_results")
 OUT_PATH  = os.path.join(OUT_DIR, "mat_diffusion_features.csv")

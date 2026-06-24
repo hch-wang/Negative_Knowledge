@@ -14,7 +14,7 @@ MDAnalysis.topology.tables has been moved to MDAnalysis.guesser.tables. This imp
 100%|██████████| 10/10 [00:02<00:00,  5.33it/s]
 100%|██████████| 10/10 [00:02<00:00,  4.47it/s]
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_026/sonnet_4.6/v3/round1/candidate.py", line 81, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_026/primary_4.6/v3/round1/candidate.py", line 81, in <module>
     df_wide = fp.to_dataframe(return_atoms=False)
 TypeError: Fingerprint.to_dataframe() got an unexpected keyword argument 'return_atoms'
 

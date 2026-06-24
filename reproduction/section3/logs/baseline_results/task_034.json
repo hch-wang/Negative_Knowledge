@@ -1,6 +1,6 @@
 {
   "task": "034",
-  "model": "sonnet_4.6",
+  "model": "primary_4.6",
   "exit_code": 1,
   "output_exists": false,
   "eval_status": "not_run",

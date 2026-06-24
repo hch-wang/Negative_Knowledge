@@ -9,24 +9,22 @@ cell (default: T_C/NegOnly) end-to-end:
      the canonical 58-entry bank (positive + negative as appropriate to
      the condition) and the Research Graph + progressive-complexity
      instructions.
-  2. Dispatch a fresh sub-agent via the Anthropic API with Read / Write /
-     Bash tools (Stage~2 cells execute candidate.py inline to observe
-     stdout and iterate).
+  2. Dispatch a fresh sub-agent through ``NK_AGENT_COMMAND`` with declared
+     Read / Write / Bash capabilities.
   3. Run the parent-side phenomenon-aware eval on the cell's saved
      pred_results/<task>.npy.
   4. Print PASS/FAIL + iteration count + cited bank entries.
 
 Run:
 
-    pip install anthropic
-    export ANTHROPIC_API_KEY=sk-ant-...
+    export NK_AGENT_COMMAND="python3 /path/to/your_agent_adapter.py"
     export PY_VENV=$(pwd)/.venv/bin/python   # used by the sub-agent's Bash
-    python run_pipeline.py --task T_C --cond NegOnly
+    python3 run_pipeline.py --task T_C --cond NegOnly
 
 Or with the bundled saved trace (no API; just runs eval on existing
 pred_results):
 
-    python run_pipeline.py --task T_C --cond NegOnly --use-saved-trace
+    python3 run_pipeline.py --task T_C --cond NegOnly --use-saved-trace
 
 ================================================================
 Why T_C/NegOnly is the default demonstration
@@ -106,13 +104,12 @@ def dispatch_fresh_subagent(cell_dir: pathlib.Path,
                             replay_dir: pathlib.Path,
                             model: str,
                             task: str) -> dict:
-    """Re-run a fresh sub-agent on the saved prompt. Requires anthropic SDK."""
+    """Re-run a fresh sub-agent on the saved prompt."""
     try:
-        from dispatch_subagent import run_subagent, MODEL_ALIASES
+        from dispatch_subagent import resolve_model, run_subagent
     except ImportError as e:
         raise RuntimeError(
-            "anthropic SDK not installed. Install with `pip install anthropic` "
-            "and set ANTHROPIC_API_KEY, or pass --use-saved-trace."
+            "agent command bridge unavailable; pass --use-saved-trace instead"
         ) from e
 
     replay_dir.mkdir(parents=True, exist_ok=True)
@@ -136,7 +133,7 @@ def dispatch_fresh_subagent(cell_dir: pathlib.Path,
         str(replay_dir / "session_log.md"),
         str(replay_dir / "pred_results" / f"{task}.npy"),
     }
-    full_model = MODEL_ALIASES.get(model, model)
+    full_model = resolve_model(model)
     print(f"Dispatching fresh sub-agent (model={full_model})...")
     t0 = time.time()
     rec = run_subagent(
@@ -157,8 +154,8 @@ def main():
     ap.add_argument("--use-saved-trace", action="store_true",
                     help="Skip sub-agent dispatch; run eval on the bundled "
                          "candidate.py output.")
-    ap.add_argument("--model", default="sonnet",
-                    help="Model alias for fresh dispatch (sonnet/haiku/opus).")
+    ap.add_argument("--model", default="default",
+                    help="Model name understood by NK_AGENT_COMMAND.")
     ap.add_argument("--replay-out", type=pathlib.Path, default=None,
                     help="Where to put the fresh dispatch outputs "
                          "(default: replay/<task>_<cond>/).")

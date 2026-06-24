@@ -19,7 +19,7 @@ Programmatic use
 
     >>> from nk_curator import NKCurator
     >>>
-    >>> curator = NKCurator(model="sonnet")
+    >>> curator = NKCurator(model="default")
     >>>
     >>> # depth-1 (one round)
     >>> rec = curator.produce_per_round(
@@ -65,13 +65,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "scripts"))
 from _paths import CURATOR_PROMPTS
 
-try:
-    from dispatch_subagent import run_subagent, MODEL_ALIASES
-except ImportError:
-    run_subagent = None
-    MODEL_ALIASES = {"sonnet": "claude-sonnet-4-5",
-                     "haiku": "claude-haiku-4-5",
-                     "opus": "claude-opus-4-5"}
+from dispatch_subagent import resolve_model, run_subagent
 
 
 # ============================================================
@@ -185,15 +179,15 @@ class NKCurator:
     Parameters
     ----------
     model : str
-        Model alias ("sonnet" | "haiku" | "opus") or full model id.
+        Model name understood by the configured agent command.
     curator_prompts_dir : pathlib.Path, optional
         Directory containing per_round_template.md and deep_template.md.
         Defaults to section4_reproduce/curator_prompts/.
     """
 
-    def __init__(self, model: str = "sonnet",
+    def __init__(self, model: str = "default",
                  curator_prompts_dir: Optional[pathlib.Path] = None):
-        self.model = MODEL_ALIASES.get(model, model)
+        self.model = resolve_model(model)
         self.curator_prompts_dir = curator_prompts_dir or CURATOR_PROMPTS
         for fname in ("per_round_template.md", "deep_template.md"):
             if not (self.curator_prompts_dir / fname).exists():
@@ -239,13 +233,6 @@ class NKCurator:
         research_question: str = "(see program prompt)",
     ) -> CurationResult:
         """Dispatch the per-round curator and write a depth-1 NK JSON."""
-        if run_subagent is None:
-            raise RuntimeError(
-                "anthropic SDK not installed; cannot dispatch. "
-                "Install with `pip install anthropic` and set "
-                "ANTHROPIC_API_KEY, or use materialize_per_round() to "
-                "inspect the prompt without dispatching."
-            )
         prompt = self.materialize_per_round(
             program_id, round_num, program_dir,
             nk_records_dir=pathlib.Path(output_path).parent,
@@ -270,12 +257,6 @@ class NKCurator:
         research_question: str = "(see program prompt)",
     ) -> CurationResult:
         """Dispatch the deep curator and write a depth-3 NK JSON."""
-        if run_subagent is None:
-            raise RuntimeError(
-                "anthropic SDK not installed; cannot dispatch. "
-                "Use materialize_deep() to inspect the prompt without "
-                "dispatching."
-            )
         prompt = self.materialize_deep(
             program_id, program_dir,
             nk_records_dir=pathlib.Path(output_path).parent,
@@ -313,13 +294,13 @@ def _cli():
     p1.add_argument("--round", type=int, required=True, choices=[1, 2, 3])
     p1.add_argument("--program-dir", required=True, type=pathlib.Path)
     p1.add_argument("--output", required=True, type=pathlib.Path)
-    p1.add_argument("--model", default="sonnet")
+    p1.add_argument("--model", default="default")
 
     p2 = sp.add_parser("deep", help="Produce a depth-3 deep NK synthesis.")
     p2.add_argument("--program-id", required=True)
     p2.add_argument("--program-dir", required=True, type=pathlib.Path)
     p2.add_argument("--output", required=True, type=pathlib.Path)
-    p2.add_argument("--model", default="sonnet")
+    p2.add_argument("--model", default="default")
 
     args = ap.parse_args()
     curator = NKCurator(model=args.model)

@@ -1,12 +1,12 @@
 {
   "task": "101",
-  "model": "sonnet_4.6",
+  "model": "primary_4.6",
   "exit_code": 1,
   "output_exists": false,
   "eval_status": "not_run",
   "eval_score": null,
   "eval_msg": "",
-  "stderr_tail": "Traceback (most recent call last):\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_101/sonnet_4.6/candidate.py\", line 83, in <module>\n    comp_col_train = find_composition_col(train_df)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_101/sonnet_4.6/candidate.py\", line 69, in find_composition_col\n    for col in df.columns:\n               ^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'columns'",
+  "stderr_tail": "Traceback (most recent call last):\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_101/primary_4.6/candidate.py\", line 83, in <module>\n    comp_col_train = find_composition_col(train_df)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_101/primary_4.6/candidate.py\", line 69, in find_composition_col\n    for col in df.columns:\n               ^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'columns'",
   "cand_duration_sec": 1.597849,
   "eval_duration_sec": 0.0
 }

@@ -23,7 +23,7 @@ Two reproduction modes:
 ## A. Verify-only (no API key)
 
 ```bash
-python analyze_results.py
+python3 analyze_results.py
 ```
 
 Expected output: `20/20 claims match`. Report at
@@ -37,18 +37,18 @@ What gets verified:
 - BKdV-S6 specifics ($\nu=5\times 10^{-2}$ prescription; BKdV-S4 envelope 13 orders too weak)
 - BKdV-S7 specifics ($-62.8\%$ $v_{\max}$ decay; cosine-similarity $0.94$ mode prediction)
 
-## B. End-to-end (Anthropic API)
+## B. End-to-end (your agent stack)
 
 ```bash
-pip install -r ../requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+python3 -m pip install -r ../requirements.txt
+export NK_AGENT_COMMAND="python3 /absolute/path/to/agent_adapter.py"
 export PY_VENV=/path/to/your/.venv/bin/python  # for the sub-agent's Bash
 
 # Replay one cell end-to-end on bundled saved trace (no API):
-python run_pipeline.py --task T_C --cond NegOnly --use-saved-trace
+python3 run_pipeline.py --task T_C --cond NegOnly --use-saved-trace
 
-# Replay with a fresh sub-agent dispatch (uses anthropic SDK + API key):
-python run_pipeline.py --task T_C --cond NegOnly
+# Replay with a fresh sub-agent dispatch:
+python3 run_pipeline.py --task T_C --cond NegOnly
 ```
 
 ``run_pipeline.py`` reuses the saved Stage~2 prompt for the (task, cond)
@@ -66,7 +66,7 @@ For curator dispatch alone (Stage~1 NK production), use
 
 ```python
 from nk_curator import NKCurator
-curator = NKCurator(model="sonnet")
+curator = NKCurator(model="default")
 
 # depth-1: distill one round of failure into a single NK record
 rec = curator.produce_per_round(
@@ -91,14 +91,14 @@ build 12 stage-2 cells → dispatch 12 stage-2 agents → run eval.
 It uses the scripts in ``scripts/``:
 
 ```bash
-python scripts/build_stage1_programs.py        # 7 BKdV-S program prompts
-# ...dispatch each via Claude Code or python -c "from nk_curator ..."
-python scripts/build_curator_prompts.py        # 28 curator prompts
+python3 scripts/build_stage1_programs.py        # 7 BKdV-S program prompts
+# ...dispatch each through NK_AGENT_COMMAND
+python3 scripts/build_curator_prompts.py        # 28 curator prompts
 # ...dispatch curators
-python scripts/aggregate_bank.py               # merge 30 legacy + 28 new -> 58
-python scripts/build_stage2.py                 # 12 stage-2 sandboxes
+python3 scripts/aggregate_bank.py               # merge 30 legacy + 28 new -> 58
+python3 scripts/build_stage2.py                 # 12 stage-2 sandboxes
 # ...dispatch stage-2 agents
-python scripts/run_eval.py                     # parent-side phenomenon eval
+python3 scripts/run_eval.py                     # parent-side phenomenon eval
 ```
 
 ---
@@ -119,7 +119,7 @@ section4_reproduce/
 │   └── deep_template.md            multi-round (deep, depth-3) curator
 ├── scripts/
 │   ├── _paths.py                   path resolution from REPRO_ROOT
-│   ├── dispatch_subagent.py        low-level Anthropic-API sub-agent loop
+│   ├── dispatch_subagent.py        provider-neutral agent-command bridge
 │   ├── build_stage1_programs.py    generate 7 BKdV-S program prompts
 │   ├── build_curator_prompts.py    generate 28 curator prompts (4/program)
 │   ├── aggregate_bank.py           merge 30 legacy + 28 new → 58-entry bank

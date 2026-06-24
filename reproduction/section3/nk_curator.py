@@ -9,9 +9,8 @@ negative-knowledge (NK) records from failed attempts. It encapsulates:
   2. **The curator prompt templates** under ``prompts/``. Prompts are
      first-class: the same module can be re-pointed at any template
      directory, and templates can be overridden per call.
-  3. **Sub-agent dispatch** via the Anthropic API, with a constrained
-     Read/Write tool-use loop, audit-record capture, and schema
-     validation of the resulting NK JSON.
+  3. **Sub-agent dispatch** through the repository's provider-neutral
+     command bridge, followed by schema validation.
 
 Two operations are supported, distinguished by *depth*:
 
@@ -19,8 +18,8 @@ Two operations are supported, distinguished by *depth*:
     artifacts and write a depth-1 NK record. Used when distilling a
     single failed attempt into one summary.
 
-  - ``curator.produce_deep(...)`` — read **N rounds** of failure
-    artifacts (typically a Self-Debug trajectory) and write a deep
+  - ``curator.produce_deep(...)`` — read the **three rounds** used by the
+    paper's Self-Debug trajectory and write a deep
     NK record with cross-round synthesis fields
     (``rounds_summary``, ``ruled_out_routes``,
     ``synthesised_diagnosis``).
@@ -31,7 +30,7 @@ Programmatic use
 
     >>> from nk_curator import NKCurator, FailureArtifacts
     >>>
-    >>> curator = NKCurator(model="claude-sonnet-4-5")
+    >>> curator = NKCurator(model="default")
     >>>
     >>> # depth-1: one failed round
     >>> nk = curator.produce_depth1(
@@ -60,7 +59,7 @@ CLI use
 
 Produce one depth-1 NK for one task::
 
-    python nk_curator.py depth1 \\
+    python3 nk_curator.py depth1 \\
         --task-id 072 \\
         --task-inst-file task_072_inst.txt \\
         --round-dir runs/round1/task_072 \\
@@ -68,7 +67,7 @@ Produce one depth-1 NK for one task::
 
 Produce one depth-3 deep NK::
 
-    python nk_curator.py deep \\
+    python3 nk_curator.py deep \\
         --task-id 072 \\
         --task-inst-file task_072_inst.txt \\
         --round-dir runs/round1/task_072 \\
@@ -128,9 +127,9 @@ HERE = pathlib.Path(__file__).resolve().parent
 
 # Reuse the dispatcher's tool-use loop. nk_curator is the high-level
 # "what" (NK schema + prompt + validation); dispatch_subagent is the
-# low-level "how" (API loop + tool plumbing).
+# low-level "how" (the configured agent-command adapter).
 sys.path.insert(0, str(HERE / "scripts"))
-from dispatch_subagent import run_subagent, MODEL_ALIASES
+from dispatch_subagent import resolve_model, run_subagent
 
 
 # ============================================================
@@ -347,20 +346,19 @@ class NKCurator:
     Parameters
     ----------
     model : str
-        Claude model name (use one of ``MODEL_ALIASES`` keys: 'sonnet',
-        'haiku', 'opus') or a full model id like 'claude-sonnet-4-5'.
+        Model name understood by the configured agent command.
     prompt_dir : pathlib.Path, optional
         Directory containing curator prompt templates. Defaults to
         ``<repo>/prompts``.
     """
 
-    def __init__(self, model: str = "sonnet",
+    def __init__(self, model: str = "default",
                  base_dir: Optional[pathlib.Path] = None):
         """``base_dir`` is the directory containing ``curator_prompt.md``
         (the canonical template) and a ``prompts/`` subdirectory with
         the two variant templates. Defaults to ``section3_reproduce/``
         (the directory holding this module)."""
-        self.model = MODEL_ALIASES.get(model, model)
+        self.model = resolve_model(model)
         self.base_dir = base_dir or HERE
         if not (self.base_dir / CuratorPrompt.CANONICAL_FILE).exists():
             raise FileNotFoundError(
@@ -429,20 +427,18 @@ class NKCurator:
         output_path: pathlib.Path,
         round_dirs: Optional[list[pathlib.Path]] = None,
     ) -> CurationResult:
-        """Curate N >= 2 rounds of failure into a depth-N deep NK record.
+        """Curate exactly three rounds into the paper's depth-3 NK record.
 
         ``rounds`` is a list of FailureArtifacts, one per round, ordered
         round-1, round-2, .... ``round_dirs`` (optional) overrides where
         the prompt template thinks each round's artifacts live; if not
         given, derived from each round's candidate path's parent.
 
-        Currently the bundled depth-N template targets N=3 specifically
-        (that is what the paper experiment used). For N != 3, the
-        recommended_alternative field's quality is not validated.
+        The reusable top-level package supports arbitrary depths; this frozen
+        reproduction module intentionally matches the paper's three rounds.
         """
-        if len(rounds) < 2:
-            raise ValueError("produce_deep requires >= 2 rounds; "
-                             "for 1 round use produce_depth1")
+        if len(rounds) != 3:
+            raise ValueError("this reproduction template requires exactly 3 rounds")
         depth = len(rounds)
 
         output_path = pathlib.Path(output_path)
@@ -518,8 +514,8 @@ def _cmd_depth1(args):
 
 
 def _cmd_deep(args):
-    if len(args.round_dir) < 2:
-        sys.exit("`deep` requires --round-dir at least twice")
+    if len(args.round_dir) != 3:
+        sys.exit("`deep` requires --round-dir exactly three times")
     curator = NKCurator(model=args.model)
     rounds = [_from_round_dir(d) for d in args.round_dir]
     res = curator.produce_deep(
@@ -552,8 +548,7 @@ def _print_summary(res: CurationResult):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Negative Knowledge curator. Produces structured NK "
-                    "records from failed attempts via the Anthropic API."
+        description="Produce structured NK records through NK_AGENT_COMMAND."
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
@@ -568,15 +563,15 @@ def main():
                              "and optionally eval.log.")
     common.add_argument("--output", required=True, type=pathlib.Path,
                         help="Path to write the NK JSON file.")
-    common.add_argument("--model", default="sonnet",
-                        help="Claude model alias or full id (default: sonnet)")
+    common.add_argument("--model", default="default",
+                        help="Model name understood by NK_AGENT_COMMAND")
 
     d1 = sub.add_parser("depth1", parents=[common],
                         help="Produce depth-1 NK from one failed round.")
     d1.set_defaults(func=_cmd_depth1)
 
     dN = sub.add_parser("deep", parents=[common],
-                        help="Produce depth-N NK from N>=2 failed rounds.")
+                        help="Produce the paper's depth-3 NK record.")
     dN.set_defaults(func=_cmd_deep)
 
     args = ap.parse_args()

@@ -10,10 +10,10 @@ Supports four cell types:
   solver-deep   deepNKR solver (reads one depth-3 NK)
 
 Reviewer CLI:
-  python build_sandboxes.py round1 --tasks all
-  python build_sandboxes.py round1 --tasks 072
-  python build_sandboxes.py curator-deep --tasks 072
-  python build_sandboxes.py solver-deep --tasks 072 --model sonnet
+  python3 build_sandboxes.py round1 --tasks all
+  python3 build_sandboxes.py round1 --tasks 072
+  python3 build_sandboxes.py curator-deep --tasks 072
+  python3 build_sandboxes.py solver-deep --tasks 072 --model primary
 
 By default all sandboxes go to {REPRO_RUNS}/<cell>/task_<id>/.
 """
@@ -103,7 +103,7 @@ NOT available (do not import): {not_avail}. If the task seems to require one of 
 # Constraints
 1. Write exactly twice (candidate.py + reasoning.md).
 2. You may Read prompt.md. Do NOT read any other files.
-3. Script self-contained, runnable as `python candidate.py`.
+3. Script self-contained, runnable as `python3 candidate.py`.
 4. After both Writes, return ONE short sentence.
 """
 
@@ -308,7 +308,7 @@ NOT available: {not_avail}.
 # Constraints
 1. Write exactly twice (candidate.py + reasoning.md).
 2. Read prompt.md and {nk_files_clause}. Do NOT read other files.
-3. Script self-contained, runnable as `python candidate.py`.
+3. Script self-contained, runnable as `python3 candidate.py`.
 4. After both Writes, return ONE short sentence on which NK recommendation you followed.
 """
 

@@ -1,12 +1,12 @@
 {
   "task": "058",
-  "model": "sonnet_4.6",
+  "model": "primary_4.6",
   "exit_code": 0,
   "output_exists": true,
   "eval_status": "ran",
   "eval_score": null,
   "eval_msg": "False",
-  "stderr_tail": "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_058/sonnet_4.6/candidate.py:221: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.\n  pid_groups = ragni.groupby('id').apply(",
+  "stderr_tail": "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_058/primary_4.6/candidate.py:221: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.\n  pid_groups = ragni.groupby('id').apply(",
   "cand_duration_sec": 0.406301,
   "eval_duration_sec": 0.248922
 }

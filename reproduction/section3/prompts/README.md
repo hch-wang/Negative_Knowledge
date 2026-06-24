@@ -19,7 +19,7 @@ template. Each filename names the modification it applies.
 
 | Variant | Paper claim it produces |
 |---|---|
-| canonical (top-level) | §3 main result: depth-3 deepNKR Sonnet passes task_072 (1/19 on the hard subset) |
+| canonical (top-level) | §3 main result: depth-3 deepNKR Primary passes task_072 (1/19 on the hard subset) |
 | single-round simpler schema | §3 NKR depth-1 condition (24 r1 NKs, used for round-2 NKR PASS rate 2/24) |
 | chain with prior NK | §3 NKR depth-1 chain condition (22 r2 NKs, used for round-3 NKR PASS rate 3/24, and for the **9% NK error rate** finding via `round1_recipe_was_wrong`) |
 
@@ -65,7 +65,7 @@ from nk_curator import NKCurator
 # Re-point at a custom base_dir (must contain curator_prompt.md
 # at top level and prompts/{single_round, chain} variants underneath).
 curator = NKCurator(
-    model="claude-sonnet-4-5",
+    model="default",
     base_dir=pathlib.Path("/path/to/your/custom/templates"),
 )
 ```

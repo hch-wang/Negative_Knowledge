@@ -18,7 +18,7 @@ documented modifications of it:
 
 In our §3 experiment this canonical template is instantiated at
 $N = 3$ (three rounds of Self-Debug failure → one depth-3 NK), which
-produced the deepNKR-Sonnet PASS on task_072.
+produced the deepNKR-Primary PASS on task_072.
 
 Parameterised by:
 - `{TASK_ID}`, `{TASK_INST}`

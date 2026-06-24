@@ -16,7 +16,7 @@ KeyError: 'EDA_SCR_Peaks'
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_029/sonnet_4.6/v3/round1/candidate.py", line 60, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_029/primary_4.6/v3/round1/candidate.py", line 60, in <module>
     scr_peaks_epoch = eda_signals["EDA_SCR_Peaks"].iloc[start:end]
                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
   File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/frame.py", line 4113, in __getitem__

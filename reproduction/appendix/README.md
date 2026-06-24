@@ -20,7 +20,7 @@ Two reproduction modes:
 ## A. Verify-only (no API key)
 
 ```bash
-python analyze_results.py
+python3 analyze_results.py
 ```
 
 Expected output: `54/54 claims match`. Detailed report at
@@ -49,23 +49,23 @@ That document traces every cite_bank / reject_bank record in the 4 BKdV-only cel
 2. **`kb-general-finiteness-not-accuracy` + `kb-general-massConservation-insufficient-diagnostic`** → motivated T_D's pre-blowup truncation, the ONLY way T_D BKdV passed.
 3. **`kb-kdv-IMEX-CN-spectral-pass`** is dual-faced: positive on T_A (motivated Madelung-Ψ split structure) but **NEGATIVE-TRANSFER on T_B** (140× worse than NoKB) because B-NLS's +Q sign makes the spectrally-endorsed method anti-diffusive.
 
-## B. End-to-end (Anthropic API)
+## B. End-to-end (your agent stack)
 
 ```bash
-pip install -r ../requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...
+python3 -m pip install -r ../requirements.txt
+export NK_AGENT_COMMAND="python3 /absolute/path/to/agent_adapter.py"
 export PY_VENV=/path/to/your/python   # interpreter the sub-agent uses to run candidate.py
 
 # Replay one cell against the bundled saved trace (no API call):
-python run_pipeline.py --task T_C --cond NLS --use-saved-trace
+python3 run_pipeline.py --task T_C --cond NLS --use-saved-trace
 
-# Fresh dispatch (uses Anthropic API):
-python run_pipeline.py --task T_C --cond NLS
+# Fresh dispatch:
+python3 run_pipeline.py --task T_C --cond NLS
 ```
 
 `run_pipeline.py`:
 1. (fresh mode) rebuilds the cell's sandbox via `scripts/build_sandboxes.py`, embedding the appropriate bank (or no bank) in the prompt
-2. (fresh mode) dispatches a single Claude sub-agent via `scripts/dispatch_subagent.py` — the agent gets Read / Write / Bash tools, follows the Research-Graph protocol in `prompts/stage3_template.md`, runs `candidate.py` inline, and writes the final `pred_results/<task>.npy`
+2. (fresh mode) dispatches one sub-agent through `scripts/dispatch_subagent.py`; the adapter receives declared Read / Write / Bash capabilities and writes the final `pred_results/<task>.npy`
 3. runs the parent-side phenomenon check from `eval/phenomenon_checks_bnls.py`
 4. prints PASS/FAIL with diagnostics; updates `logs/stage3/<task>/<cond>/verified_eval.json`
 
@@ -100,7 +100,7 @@ appendix_reproduce/
 ├── scripts/
 │   ├── _paths.py                   path resolution
 │   ├── build_sandboxes.py          build prompts for any subset of 16 cells
-│   ├── dispatch_subagent.py        Anthropic-API tool-use loop (Read/Write/Bash)
+│   ├── dispatch_subagent.py        provider-neutral agent-command bridge
 │   └── run_eval.py                 parent-side eval on all 16 cells
 ├── logs/                           ★ bundled outputs from our original run
 │   ├── verified_results.json       16-row aggregate eval result

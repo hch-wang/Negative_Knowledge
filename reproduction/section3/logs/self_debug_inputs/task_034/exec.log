@@ -4,7 +4,7 @@ duration_sec=1.6
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_034/sonnet_4.6/v3/round1/candidate.py", line 20, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_034/primary_4.6/v3/round1/candidate.py", line 20, in <module>
     hrv_freq = nk.hrv_frequency(rpeaks, sampling_rate=sampling_rate)
   File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/neurokit2/hrv/hrv_frequency.py", line 203, in hrv_frequency
     power = signal_power(

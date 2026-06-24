@@ -4,7 +4,7 @@ duration_sec=8.4
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_021/sonnet_4.6/v3/round1/candidate.py", line 21, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_021/primary_4.6/v3/round1/candidate.py", line 21, in <module>
     deforested_in_buffer = gpd.clip(deforested_proj, roads_buffer_dissolved)
   File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/geopandas/tools/clip.py", line 218, in clip
     clipped = _clip_gdf_with_mask(gdf, combined_mask, sort=sort)

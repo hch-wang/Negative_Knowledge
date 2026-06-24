@@ -13,23 +13,23 @@ Reviewer usage
 ================================================================
 
 Required environment:
-    export ANTHROPIC_API_KEY=sk-ant-...
+    export NK_AGENT_COMMAND="python3 /path/to/your_agent_adapter.py"
     export SAB_BENCH=/abs/path/to/ScienceAgentBench/benchmark
     export PY_VENV=/abs/path/to/your/python    # has the 28-lib stack
 
 (1) Cheapest demonstration --- one task, reuse our saved autoresearch
-    trace, just re-run the curator + Sonnet solver. ~$1, ~3 minutes.
+    trace, just re-run the curator + Primary solver. ~$1, ~3 minutes.
 
-        python run_pipeline.py --task 072 --use-saved-trace --skip-haiku
+        python3 run_pipeline.py --task 072 --use-saved-trace --skip-secondary
 
 (2) Full single-task end-to-end --- one task, re-run everything from
     scratch (round-1 + 2x Self-Debug + curator + solver). ~$3, ~10 minutes.
 
-        python run_pipeline.py --task 072
+        python3 run_pipeline.py --task 072
 
 (3) Full §3 reproduction --- all 19 hard tasks, full pipeline. ~$60, 2-4 hours.
 
-        python run_pipeline.py --task all
+        python3 run_pipeline.py --task all
 
 ================================================================
 What each stage does
@@ -44,12 +44,12 @@ Stage 1 -- knowledge production (autoresearch + curator)
 
 Stage 2 -- knowledge consumption (NK -> solver)
    2.1  NKR solver         reads depth-1 NK only -> writes candidate.py
-   2.2  deepNKR Sonnet     reads depth-3 NK only -> writes candidate.py
-   2.3  deepNKR Haiku      cross-model: same depth-3 NK -> Haiku writes candidate.py
+   2.2  deepNKR Primary     reads depth-3 NK only -> writes candidate.py
+   2.3  deepNKR Secondary      cross-model: same depth-3 NK -> Secondary writes candidate.py
    2.4  execute_candidates run each candidate.py + grade via the task's evaluator
 
-All dispatches use scripts/dispatch_subagent.py (Anthropic API; tool-use
-loop with Read/Write allowlists).
+All fresh dispatches use the provider-neutral command protocol documented in
+``reproduction/README.md``.
 ================================================================
 """
 from __future__ import annotations
@@ -71,7 +71,7 @@ from _paths import (
     HARD_19, NK_TEST_24, ensure_bench_exists,
 )
 import build_sandboxes as bb
-from dispatch_subagent import run_subagent, MODEL_ALIASES
+from dispatch_subagent import resolve_model, run_subagent
 from execute_candidates import execute_one
 
 # High-level NK production. nk_curator wraps the curator-prompt
@@ -140,7 +140,7 @@ def dispatch(
 
     print(f"  → dispatch [{label}] model={model} "
           f"sandbox={sandbox.name}", flush=True)
-    rec = run_subagent(prompt, MODEL_ALIASES[model], read_set, write_set)
+    rec = run_subagent(prompt, resolve_model(model), read_set, write_set)
     rec["label"] = label
     rec["sandbox"] = str(sandbox)
     rec["dispatched_at_utc"] = dt.datetime.now(dt.UTC).isoformat()
@@ -157,7 +157,7 @@ def dispatch(
 # Stage 1: autoresearch + knowledge production
 # --------------------------------------------------------------------
 
-def stage1_full(tid: str, model: str = "sonnet"):
+def stage1_full(tid: str, model: str = "primary"):
     """Run round-1, two Self-Debug rounds, then both curators on this task."""
     print(f"\n══ Stage 1 ── task_{tid} (full autoresearch) ══")
 
@@ -190,7 +190,7 @@ def stage1_full(tid: str, model: str = "sonnet"):
     _curate_both(tid, [sb1, sb2, sb3], model)
 
 
-def stage1_from_saved_trace(tid: str, model: str = "sonnet"):
+def stage1_from_saved_trace(tid: str, model: str = "primary"):
     """Skip autoresearch; reuse saved trace from logs/ to feed the curators.
 
     The reviewer-cheapest path: we already shipped the round-1/2/3 + B2
@@ -346,7 +346,7 @@ def _move_solver_sandbox(sb: pathlib.Path, target: pathlib.Path) -> pathlib.Path
     """Move a solver sandbox and rewrite prompt paths to the new location.
 
     build_solver_deep() constructs prompts under RUNS/solver-deep/. The
-    named Sonnet/Haiku cells live under RUNS/solver-deep-<model>/. Without
+    named Primary/Secondary cells live under RUNS/solver-deep-<model>/. Without
     rewriting prompt.md after the move, the model is instructed to Write to
     the old path while the dispatcher allowlist permits only the new path.
     """
@@ -367,40 +367,40 @@ def _move_solver_sandbox(sb: pathlib.Path, target: pathlib.Path) -> pathlib.Path
 # Stage 2: knowledge consumption
 # --------------------------------------------------------------------
 
-def stage2(tid: str, *, do_nkr=True, do_deep_sonnet=True, do_deep_haiku=True):
+def stage2(tid: str, *, do_nkr=True, do_deep_primary=True, do_deep_secondary=True):
     """Run NK-consuming solvers and grade them."""
     print(f"\n══ Stage 2 ── task_{tid} (NK consumption) ══")
 
     if do_nkr and nk_r1_path(tid).exists():
         sb = bb.build_solver_nkr(tid, nk_r1_path(tid))
-        dispatch("solver-nkr (depth-1)", sb, "sonnet",
+        dispatch("solver-nkr (depth-1)", sb, "primary",
                  read_allowlist=[sb / "nk.json"],
                  output_files=[sb / "candidate.py", sb / "reasoning.md"])
         execute_one(tid, "solver-nkr")
 
-    if do_deep_sonnet and nk_deep_path(tid).exists():
+    if do_deep_primary and nk_deep_path(tid).exists():
         sb = bb.build_solver_deep(tid, nk_deep_path(tid))
         # build_solver_deep writes to RUNS/solver-deep/; the
         # cross-model variant needs a parallel dir.
-        # We rename via copy to solver-deep-sonnet/ for clarity:
-        target = solver_deep_dir(tid, "sonnet")
+        # We rename via copy to solver-deep-primary/ for clarity:
+        target = solver_deep_dir(tid, "primary")
         if sb != target:
             target = _move_solver_sandbox(sb, target)
-        dispatch("solver-deep Sonnet (depth-3)", target, "sonnet",
+        dispatch("solver-deep Primary (depth-3)", target, "primary",
                  read_allowlist=[target / "deep_nk.json"],
                  output_files=[target / "candidate.py", target / "reasoning.md"])
         # execute_one needs the cell name in RUNS/<cell>/task_<id>/
-        execute_one(tid, "solver-deep-sonnet")
+        execute_one(tid, "solver-deep-primary")
 
-    if do_deep_haiku and nk_deep_path(tid).exists():
+    if do_deep_secondary and nk_deep_path(tid).exists():
         sb = bb.build_solver_deep(tid, nk_deep_path(tid))
-        target = solver_deep_dir(tid, "haiku")
+        target = solver_deep_dir(tid, "secondary")
         if sb != target:
             target = _move_solver_sandbox(sb, target)
-        dispatch("solver-deep Haiku (cross-model)", target, "haiku",
+        dispatch("solver-deep Secondary (cross-model)", target, "secondary",
                  read_allowlist=[target / "deep_nk.json"],
                  output_files=[target / "candidate.py", target / "reasoning.md"])
-        execute_one(tid, "solver-deep-haiku")
+        execute_one(tid, "solver-deep-secondary")
 
 
 # --------------------------------------------------------------------
@@ -420,13 +420,13 @@ def main():
                     help="Stage 1: reuse the autoresearch trace from logs/ "
                          "instead of re-running round-1 + Self-Debug. Saves "
                          "3 sub-agent dispatches per task.")
-    ap.add_argument("--skip-haiku", action="store_true",
-                    help="Stage 2: don't run the Haiku cross-model condition.")
+    ap.add_argument("--skip-secondary", action="store_true",
+                    help="Stage 2: don't run the Secondary cross-model condition.")
     args = ap.parse_args()
 
     ensure_bench_exists()
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise SystemExit("ANTHROPIC_API_KEY not set in environment.")
+    if not os.environ.get("NK_AGENT_COMMAND"):
+        raise SystemExit("NK_AGENT_COMMAND not set; see ../README.md")
 
     tasks = HARD_19 if args.task == "all" else [args.task]
     print(f"running {len(tasks)} task(s): {tasks}")
@@ -439,7 +439,7 @@ def main():
             else:
                 stage1_full(tid)
         if args.stage in ("stage2", "both"):
-            stage2(tid, do_deep_haiku=not args.skip_haiku)
+            stage2(tid, do_deep_secondary=not args.skip_secondary)
 
     # Persist dispatch log for the whole run.
     pipeline_log = RUNS / f"pipeline_log_{dt.datetime.now(dt.UTC).isoformat(timespec='seconds').replace(':', '-')}.json"
@@ -449,9 +449,7 @@ def main():
     # Summary
     n_dispatches = len(DISPATCH_LOG)
     total_tokens = sum(r["total_tokens"] for r in DISPATCH_LOG)
-    print(f"\n{n_dispatches} dispatches; "
-          f"total ~{total_tokens} tokens "
-          f"(~${total_tokens / 1e6 * 5:.2f} at Sonnet rate)")
+    print(f"\n{n_dispatches} dispatches; total ~{total_tokens} tokens")
 
 
 if __name__ == "__main__":

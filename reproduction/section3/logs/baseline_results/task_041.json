@@ -1,6 +1,6 @@
 {
   "task": "041",
-  "model": "sonnet_4.6",
+  "model": "primary_4.6",
   "exit_code": 0,
   "output_exists": true,
   "eval_status": "ran",

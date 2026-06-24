@@ -96,7 +96,7 @@
       "expected": "18/38",
       "computed": "18/38",
       "match": true,
-      "source": "deepNKR_sonnet cell"
+      "source": "deepNKR_primary cell"
     },
     {
       "label": "headline: baseline %",
@@ -134,18 +134,18 @@
       "source": "round2_B2 + round3_B2 cells"
     },
     {
-      "label": "deepNKR-Sonnet on 19 hard",
+      "label": "deepNKR-Primary on 19 hard",
       "expected": "1/19",
       "computed": "1/19",
       "match": true,
-      "source": "deepNKR_sonnet cell on hard subset"
+      "source": "deepNKR_primary cell on hard subset"
     },
     {
-      "label": "deepNKR-Haiku (cross-model) on 19 hard",
+      "label": "deepNKR-Secondary (cross-model) on 19 hard",
       "expected": "0/19",
       "computed": "0/19",
       "match": true,
-      "source": "deepNKR_haiku cell"
+      "source": "deepNKR_secondary cell"
     },
     {
       "label": "B2 covering median (bytes/task)",
@@ -197,18 +197,18 @@
       "source": "round2_NKR dispatches"
     },
     {
-      "label": "solver tokens: deepNKR-Sonnet median",
+      "label": "solver tokens: deepNKR-Primary median",
       "expected": 19247,
       "computed": 19247,
       "match": true,
-      "source": "deepNKR_sonnet dispatches"
+      "source": "deepNKR_primary dispatches"
     },
     {
-      "label": "solver tokens: deepNKR-Haiku median",
+      "label": "solver tokens: deepNKR-Secondary median",
       "expected": 48360,
       "computed": 48360,
       "match": true,
-      "source": "deepNKR_haiku dispatches"
+      "source": "deepNKR_secondary dispatches"
     },
     {
       "label": "r2 NK count",
@@ -239,18 +239,18 @@
       "source": "r2 NK records"
     },
     {
-      "label": "task_072 in deepNKR_sonnet PASS set",
+      "label": "task_072 in deepNKR_primary PASS set",
       "expected": true,
       "computed": true,
       "match": true,
-      "source": "deepNKR_sonnet dispatch for task_072"
+      "source": "deepNKR_primary dispatch for task_072"
     },
     {
-      "label": "task_072 deepNKR-Sonnet eval_score",
+      "label": "task_072 deepNKR-Primary eval_score",
       "expected": 1,
       "computed": 1,
       "match": true,
-      "source": "task_072__deepNKR_sonnet.json"
+      "source": "task_072__deepNKR_primary.json"
     }
   ]
 }

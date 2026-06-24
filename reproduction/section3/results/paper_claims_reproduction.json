@@ -81,7 +81,7 @@
       "computed": "18/38",
       "match": true,
       "source_paths": [
-        "deepNKR_sonnet cell"
+        "deepNKR_primary cell"
       ]
     },
     {
@@ -103,21 +103,21 @@
       ]
     },
     {
-      "label": "controlled: deepNKR-Sonnet on 19 hard",
+      "label": "controlled: deepNKR-Primary on 19 hard",
       "expected": "1/19",
       "computed": "1/19",
       "match": true,
       "source_paths": [
-        "deepNKR_sonnet"
+        "deepNKR_primary"
       ]
     },
     {
-      "label": "controlled: deepNKR-Haiku (cross-model) on 19",
+      "label": "controlled: deepNKR-Secondary (cross-model) on 19",
       "expected": "0/19",
       "computed": "0/19",
       "match": true,
       "source_paths": [
-        "deepNKR_haiku"
+        "deepNKR_secondary"
       ]
     },
     {
@@ -227,26 +227,26 @@
       "source_paths": []
     },
     {
-      "label": "solver tokens: deepNKR-Sonnet median",
+      "label": "solver tokens: deepNKR-Primary median",
       "expected": 19247,
       "computed": 19247,
       "match": true,
       "source_paths": []
     },
     {
-      "label": "solver tokens: deepNKR-Haiku median",
+      "label": "solver tokens: deepNKR-Secondary median",
       "expected": 48360,
       "computed": 48360,
       "match": true,
       "source_paths": []
     },
     {
-      "label": "task_072 in deepNKR_sonnet PASS set",
+      "label": "task_072 in deepNKR_primary PASS set",
       "expected": true,
       "computed": true,
       "match": true,
       "source_paths": [
-        "deepNKR_sonnet/task_072"
+        "deepNKR_primary/task_072"
       ]
     }
   ]

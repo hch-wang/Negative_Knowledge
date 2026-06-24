@@ -1,12 +1,12 @@
 {
   "task": "037",
-  "model": "sonnet_4.6",
+  "model": "primary_4.6",
   "exit_code": 1,
   "output_exists": false,
   "eval_status": "not_run",
   "eval_score": null,
   "eval_msg": "",
-  "stderr_tail": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_037/sonnet_4.6/candidate.py\", line 19, in <module>\n    timestamps = df[\"timestamps\"].values\n                 ~~^^^^^^^^^^^^^^\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/frame.py\", line 4113, in __getitem__\n    indexer = self.columns.get_loc(key)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/indexes/base.py\", line 3819, in get_loc\n    raise KeyError(key) from err\nKeyError: 'timestamps'",
+  "stderr_tail": "  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_037/primary_4.6/candidate.py\", line 19, in <module>\n    timestamps = df[\"timestamps\"].values\n                 ~~^^^^^^^^^^^^^^\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/frame.py\", line 4113, in __getitem__\n    indexer = self.columns.get_loc(key)\n  File \"/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv/lib/python3.14/site-packages/pandas/core/indexes/base.py\", line 3819, in get_loc\n    raise KeyError(key) from err\nKeyError: 'timestamps'",
   "cand_duration_sec": 1.404527,
   "eval_duration_sec": 0.0
 }

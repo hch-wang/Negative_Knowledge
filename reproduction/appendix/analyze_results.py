@@ -5,7 +5,7 @@ Reads logs/verified_results.json and the bundled per-cell verified_eval.json
 files, then checks each numerical / qualitative claim made in the appendix.
 
 Usage:
-  python analyze_results.py
+  python3 analyze_results.py
 
 Exit code 0 if all claims match; non-zero on mismatch. Detailed report
 written to results/claim_report.md.

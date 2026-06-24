@@ -4,14 +4,13 @@
 Two sub-modes:
   --use-saved-trace : re-run the parent-side phenomenon eval on the
                       bundled pred_results/<task>.npy. No API calls. Cost $0.
-  (default)         : rebuild the cell's sandbox, dispatch a fresh
-                      sub-agent via Anthropic API, then re-run eval.
-                      Requires ANTHROPIC_API_KEY and an external Python
-                      venv with numpy / scipy (set PY_VENV env var).
+  (default)         : rebuild the cell's sandbox, dispatch a fresh sub-agent
+                      through NK_AGENT_COMMAND, then re-run eval. Requires an
+                      external Python venv with numpy / scipy.
 
 Usage:
-  python run_pipeline.py --task T_C --cond NLS --use-saved-trace
-  python run_pipeline.py --task T_C --cond NLS
+  python3 run_pipeline.py --task T_C --cond NLS --use-saved-trace
+  python3 run_pipeline.py --task T_C --cond NLS
 """
 import argparse
 import importlib.util

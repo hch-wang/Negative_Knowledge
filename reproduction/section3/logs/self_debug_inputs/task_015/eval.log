@@ -4,10 +4,10 @@ duration_sec=1.0
 
 --- stderr ---
 Traceback (most recent call last):
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_015/sonnet_4.6/v3/round1/_eval.py", line 19, in <module>
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_015/primary_4.6/v3/round1/_eval.py", line 19, in <module>
     print(eval())
           ~~~~^^
-  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_015/sonnet_4.6/v3/round1/_eval.py", line 11, in eval
+  File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/runs/task_015/primary_4.6/v3/round1/_eval.py", line 11, in eval
     metric = roc_auc_score(gold[["Y"]], pred[["Y"]])
                                         ~~~~^^^^^^^
   File "/Users/dietcoke/Documents/Project/00-simulation_software/paper/experiments/pilot_2026-05-10/.venv_full/lib/python3.13/site-packages/pandas/core/frame.py", line 4119, in __getitem__

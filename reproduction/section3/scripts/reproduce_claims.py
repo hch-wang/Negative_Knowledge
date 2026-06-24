@@ -13,8 +13,8 @@ The archive must contain:
                              files at ../tasks/ for the full pilot count)
 
 Run:
-  python reproduce_claims.py
-  python reproduce_claims.py --logs /custom/path/to/logs
+  python3 reproduce_claims.py
+  python3 reproduce_claims.py --logs /custom/path/to/logs
 
 Output:
   ../results/paper_claims_reproduction.md
@@ -104,12 +104,12 @@ def main():
           len(baseline_pass_38),
           ["logs/baseline_results/task_*.json"])
 
-    nk_test_24 = all_tasks_in_cell(solvers, "sonnet_4.6", "round1")
+    nk_test_24 = all_tasks_in_cell(solvers, "primary_4.6", "round1")
     claim("NK-test subset size", 24, len(nk_test_24),
           ["derived from v3 round1 cell"])
 
-    b2_pass = (passes_by_cell(solvers)[("sonnet_4.6", "round2_B2")] |
-               passes_by_cell(solvers)[("sonnet_4.6", "round3_B2")])
+    b2_pass = (passes_by_cell(solvers)[("primary_4.6", "round2_B2")] |
+               passes_by_cell(solvers)[("primary_4.6", "round3_B2")])
     hard_19 = nk_test_24 - b2_pass
     claim("hard subset size", 19, len(hard_19),
           ["derived from round2_B2 + round3_B2 cells"])
@@ -120,13 +120,13 @@ def main():
           f"{len(benchmark_r1)}/38",
           ["logs/baseline_results/"])
 
-    b0 = passes_by_cell(solvers)[("sonnet_4.6", "round2_B0")]
+    b0 = passes_by_cell(solvers)[("primary_4.6", "round2_B0")]
     benchmark_b0 = benchmark_r1 | b0
     claim("Table 1: + B0 retry PASS / 38", "12/38",
           f"{len(benchmark_b0)}/38",
           ["baseline + round2_B0 cell"])
 
-    nkr_r2 = passes_by_cell(solvers)[("sonnet_4.6", "round2_NKR")]
+    nkr_r2 = passes_by_cell(solvers)[("primary_4.6", "round2_NKR")]
     benchmark_nkr = benchmark_b0 | nkr_r2
     claim("Table 1: + NKR depth-1 PASS / 38", "14/38",
           f"{len(benchmark_nkr)}/38",
@@ -137,11 +137,11 @@ def main():
           f"{len(benchmark_b2)}/38",
           ["round2_B2 + round3_B2 cells"])
 
-    deep = passes_by_cell(solvers)[("sonnet_4.6", "deepNKR_sonnet")]
+    deep = passes_by_cell(solvers)[("primary_4.6", "deepNKR_primary")]
     benchmark_deep = benchmark_b2 | deep
     claim("Table 1: + deepNKR depth-3 PASS / 38", "18/38",
           f"{len(benchmark_deep)}/38",
-          ["deepNKR_sonnet cell"])
+          ["deepNKR_primary cell"])
 
     # Controlled view
     def on_subset(passed, subset): return len(passed & subset)
@@ -149,12 +149,12 @@ def main():
           f"{on_subset(nkr_r2, nk_test_24)}/24", ["round2_NKR"])
     claim("controlled: B2 covering on 24", "5/24",
           f"{on_subset(b2_pass, nk_test_24)}/24", ["round2_B2 + round3_B2"])
-    claim("controlled: deepNKR-Sonnet on 19 hard", "1/19",
-          f"{on_subset(deep, hard_19)}/19", ["deepNKR_sonnet"])
+    claim("controlled: deepNKR-Primary on 19 hard", "1/19",
+          f"{on_subset(deep, hard_19)}/19", ["deepNKR_primary"])
 
-    haiku = passes_by_cell(solvers)[("haiku_4.5", "deepNKR_haiku")]
-    claim("controlled: deepNKR-Haiku (cross-model) on 19", "0/19",
-          f"{on_subset(haiku, hard_19)}/19", ["deepNKR_haiku"])
+    secondary = passes_by_cell(solvers)[("secondary_4.5", "deepNKR_secondary")]
+    claim("controlled: deepNKR-Secondary (cross-model) on 19", "0/19",
+          f"{on_subset(secondary, hard_19)}/19", ["deepNKR_secondary"])
 
     # Headline
     claim("headline: baseline %", "31.6",
@@ -236,17 +236,17 @@ def main():
 
     def med(ts): return int(statistics.median(ts)) if ts else 0
     claim("solver tokens: round-1 median", 16262,
-          med(by_cell_tok[("sonnet_4.6", "round1")]), [])
+          med(by_cell_tok[("primary_4.6", "round1")]), [])
     claim("solver tokens: round2_NKR median", 18080,
-          med(by_cell_tok[("sonnet_4.6", "round2_NKR")]), [])
-    claim("solver tokens: deepNKR-Sonnet median", 19247,
-          med(by_cell_tok[("sonnet_4.6", "deepNKR_sonnet")]), [])
-    claim("solver tokens: deepNKR-Haiku median", 48360,
-          med(by_cell_tok[("haiku_4.5", "deepNKR_haiku")]), [])
+          med(by_cell_tok[("primary_4.6", "round2_NKR")]), [])
+    claim("solver tokens: deepNKR-Primary median", 19247,
+          med(by_cell_tok[("primary_4.6", "deepNKR_primary")]), [])
+    claim("solver tokens: deepNKR-Secondary median", 48360,
+          med(by_cell_tok[("secondary_4.5", "deepNKR_secondary")]), [])
 
     # task_072 specifics
-    claim("task_072 in deepNKR_sonnet PASS set", True,
-          "072" in deep, ["deepNKR_sonnet/task_072"])
+    claim("task_072 in deepNKR_primary PASS set", True,
+          "072" in deep, ["deepNKR_primary/task_072"])
 
     # Write reports
     n_match = sum(1 for c in CLAIMS if c["match"])

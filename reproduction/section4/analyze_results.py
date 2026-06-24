@@ -6,7 +6,7 @@ re-run any sub-agent. Each claim prints a one-line verdict with file
 provenance.
 
 Run:
-    python analyze_results.py
+    python3 analyze_results.py
 
 Outputs:
     results/claim_report.md   Markdown report (claim, expected, computed, ✓/✗)
