@@ -1,5 +1,9 @@
 # Negative Knowledge
 
+[![arXiv](https://img.shields.io/badge/arXiv-2606.21024-b31b1b.svg)](https://arxiv.org/abs/2606.21024)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+
 A failure-aware shared memory layer for AutoResearch. Instead of
 discarding failed attempts as transient debugging noise, a **curator**
 agent turns each failure into a bounded, typed *negative-knowledge (NK)
@@ -9,8 +13,8 @@ experiment. Failures become reusable constraints that steer exploration
 away from dead ends.
 
 This is the reference implementation for the ICML 2026 AI4Research
-Workshop paper *Negative Knowledge as Failure-aware Shared Memory for
-AutoResearch*.
+Workshop paper [*Negative Knowledge as Failure-aware Shared Memory for
+AutoResearch*](https://arxiv.org/abs/2606.21024).
 
 ![Overview of the negative knowledge memory layer in a multi-agent AutoResearch workflow.](docs/overview.png)
 

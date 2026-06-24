@@ -8,12 +8,20 @@ version = "0.1.0"
 description = "A failure-aware shared memory layer for AutoResearch: turn failed attempts into bounded, typed negative-knowledge records."
 readme = "README.md"
 requires-python = ">=3.9"
+license = { text = "MIT" }
 authors = [{ name = "Hanchun Wang", email = "hw660@cam.ac.uk" }]
 keywords = ["AutoResearch", "LLM agents", "negative knowledge", "agent memory"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = ["anthropic>=0.40"]
 
 [project.urls]
 Repository = "https://github.com/hch-wang/Negative_Knowledge"
+Paper = "https://arxiv.org/abs/2606.21024"
 
 [project.scripts]
 negative-knowledge = "negative_knowledge.curator:main"

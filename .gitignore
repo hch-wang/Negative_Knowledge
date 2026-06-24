@@ -7,7 +7,7 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 
-# Virtual env (do NOT commit; reproduce-time only)
+# Virtual environments
 .venv/
 venv/
 env/
@@ -16,18 +16,8 @@ env/
 .DS_Store
 .AppleDouble
 
-# Editor
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Local outputs that get regenerated
-# (keep canonical artifacts but ignore replay scratch)
-# (Actually we WANT to keep pred_results/*.npy for inspection; comment if you want exclude)
-
-# Symlinks
-.venv
-
-# Logs that exceed reasonable size
-*.gigantic.log

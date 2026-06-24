@@ -1,3 +1,9 @@
+# Requirements for *reproducing the paper* (the reproduction/ studies).
+#
+# The negative_knowledge package itself has a single runtime dependency,
+# `anthropic`, declared in pyproject.toml -- `pip install -e .` is enough to
+# use the library. numpy / scipy are only needed by the reproduction analysis
+# scripts (e.g. reproduction/section4 phenomenon checks).
+anthropic
 numpy
 scipy
-anthropic
