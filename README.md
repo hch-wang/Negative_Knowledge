@@ -62,10 +62,11 @@ append("negative_knowledge.jsonl", record)          # persist as JSONL
 memory = load("negative_knowledge.jsonl")            # read the bank back
 ```
 
-A runnable end-to-end demo (offline — no API key, no SDK):
+Two runnable end-to-end demos (offline — no API key, no SDK):
 
 ```bash
-python examples/quickstart.py
+python examples/quickstart.py   # producer side: curate -> append -> load
+python examples/agent_loop.py   # consumer side: adopt / reject, then propose
 ```
 
 ## The NK record schema
@@ -83,10 +84,20 @@ rationale, recommended_alternative
 `validate(record)` enforces this contract — the six core fields plus the
 closed `failure.*` vocabulary — and returns a list of problems (empty
 means valid). Records may also carry **extra fields** (for example a
-round index or cross-round notes); these are accepted as extensions. The
-controlled vocabularies (`LAYERS`, `SCOPES`, `DEGREES`, `ACTIONS`,
-`RISKS`) live at the top of
-[`negative_knowledge.py`](negative_knowledge.py).
+round index or cross-round notes); these are accepted as extensions.
+
+| `failure.` field | allowed values |
+|---|---|
+| `layer` | `implementation_failure` · `communication_failure` · `method_failure` · `hypothesis_failure` · `measurement_failure` |
+| `scope` | `local_failure` · `regime_bound_failure` · `general_failure` |
+| `degree` | `contradicted` · `partial` · `inconclusive` · `unstable` · `artifact_driven` · `overclaimed` |
+| `recommended_action` | `retry` · `change_method` · `narrow_claim` · `abandon_route` |
+| `risk` | `low_risk_omission` · `medium_risk_drift` · `high_risk_false_progress` |
+
+Length limits: `task_id` ≤ 128, `attempted_route` / `observation` ≤ 600,
+`rationale` / `recommended_alternative` ≤ 1200 characters. The same
+vocabularies are importable as `LAYERS`, `SCOPES`, `DEGREES`, `ACTIONS`,
+`RISKS` from [`negative_knowledge.py`](negative_knowledge.py).
 
 ```python
 from negative_knowledge import validate
@@ -106,7 +117,8 @@ issues = validate(record)                            # [] == valid
 
 ```
 negative_knowledge.py   the single-file, dependency-free module
-examples/               quickstart.py + a self-contained sample failure
+examples/               quickstart.py (producer) + agent_loop.py (consumer)
+docs/                   ARCHITECTURE.md + the overview figure
 reproduction/           everything behind the paper's numbers (see below)
 tests/                  unit tests: python -m unittest discover -s tests
 ```
